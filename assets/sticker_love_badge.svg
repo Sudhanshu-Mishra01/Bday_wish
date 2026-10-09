@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" width="140" height="140">
+  <defs>
+    <radialGradient id="badgeGold" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#fff275"/>
+      <stop offset="60%" stop-color="#ffd166"/>
+      <stop offset="100%" stop-color="#f39c12"/>
+    </radialGradient>
+    <filter id="badgeShadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Ribbons -->
+  <polygon points="45,95 25,135 48,125 65,135 55,95" fill="#e84393" filter="url(#badgeShadow)"/>
+  <polygon points="95,95 115,135 92,125 75,135 85,95" fill="#d63031" filter="url(#badgeShadow)"/>
+  <!-- Rosette Ring -->
+  <circle cx="70" cy="65" r="48" fill="url(#badgeGold)" filter="url(#badgeShadow)"/>
+  <circle cx="70" cy="65" r="42" fill="#fff5f5" stroke="#ffd166" stroke-width="2"/>
+  <circle cx="70" cy="65" r="38" fill="#ff758c"/>
+  <!-- Crown Icon & Text -->
+  <polygon points="60,48 64,56 70,50 76,56 80,48 82,60 58,60" fill="#ffd166"/>
+  <text x="70" y="74" font-family="'Outfit', sans-serif" font-weight="bold" font-size="9" fill="#ffffff" text-anchor="middle" letter-spacing="1">BIRTHDAY</text>
+  <text x="70" y="85" font-family="'Outfit', sans-serif" font-weight="900" font-size="10" fill="#ffd166" text-anchor="middle" letter-spacing="1">QUEEN 👑</text>
+</svg>

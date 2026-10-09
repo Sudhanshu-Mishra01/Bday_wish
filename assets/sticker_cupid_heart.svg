@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <radialGradient id="wingGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#ffb8c6" stop-opacity="0.4"/>
+    </radialGradient>
+    <radialGradient id="heartGrad" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#ff9a9e"/>
+      <stop offset="50%" stop-color="#fecfef"/>
+      <stop offset="100%" stop-color="#ff6b8b"/>
+    </radialGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <!-- Left Wing -->
+  <path d="M 38 60 C 20 40, 5 50, 2 65 C 0 75, 15 80, 40 68 Z" fill="url(#wingGrad)" opacity="0.85"/>
+  <path d="M 36 62 C 15 50, 10 70, 38 72 Z" fill="#ffffff" opacity="0.5"/>
+  <!-- Right Wing -->
+  <path d="M 82 60 C 100 40, 115 50, 118 65 C 120 75, 105 80, 80 68 Z" fill="url(#wingGrad)" opacity="0.85"/>
+  <path d="M 84 62 C 105 50, 110 70, 82 72 Z" fill="#ffffff" opacity="0.5"/>
+  <!-- Main Glowing Heart -->
+  <path d="M 60 45 C 50 30, 25 35, 35 60 C 42 76, 60 92, 60 92 C 60 92, 78 76, 85 60 C 95 35, 70 30, 60 45 Z" fill="url(#heartGrad)" filter="url(#glow)"/>
+  <!-- Highlights -->
+  <circle cx="48" cy="48" r="4" fill="#ffffff" opacity="0.8"/>
+  <circle cx="53" cy="44" r="2" fill="#ffffff" opacity="0.9"/>
+  <!-- Sparkles -->
+  <polygon points="60,20 62,26 68,28 62,30 60,36 58,30 52,28 58,26" fill="#ffd166"/>
+  <polygon points="85,32 86,36 90,37 86,38 85,42 84,38 80,37 84,36" fill="#ffffff" opacity="0.9"/>
+</svg>

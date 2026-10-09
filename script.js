@@ -1,0 +1,1159 @@
+/**
+ * ==============================================================================
+ * 💖 ROMANTIC BIRTHDAY SURPRISE — INTERACTIVE ENGINE
+ * Multi-Stage Journey, Interactive Cake Cutting, Scratch Card & Video Screening
+ * ==============================================================================
+ */
+
+(function () {
+  'use strict';
+
+  // 1. Load Configuration with LocalStorage overrides (from Customizer)
+  const savedConfig = localStorage.getItem('romantic_bday_custom_config');
+  const CFG = savedConfig ? JSON.parse(savedConfig) : window.SURPRISE_CONFIG;
+
+  // State Management
+  const state = {
+    currentStage: 1,
+    loveClicks: 0,
+    envelopeOpened: false,
+    crystalsFound: 0,
+    scratchRevealed: false,
+    candlesLit: 3,
+    cakeSliced: false,
+    audioPlaying: false,
+    activeReelSlide: 0,
+    reelInterval: null
+  };
+
+  // DOM Elements
+  const DOM = {
+    navGfName: document.getElementById('nav-gf-name'),
+    stepDots: document.querySelectorAll('.step-dot'),
+    totalClicksCount: document.getElementById('total-clicks-count'),
+    audioToggleBtn: document.getElementById('audio-toggle-btn'),
+    audioPlayer: document.getElementById('custom-audio-player'),
+    floatingMascot: document.getElementById('floating-mascot'),
+    ambientCanvas: document.getElementById('ambient-canvas'),
+    easterEggsLayer: document.getElementById('easter-eggs-layer'),
+
+    // Stage 1
+    envelopeWrapper: document.getElementById('envelope-wrapper'),
+    envelopeFlap: document.getElementById('envelope-flap'),
+    waxSeal: document.getElementById('wax-seal'),
+    sealStampText: document.getElementById('seal-stamp-text'),
+    envelopeTagline: document.getElementById('envelope-tagline'),
+    letterTeaserTitle: document.getElementById('letter-teaser-title'),
+    letterTeaserBody: document.getElementById('letter-teaser-body'),
+    letterDateDisplay: document.getElementById('letter-date-display'),
+    btnStartQuest: document.getElementById('btn-start-quest'),
+    envelopePromptText: document.getElementById('envelope-prompt-text'),
+
+    // Stage 2
+    crystalsFoundCount: document.getElementById('crystals-found-count'),
+    crystalsProgressFill: document.getElementById('crystals-progress-fill'),
+    crystalPlayground: document.getElementById('crystal-playground'),
+    revealedReasonsGrid: document.getElementById('revealed-reasons-grid'),
+    stage2UnlockBanner: document.getElementById('stage2-unlock-banner'),
+    btnGotoStage3: document.getElementById('btn-goto-stage-3'),
+
+    // Stage 3
+    polaroidGallery: document.getElementById('polaroid-gallery'),
+    scratchBox: document.getElementById('scratch-box'),
+    scratchCanvas: document.getElementById('scratch-canvas'),
+    scratchSecretTitle: document.getElementById('scratch-secret-title'),
+    scratchSecretBody: document.getElementById('scratch-secret-body'),
+    scratchPercent: document.getElementById('scratch-percent'),
+    stage3UnlockBanner: document.getElementById('stage3-unlock-banner'),
+    btnGotoStage4: document.getElementById('btn-goto-stage-4'),
+
+    // Stage 4
+    letterSalutationText: document.getElementById('letter-salutation-text'),
+    letterParagraphsContainer: document.getElementById('letter-paragraphs-container'),
+    letterClosingText: document.getElementById('letter-closing-text'),
+    letterSignatureText: document.getElementById('letter-signature-text'),
+    tokenButtons: document.querySelectorAll('.token-btn'),
+    btnGotoStage5: document.getElementById('btn-goto-stage-5'),
+
+    // Stage 5
+    candlesTracker: document.getElementById('candles-tracker'),
+    candlesRemainingCount: document.getElementById('candles-remaining-count'),
+    candlesRow: document.getElementById('candles-row'),
+    candleItems: document.querySelectorAll('.candle-item'),
+    sliceLine: document.getElementById('slice-line'),
+    cakeSlicePiece: document.getElementById('cake-slice-piece'),
+    goldenKnife: document.getElementById('golden-knife'),
+    btnBlowAll: document.getElementById('btn-blow-all'),
+    btnTriggerCut: document.getElementById('btn-trigger-cut'),
+    cakeSuccessCard: document.getElementById('cake-success-card'),
+    cakeSuccessTitle: document.getElementById('cake-success-title'),
+    cakeSuccessMsg: document.getElementById('cake-success-msg'),
+    btnGotoStage6: document.getElementById('btn-goto-stage-6'),
+
+    // Stage 6
+    videoEmbedBox: document.getElementById('video-embed-box'),
+    animatedMemoryReel: document.getElementById('animated-memory-reel'),
+    videoEndQuote: document.getElementById('video-end-quote'),
+    btnBlastConfetti: document.getElementById('btn-blast-confetti'),
+    btnShareWhatsapp: document.getElementById('btn-share-whatsapp'),
+    btnDownloadCard: document.getElementById('btn-download-card'),
+    btnRestartQuest: document.getElementById('btn-restart-quest'),
+
+    // Modals
+    lightboxDialog: document.getElementById('lightbox-dialog'),
+    lightboxImg: document.getElementById('lightbox-img'),
+    lightboxCaptionText: document.getElementById('lightbox-caption-text'),
+    lightboxClose: document.getElementById('lightbox-close'),
+
+    reasonDialog: document.getElementById('reason-dialog'),
+    reasonPopIcon: document.getElementById('reason-pop-icon'),
+    reasonPopTitle: document.getElementById('reason-pop-title'),
+    reasonPopText: document.getElementById('reason-pop-text'),
+    reasonPopClose: document.getElementById('reason-pop-close'),
+
+    customizerDialog: document.getElementById('customizer-dialog'),
+    btnOpenCustomizer: document.getElementById('btn-open-customizer'),
+    customizerClose: document.getElementById('customizer-close'),
+    btnSaveCustomizer: document.getElementById('btn-save-customizer'),
+    btnResetDefaults: document.getElementById('btn-reset-defaults')
+  };
+
+  // ==============================================================================
+  // 🎵 WEB AUDIO API: PROCEDURAL ROMANTIC SYNTHESIZER & SOUND FX
+  // Works out of the box with zero external mp3 files required!
+  // ==============================================================================
+  let audioCtx = null;
+  let bgmOscInterval = null;
+
+  function initAudioContext() {
+    if (!audioCtx) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContext();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+  }
+
+  function playTone(freq, type = 'sine', duration = 0.5, gainVal = 0.15) {
+    if (!audioCtx) return;
+    try {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    } catch (e) {
+      console.warn('Audio tone err:', e);
+    }
+  }
+
+  // Romantic Sound Effects
+  function playChime() {
+    initAudioContext();
+    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+    notes.forEach((freq, idx) => {
+      setTimeout(() => playTone(freq, 'sine', 0.8, 0.18), idx * 110);
+    });
+  }
+
+  function playBubblePop() {
+    initAudioContext();
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(950, audioCtx.currentTime + 0.12);
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.12);
+  }
+
+  function playCandleBlow() {
+    initAudioContext();
+    // Gentle soft whoosh
+    playTone(180, 'sine', 0.4, 0.15);
+  }
+
+  function playSliceSound() {
+    initAudioContext();
+    if (!audioCtx) return;
+    playTone(880, 'triangle', 0.2, 0.2);
+    setTimeout(() => playTone(1320, 'sine', 0.4, 0.25), 80);
+  }
+
+  function playFanfare() {
+    initAudioContext();
+    const melody = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+    melody.forEach((note, i) => {
+      setTimeout(() => playTone(note, 'sine', 0.7, 0.22), i * 140);
+    });
+  }
+
+  // Built-in Romantic Procedural Background Arpeggio
+  function startProceduralBGM() {
+    initAudioContext();
+    if (bgmOscInterval) clearInterval(bgmOscInterval);
+
+    // Ethereal Pentatonic progression: C Major / A Minor romantic arpeggios
+    const romanticChords = [
+      [261.63, 329.63, 392.00, 523.25], // C Maj
+      [220.00, 261.63, 329.63, 440.00], // A Min
+      [174.61, 220.00, 261.63, 349.23], // F Maj
+      [196.00, 246.94, 293.66, 392.00]  // G Maj
+    ];
+
+    let chordIdx = 0;
+    let noteIdx = 0;
+
+    bgmOscInterval = setInterval(() => {
+      if (!state.audioPlaying) return;
+      const currentChord = romanticChords[chordIdx];
+      const freq = currentChord[noteIdx];
+      playTone(freq, 'sine', 1.8, 0.08);
+
+      noteIdx++;
+      if (noteIdx >= currentChord.length) {
+        noteIdx = 0;
+        chordIdx = (chordIdx + 1) % romanticChords.length;
+      }
+    }, 600);
+  }
+
+  function stopProceduralBGM() {
+    if (bgmOscInterval) {
+      clearInterval(bgmOscInterval);
+      bgmOscInterval = null;
+    }
+  }
+
+  function toggleMusic() {
+    initAudioContext();
+    state.audioPlaying = !state.audioPlaying;
+
+    if (state.audioPlaying) {
+      DOM.audioToggleBtn.classList.add('playing');
+      const statusText = DOM.audioToggleBtn.querySelector('.music-status-text');
+      if (statusText) statusText.textContent = 'Pause Music';
+
+      if (CFG.bgmUrl && CFG.bgmUrl.trim() !== '') {
+        DOM.audioPlayer.src = CFG.bgmUrl;
+        DOM.audioPlayer.play().catch(e => {
+          console.log('Audio autoplay prevented, using synth fallback', e);
+          startProceduralBGM();
+        });
+      } else {
+        startProceduralBGM();
+      }
+    } else {
+      DOM.audioToggleBtn.classList.remove('playing');
+      const statusText = DOM.audioToggleBtn.querySelector('.music-status-text');
+      if (statusText) statusText.textContent = 'Play Melody';
+
+      if (DOM.audioPlayer) DOM.audioPlayer.pause();
+      stopProceduralBGM();
+    }
+  }
+
+  // ==============================================================================
+  // 💖 LOVE CLICKS & PARTICLES TRACKER
+  // ==============================================================================
+  function registerLoveClick(x, y) {
+    state.loveClicks++;
+    DOM.totalClicksCount.textContent = state.loveClicks;
+
+    // Trigger subtle floating heart at click location
+    if (x && y) {
+      spawnFloatingHeart(x, y);
+    }
+  }
+
+  function spawnFloatingHeart(x, y, emoji = '💖') {
+    const bubble = document.createElement('div');
+    bubble.className = 'easter-egg-bubble';
+    bubble.textContent = emoji;
+    bubble.style.left = `${x}px`;
+    bubble.style.top = `${y}px`;
+    DOM.easterEggsLayer.appendChild(bubble);
+
+    setTimeout(() => {
+      bubble.remove();
+    }, 1800);
+  }
+
+  // Confetti helper
+  function triggerConfettiBurst(origin = { x: 0.5, y: 0.5 }) {
+    if (typeof confetti === 'function') {
+      confetti({
+        particleCount: 60,
+        spread: 80,
+        origin: origin,
+        colors: ['#ff6584', '#ffd166', '#e84393', '#ffffff', '#a855f7']
+      });
+    }
+  }
+
+  function triggerGrandConfettiShow() {
+    if (typeof confetti !== 'function') return;
+    const duration = 3.5 * 1000;
+    const animationEnd = Date.now() + duration;
+
+    const interval = setInterval(function () {
+      const timeLeft = animationEnd - Date.now();
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+      confetti({
+        particleCount: 30,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.7 }
+      });
+      confetti({
+        particleCount: 30,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.7 }
+      });
+    }, 250);
+  }
+
+  // ==============================================================================
+  // 🗺️ STAGE NAVIGATION
+  // ==============================================================================
+  function switchStage(stageNum) {
+    if (stageNum < 1 || stageNum > 6) return;
+    state.currentStage = stageNum;
+
+    // Update Stage Sections
+    document.querySelectorAll('.stage-section').forEach((section, idx) => {
+      const isActive = idx + 1 === stageNum;
+      section.classList.toggle('active', isActive);
+      if (isActive) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+
+    // Update Navigation Dots
+    DOM.stepDots.forEach((dot, idx) => {
+      const stepIdx = idx + 1;
+      dot.classList.toggle('active', stepIdx === stageNum);
+      dot.classList.toggle('completed', stepIdx < stageNum);
+    });
+
+    playChime();
+    registerLoveClick();
+  }
+
+  // ==============================================================================
+  // 💌 STAGE 1: ENVELOPE & WAX SEAL INTERACTION
+  // ==============================================================================
+  function initStage1() {
+    DOM.navGfName.textContent = CFG.recipientName || 'My Princess';
+    if (DOM.sealStampText) DOM.sealStampText.textContent = CFG.envelope.stampText || 'FOR HER';
+    if (DOM.envelopeTagline) DOM.envelopeTagline.textContent = `✨ ${CFG.envelope.tagline} ✨`;
+    if (DOM.letterTeaserTitle) DOM.letterTeaserTitle.textContent = `${CFG.envelope.teaserTitle} 💕`;
+    if (DOM.letterDateDisplay) DOM.letterDateDisplay.textContent = CFG.birthdayDate || 'Today is your day!';
+    if (DOM.letterTeaserBody) DOM.letterTeaserBody.textContent = CFG.envelope.teaserBody;
+    if (DOM.btnStartQuest) DOM.btnStartQuest.textContent = CFG.envelope.startButtonText || 'Begin Love Quest 🗝️';
+
+    // Break Wax Seal Click
+    DOM.waxSeal.addEventListener('click', function (e) {
+      if (state.envelopeOpened) return;
+      state.envelopeOpened = true;
+
+      const rect = DOM.waxSeal.getBoundingClientRect();
+      const x = (rect.left + rect.width / 2) / window.innerWidth;
+      const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+      triggerConfettiBurst({ x, y });
+      playChime();
+      registerLoveClick(e.clientX, e.clientY);
+
+      DOM.envelopeWrapper.classList.add('open');
+      DOM.envelopePromptText.innerHTML = '🎉 <strong>Seal Broken!</strong> Read your invitation above!';
+
+      // Auto start music on first envelope click
+      if (!state.audioPlaying) {
+        toggleMusic();
+      }
+    });
+
+    DOM.btnStartQuest.addEventListener('click', function (e) {
+      registerLoveClick(e.clientX, e.clientY);
+      switchStage(2);
+    });
+  }
+
+  // ==============================================================================
+  // ✨ STAGE 2: CONSTELLATION OF LOVE CRYSTALS (CLICK HUNT)
+  // ==============================================================================
+  function initStage2() {
+    DOM.crystalPlayground.innerHTML = '';
+    DOM.revealedReasonsGrid.innerHTML = '';
+
+    const reasons = CFG.loveReasons || [];
+    const totalReasons = reasons.length;
+    DOM.crystalsFoundCount.textContent = '0';
+    DOM.crystalsProgressFill.style.width = '0%';
+
+    reasons.forEach((reason, index) => {
+      // 1. Create Floating Interactive Orb in playground
+      const orb = document.createElement('div');
+      orb.className = 'crystal-orb';
+      orb.style.setProperty('--orb-color', reason.color || '#ff6b8b');
+      
+      // Random coordinates within playground box
+      const posX = 10 + (index * (75 / totalReasons)) + (Math.random() * 8);
+      const posY = 15 + ((index % 3) * 28) + (Math.random() * 10);
+      orb.style.left = `${posX}%`;
+      orb.style.top = `${posY}%`;
+      orb.style.animationDelay = `${index * 0.4}s`;
+
+      orb.innerHTML = `
+        <span class="orb-icon">${reason.icon || '💖'}</span>
+        <span class="orb-num">#${reason.id}</span>
+      `;
+
+      orb.addEventListener('click', (e) => {
+        if (orb.classList.contains('popped')) return;
+        
+        orb.classList.add('popped');
+        playBubblePop();
+        registerLoveClick(e.clientX, e.clientY);
+
+        // Particle burst at orb position
+        const rect = orb.getBoundingClientRect();
+        triggerConfettiBurst({
+          x: (rect.left + rect.width / 2) / window.innerWidth,
+          y: (rect.top + rect.height / 2) / window.innerHeight
+        });
+
+        // Show Reason Pop Modal
+        showReasonModal(reason);
+
+        // Add to revealed list
+        addRevealedReasonCard(reason);
+
+        // Update progress
+        state.crystalsFound++;
+        DOM.crystalsFoundCount.textContent = state.crystalsFound;
+        const pct = (state.crystalsFound / totalReasons) * 100;
+        DOM.crystalsProgressFill.style.width = `${pct}%`;
+
+        // Check completion
+        if (state.crystalsFound >= totalReasons) {
+          setTimeout(() => {
+            playFanfare();
+            triggerGrandConfettiShow();
+            DOM.stage2UnlockBanner.classList.remove('hidden');
+          }, 800);
+        }
+      });
+
+      DOM.crystalPlayground.appendChild(orb);
+    });
+
+    DOM.btnGotoStage3.addEventListener('click', (e) => {
+      registerLoveClick(e.clientX, e.clientY);
+      switchStage(3);
+    });
+  }
+
+  function showReasonModal(reason) {
+    DOM.reasonPopIcon.textContent = reason.icon || '💖';
+    DOM.reasonPopTitle.textContent = reason.title;
+    DOM.reasonPopText.textContent = reason.text;
+    DOM.reasonDialog.showModal();
+  }
+
+  DOM.reasonPopClose.addEventListener('click', () => {
+    DOM.reasonDialog.close();
+  });
+
+  function addRevealedReasonCard(reason) {
+    const card = document.createElement('div');
+    card.className = 'reason-card';
+    card.innerHTML = `
+      <div class="reason-card-icon">${reason.icon || '💖'}</div>
+      <div>
+        <h4 class="reason-card-title">${reason.title}</h4>
+        <p class="reason-card-text">${reason.text}</p>
+      </div>
+    `;
+    DOM.revealedReasonsGrid.appendChild(card);
+  }
+
+  // ==============================================================================
+  // 📸 STAGE 3: POLAROIDS & INTERACTIVE SCRATCH-OFF CARD
+  // ==============================================================================
+  function initStage3() {
+    DOM.polaroidGallery.innerHTML = '';
+    const gallery = CFG.gallery || [];
+
+    gallery.forEach((item) => {
+      const polaroid = document.createElement('div');
+      polaroid.className = 'polaroid-item';
+      polaroid.innerHTML = `
+        <div class="polaroid-inner">
+          <div class="polaroid-front">
+            <div class="polaroid-tape"></div>
+            <div class="polaroid-image-frame">
+              <img src="${item.image}" alt="${item.title}" loading="lazy">
+            </div>
+            <div class="polaroid-caption">
+              <h3 class="polaroid-title">${item.title}</h3>
+              <p class="polaroid-date">${item.date || 'Sweet Memory'}</p>
+            </div>
+          </div>
+          <div class="polaroid-back">
+            <span class="back-doodle">💌</span>
+            <p class="back-text">"${item.caption}"</p>
+            <p class="back-hint">(Tap to flip back)</p>
+          </div>
+        </div>
+      `;
+
+      // Flip on click
+      polaroid.addEventListener('click', (e) => {
+        // If image itself was clicked on front, open zoom lightbox
+        if (e.target.tagName === 'IMG' && !polaroid.classList.contains('flipped')) {
+          e.stopPropagation();
+          openLightbox(item.image, `${item.title} — ${item.caption}`);
+          registerLoveClick(e.clientX, e.clientY);
+          return;
+        }
+
+        polaroid.classList.toggle('flipped');
+        playChime();
+        registerLoveClick(e.clientX, e.clientY);
+      });
+
+      DOM.polaroidGallery.appendChild(polaroid);
+    });
+
+    // Scratch Card Setup
+    initScratchCard();
+
+    DOM.btnGotoStage4.addEventListener('click', (e) => {
+      registerLoveClick(e.clientX, e.clientY);
+      switchStage(4);
+    });
+  }
+
+  function openLightbox(src, caption) {
+    DOM.lightboxImg.src = src;
+    DOM.lightboxCaptionText.textContent = caption;
+    DOM.lightboxDialog.showModal();
+  }
+
+  DOM.lightboxClose.addEventListener('click', () => {
+    DOM.lightboxDialog.close();
+  });
+
+  // Interactive HTML5 Canvas Scratch Card
+  function initScratchCard() {
+    const cardData = CFG.scratchCard || {};
+    DOM.scratchSecretTitle.textContent = cardData.secretTitle || 'My Eternal Promise 💖';
+    DOM.scratchSecretBody.textContent = cardData.secretMessage || 'I love you with all my heart!';
+
+    const canvas = DOM.scratchCanvas;
+    const ctx = canvas.getContext('2d');
+    const box = DOM.scratchBox;
+
+    let canvasInitialized = false;
+
+    function resizeCanvas() {
+      if (state.scratchRevealed) return;
+      const rect = box.getBoundingClientRect();
+      
+      // If canvas is already initialized and dimension has not changed, do nothing
+      if (canvasInitialized && canvas.width === rect.width && canvas.height === rect.height) {
+        return;
+      }
+
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+
+      // Draw metallic rose-gold foil texture
+      const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      grad.addColorStop(0, '#f6d365');
+      grad.addColorStop(0.3, '#fda085');
+      grad.addColorStop(0.6, '#ffd166');
+      grad.addColorStop(1, '#ff758c');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Add shimmer text & stars on foil
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 16px Outfit, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('✨ Scratch Here to Reveal Secret ✨', canvas.width / 2, canvas.height / 2 - 8);
+      ctx.font = '13px Outfit, sans-serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      ctx.fillText('Use your finger or mouse!', canvas.width / 2, canvas.height / 2 + 18);
+
+      canvasInitialized = true;
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    let isScratching = false;
+
+    function scratchAt(x, y) {
+      if (state.scratchRevealed) return;
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 26, 0, Math.PI * 2);
+      ctx.fill();
+
+      checkScratchProgress();
+    }
+
+    function checkScratchProgress() {
+      if (state.scratchRevealed) return;
+      
+      // Sample pixels to compute scratched percentage
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const pixels = imgData.data;
+      let transparentPixels = 0;
+      const totalSampled = pixels.length / 16; // sample every 4th pixel for speed
+
+      for (let i = 3; i < pixels.length; i += 16) {
+        if (pixels[i] === 0) {
+          transparentPixels++;
+        }
+      }
+
+      const percent = Math.min(100, Math.round((transparentPixels / totalSampled) * 100));
+      DOM.scratchPercent.textContent = `${percent}%`;
+
+      if (percent > 45 && !state.scratchRevealed) {
+        state.scratchRevealed = true;
+        // Fade out remainder of canvas
+        canvas.style.transition = 'opacity 0.6s ease';
+        canvas.style.opacity = '0';
+        setTimeout(() => {
+          canvas.remove();
+        }, 600);
+
+        playFanfare();
+        triggerGrandConfettiShow();
+        DOM.stage3UnlockBanner.classList.remove('hidden');
+      }
+    }
+
+    // Pointer events for desktop & mobile touch
+    canvas.addEventListener('mousedown', (e) => {
+      isScratching = true;
+      const rect = canvas.getBoundingClientRect();
+      scratchAt(e.clientX - rect.left, e.clientY - rect.top);
+    });
+
+    window.addEventListener('mouseup', () => { isScratching = false; });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (!isScratching) return;
+      const rect = canvas.getBoundingClientRect();
+      scratchAt(e.clientX - rect.left, e.clientY - rect.top);
+    });
+
+    canvas.addEventListener('touchstart', (e) => {
+      isScratching = true;
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      scratchAt(touch.clientX - rect.left, touch.clientY - rect.top);
+      e.preventDefault();
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+      if (!isScratching) return;
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      scratchAt(touch.clientX - rect.left, touch.clientY - rect.top);
+      e.preventDefault();
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', () => { isScratching = false; });
+  }
+
+  // ==============================================================================
+  // 📜 STAGE 4: HEARTFELT LOVE LETTER SCROLL
+  // ==============================================================================
+  function initStage4() {
+    const letter = CFG.loveLetter || {};
+    DOM.letterSalutationText.textContent = letter.salutation || 'To My Dearest Love,';
+    DOM.letterClosingText.textContent = letter.closing || 'Forever & Always Yours,';
+    DOM.letterSignatureText.textContent = `${letter.signature || 'With All My Heart'} ❤️`;
+
+    DOM.letterParagraphsContainer.innerHTML = '';
+    (letter.paragraphs || []).forEach((para) => {
+      const p = document.createElement('p');
+      p.textContent = para;
+      DOM.letterParagraphsContainer.appendChild(p);
+    });
+
+    // Reaction tokens
+    DOM.tokenButtons.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const type = btn.dataset.reaction;
+        let emoji = '💖';
+        if (type === 'kiss') emoji = '💋';
+        if (type === 'hug') emoji = '🤗';
+        if (type === 'blush') emoji = '🥰';
+
+        playChime();
+        registerLoveClick(e.clientX, e.clientY);
+
+        for (let i = 0; i < 5; i++) {
+          setTimeout(() => {
+            spawnFloatingHeart(
+              e.clientX + (Math.random() * 80 - 40),
+              e.clientY + (Math.random() * 60 - 30),
+              emoji
+            );
+          }, i * 120);
+        }
+
+        btn.style.transform = 'scale(1.2)';
+        setTimeout(() => { btn.style.transform = ''; }, 300);
+      });
+    });
+
+    DOM.btnGotoStage5.addEventListener('click', (e) => {
+      registerLoveClick(e.clientX, e.clientY);
+      switchStage(5);
+    });
+  }
+
+  // ==============================================================================
+  // 🎂 STAGE 5: INTERACTIVE CAKE CUTTING CEREMONY
+  // ==============================================================================
+  function initStage5() {
+    state.candlesLit = DOM.candleItems.length;
+    DOM.candlesRemainingCount.textContent = state.candlesLit;
+
+    // Candle Tap Actions
+    DOM.candleItems.forEach((candle) => {
+      candle.addEventListener('click', (e) => {
+        if (candle.classList.contains('blown')) return;
+        blowOutCandle(candle, e);
+      });
+    });
+
+    // Blow all button
+    DOM.btnBlowAll.addEventListener('click', (e) => {
+      DOM.candleItems.forEach((c) => {
+        if (!c.classList.contains('blown')) {
+          blowOutCandle(c, e);
+        }
+      });
+    });
+
+    // Knife Slice Trigger
+    DOM.goldenKnife.addEventListener('click', triggerCakeSlice);
+    DOM.btnTriggerCut.addEventListener('click', triggerCakeSlice);
+
+    DOM.btnGotoStage6.addEventListener('click', (e) => {
+      registerLoveClick(e.clientX, e.clientY);
+      switchStage(6);
+    });
+  }
+
+  function blowOutCandle(candle, e) {
+    candle.classList.add('blown');
+    playCandleBlow();
+    registerLoveClick(e ? e.clientX : undefined, e ? e.clientY : undefined);
+
+    state.candlesLit = Math.max(0, state.candlesLit - 1);
+    DOM.candlesRemainingCount.textContent = state.candlesLit;
+
+    if (state.candlesLit === 0) {
+      DOM.candlesTracker.innerHTML = '🎉 <strong>All candles blown out! Make your wish and slice the cake! 🍰</strong>';
+      DOM.goldenKnife.classList.remove('disabled');
+      DOM.btnTriggerCut.classList.remove('disabled');
+      DOM.btnBlowAll.style.display = 'none';
+
+      playFanfare();
+      triggerConfettiBurst();
+    }
+  }
+
+  function triggerCakeSlice(e) {
+    if (state.candlesLit > 0) {
+      alert('Blow out the candles first to make a wish! 🕯️✨');
+      return;
+    }
+    if (state.cakeSliced) return;
+    state.cakeSliced = true;
+
+    playSliceSound();
+    registerLoveClick(e ? e.clientX : undefined, e ? e.clientY : undefined);
+
+    // Knife slicing animation
+    DOM.sliceLine.classList.add('active');
+    setTimeout(() => {
+      DOM.cakeSlicePiece.classList.add('sliced');
+      DOM.goldenKnife.style.display = 'none';
+      DOM.btnTriggerCut.style.display = 'none';
+
+      // Confetti & reveal
+      playFanfare();
+      triggerGrandConfettiShow();
+      DOM.cakeSuccessCard.classList.remove('hidden');
+    }, 600);
+  }
+
+  // ==============================================================================
+  // 🎥 STAGE 6: CINEMA MODE VIDEO & FINALE CELEBRATION
+  // ==============================================================================
+  function initStage6() {
+    const videoConfig = CFG.video || {};
+    DOM.videoEndQuote.textContent = videoConfig.endQuote || 'Happy Birthday to the girl who stole my heart! 💖';
+
+    // Check if custom video URL is provided
+    if (videoConfig.videoSrc && videoConfig.videoSrc.trim() !== '') {
+      const src = videoConfig.videoSrc.trim();
+
+      // YouTube embed check
+      if (src.includes('youtube.com') || src.includes('youtu.be')) {
+        let embedUrl = src;
+        if (!src.includes('embed/')) {
+          const videoId = src.includes('v=') ? src.split('v=')[1].split('&')[0] : src.split('/').pop();
+          embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+        }
+        DOM.videoEmbedBox.innerHTML = `
+          <iframe src="${embedUrl}" title="Birthday Wish Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        `;
+      } else {
+        // Local MP4 or direct video link
+        DOM.videoEmbedBox.innerHTML = `
+          <video src="${src}" controls autoplay playsinline></video>
+        `;
+      }
+    } else {
+      // Start built-in Memory Reel Slideshow
+      startReelSlideshow();
+    }
+
+    // Blast Confetti Again Button
+    DOM.btnBlastConfetti.addEventListener('click', (e) => {
+      playFanfare();
+      triggerGrandConfettiShow();
+      registerLoveClick(e.clientX, e.clientY);
+    });
+
+    // Share on WhatsApp
+    DOM.btnShareWhatsapp.addEventListener('click', () => {
+      const gfName = CFG.recipientName || 'My Love';
+      const text = encodeURIComponent(`Hey! I just went through the wonderful birthday surprise you made for me! I am so touched and I love you so much! 🥰💖🎂`);
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+    });
+
+    // Download Commemorative Keepsake Card
+    DOM.btnDownloadCard.addEventListener('click', generateKeepsakeCard);
+
+    // Restart Quest
+    DOM.btnRestartQuest.addEventListener('click', () => {
+      if (confirm('Replay this entire magical journey from the beginning?')) {
+        location.reload();
+      }
+    });
+  }
+
+  // Memory Reel Controls
+  function startReelSlideshow() {
+    const slides = document.querySelectorAll('.reel-slide');
+    if (!slides.length) return;
+
+    let slideIndex = 0;
+    let isPlaying = true;
+
+    function showSlide(idx) {
+      slides.forEach((s, i) => {
+        s.classList.toggle('active', i === idx);
+      });
+      slideIndex = idx;
+    }
+
+    function nextSlide() {
+      showSlide((slideIndex + 1) % slides.length);
+    }
+
+    function prevSlide() {
+      showSlide((slideIndex - 1 + slides.length) % slides.length);
+    }
+
+    state.reelInterval = setInterval(nextSlide, 4500);
+
+    const btnNext = document.getElementById('btn-reel-next');
+    const btnPrev = document.getElementById('btn-reel-prev');
+    const btnToggle = document.getElementById('btn-reel-toggle');
+
+    if (btnNext) btnNext.addEventListener('click', () => { nextSlide(); playChime(); });
+    if (btnPrev) btnPrev.addEventListener('click', () => { prevSlide(); playChime(); });
+    if (btnToggle) {
+      btnToggle.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        if (isPlaying) {
+          state.reelInterval = setInterval(nextSlide, 4500);
+          btnToggle.textContent = '⏸ Pause Slideshow';
+        } else {
+          clearInterval(state.reelInterval);
+          btnToggle.textContent = '▶ Play Slideshow';
+        }
+      });
+    }
+  }
+
+  // Generate Digital Keepsake Card as Canvas PNG
+  function generateKeepsakeCard() {
+    const cardCanvas = document.createElement('canvas');
+    cardCanvas.width = 1000;
+    cardCanvas.height = 700;
+    const ctx = cardCanvas.getContext('2d');
+
+    // Background gradient
+    const grad = ctx.createLinearGradient(0, 0, 1000, 700);
+    grad.addColorStop(0, '#2a082c');
+    grad.addColorStop(0.5, '#44143a');
+    grad.addColorStop(1, '#150618');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 1000, 700);
+
+    // Golden frame border
+    ctx.strokeStyle = '#ffd166';
+    ctx.lineWidth = 6;
+    ctx.strokeRect(30, 30, 940, 640);
+    ctx.strokeStyle = 'rgba(255, 105, 180, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(42, 42, 916, 616);
+
+    // Text Header
+    ctx.fillStyle = '#ff758c';
+    ctx.font = 'bold 22px Outfit, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('OFFICIAL CERTIFICATE OF INFINITE LOVE', 500, 100);
+
+    // Main Greeting
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 44px "Playfair Display", Georgia, serif';
+    ctx.fillText(`Happy Birthday, ${CFG.recipientName}! 👑`, 500, 180);
+
+    // Heartfelt quote
+    ctx.fillStyle = '#ffd166';
+    ctx.font = 'italic 26px "Great Vibes", cursive, Georgia';
+    ctx.fillText('"You are my today and all of my tomorrows."', 500, 240);
+
+    // Body text
+    ctx.fillStyle = '#fce4ec';
+    ctx.font = '20px Outfit, sans-serif';
+    ctx.fillText(`Presented with all my love on this very special day.`, 500, 310);
+    ctx.fillText(`May every laugh, every dream, and every wish of yours come true.`, 500, 345);
+    ctx.fillText(`Total Love Clicks Unlocked: ${state.loveClicks} ✨`, 500, 410);
+
+    // Signature
+    ctx.fillStyle = '#ffb8c6';
+    ctx.font = 'italic 28px "Great Vibes", cursive';
+    ctx.fillText(`${CFG.senderName || 'Your Forever Love'} ❤️`, 500, 500);
+
+    // Convert to image download
+    const link = document.createElement('a');
+    link.download = `Birthday_Keepsake_For_${(CFG.recipientName || 'Love').replace(/\s+/g, '_')}.png`;
+    link.href = cardCanvas.toDataURL('image/png');
+    link.click();
+  }
+
+  // ==============================================================================
+  // 🌟 AMBIENT CANVAS PARTICLES (Petals, Stars & Bokeh)
+  // ==============================================================================
+  function initAmbientCanvas() {
+    const canvas = DOM.ambientCanvas;
+    const ctx = canvas.getContext('2d');
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const count = Math.min(65, Math.floor(width / 22));
+
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 3 + 1,
+        speedY: Math.random() * 0.7 + 0.3,
+        speedX: Math.random() * 0.5 - 0.25,
+        rotation: Math.random() * 360,
+        rotSpeed: Math.random() * 1.5 - 0.75,
+        type: Math.random() > 0.4 ? 'petal' : 'bokeh',
+        color: Math.random() > 0.5 ? 'rgba(255, 182, 193, ' : 'rgba(255, 209, 102, ',
+        alpha: Math.random() * 0.6 + 0.2
+      });
+    }
+
+    function renderParticles() {
+      ctx.clearRect(0, 0, width, height);
+
+      particles.forEach((p) => {
+        p.y += p.speedY;
+        p.x += Math.sin(p.y * 0.01) * 0.5 + p.speedX;
+        p.rotation += p.rotSpeed;
+
+        if (p.y > height + 20) {
+          p.y = -20;
+          p.x = Math.random() * width;
+        }
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+
+        if (p.type === 'petal') {
+          // Draw subtle cherry blossom petal
+          ctx.beginPath();
+          ctx.ellipse(0, 0, p.radius * 2.2, p.radius, 0, 0, Math.PI * 2);
+          ctx.fillStyle = `${p.color}${p.alpha})`;
+          ctx.fill();
+        } else {
+          // Draw glowing round bokeh
+          ctx.beginPath();
+          ctx.arc(0, 0, p.radius * 1.8, 0, Math.PI * 2);
+          ctx.fillStyle = `${p.color}${p.alpha * 0.7})`;
+          ctx.fill();
+        }
+
+        ctx.restore();
+      });
+
+      requestAnimationFrame(renderParticles);
+    }
+
+    renderParticles();
+  }
+
+  // ==============================================================================
+  // ⚙️ BOYFRIEND IN-APP CUSTOMIZER PANEL
+  // ==============================================================================
+  function initCustomizer() {
+    DOM.btnOpenCustomizer.addEventListener('click', () => {
+      document.getElementById('edit-gf-name').value = CFG.recipientName || '';
+      document.getElementById('edit-sender-name').value = CFG.senderName || '';
+      document.getElementById('edit-birthday-date').value = CFG.birthdayDate || '';
+      document.getElementById('edit-video-url').value = (CFG.video && CFG.video.videoSrc) || '';
+      document.getElementById('edit-bgm-url').value = CFG.bgmUrl || '';
+      document.getElementById('edit-scratch-secret').value = (CFG.scratchCard && CFG.scratchCard.secretMessage) || '';
+      document.getElementById('edit-love-letter').value = (CFG.loveLetter && CFG.loveLetter.paragraphs) ? CFG.loveLetter.paragraphs.join('\n\n') : '';
+
+      DOM.customizerDialog.showModal();
+    });
+
+    DOM.customizerClose.addEventListener('click', () => {
+      DOM.customizerDialog.close();
+    });
+
+    DOM.btnSaveCustomizer.addEventListener('click', () => {
+      CFG.recipientName = document.getElementById('edit-gf-name').value || CFG.recipientName;
+      CFG.senderName = document.getElementById('edit-sender-name').value || CFG.senderName;
+      CFG.birthdayDate = document.getElementById('edit-birthday-date').value || CFG.birthdayDate;
+      if (!CFG.video) CFG.video = {};
+      CFG.video.videoSrc = document.getElementById('edit-video-url').value || '';
+      CFG.bgmUrl = document.getElementById('edit-bgm-url').value || '';
+      if (!CFG.scratchCard) CFG.scratchCard = {};
+      CFG.scratchCard.secretMessage = document.getElementById('edit-scratch-secret').value || CFG.scratchCard.secretMessage;
+
+      const paragraphsRaw = document.getElementById('edit-love-letter').value;
+      if (paragraphsRaw) {
+        if (!CFG.loveLetter) CFG.loveLetter = {};
+        CFG.loveLetter.paragraphs = paragraphsRaw.split('\n\n').filter(p => p.trim().length > 0);
+      }
+
+      localStorage.setItem('romantic_bday_custom_config', JSON.stringify(CFG));
+      alert('✨ Changes saved! Refreshing page to apply updates.');
+      location.reload();
+    });
+
+    DOM.btnResetDefaults.addEventListener('click', () => {
+      if (confirm('Reset all values to original defaults?')) {
+        localStorage.removeItem('romantic_bday_custom_config');
+        location.reload();
+      }
+    });
+  }
+
+  // ==============================================================================
+  // 🐾 MASCOT & EASTER EGGS
+  // ==============================================================================
+  function initMascotAndEasterEggs() {
+    DOM.floatingMascot.addEventListener('click', (e) => {
+      playChime();
+      registerLoveClick(e.clientX, e.clientY);
+
+      const cuteQuotes = [
+        'Sending you 100 kisses! 💋',
+        'You are the cutest human ever! 🧸',
+        'Smile, it looks gorgeous on you! ✨',
+        'You have stolen his entire heart! 💖',
+        '100% girlfriend perfection! 👑'
+      ];
+      const randomQuote = cuteQuotes[Math.floor(Math.random() * cuteQuotes.length)];
+      
+      const badge = DOM.floatingMascot.querySelector('.mascot-badge');
+      if (badge) {
+        badge.textContent = randomQuote;
+        setTimeout(() => { badge.textContent = 'Tap me! 🐾'; }, 3000);
+      }
+
+      for (let i = 0; i < 6; i++) {
+        setTimeout(() => {
+          spawnFloatingHeart(
+            e.clientX + (Math.random() * 80 - 40),
+            e.clientY + (Math.random() * 80 - 40),
+            ['💖', '🌸', '✨', '💋', '🧸'][i % 5]
+          );
+        }, i * 90);
+      }
+    });
+
+    // Step dots click navigation
+    DOM.stepDots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const step = parseInt(dot.dataset.step, 10);
+        switchStage(step);
+      });
+    });
+
+    // Audio toggle
+    DOM.audioToggleBtn.addEventListener('click', toggleMusic);
+  }
+
+  // ==============================================================================
+  // 🚀 BOOTSTRAP APP
+  // ==============================================================================
+  window.addEventListener('DOMContentLoaded', () => {
+    initStage1();
+    initStage2();
+    initStage3();
+    initStage4();
+    initStage5();
+    initStage6();
+    initAmbientCanvas();
+    initCustomizer();
+    initMascotAndEasterEggs();
+  });
+
+})();

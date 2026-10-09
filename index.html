@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>A Special Birthday Surprise For You 💖</title>
+  <meta name="description" content="A personalized interactive romantic birthday journey filled with love, sweet memories, and special surprises.">
+  
+  <!-- Modern Romantic Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Sacramento&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Canvas Confetti Library via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body class="theme-romantic">
+
+  <!-- Ambient Background Canvas (Petals, Stars, Glowing Bokeh) -->
+  <canvas id="ambient-canvas" aria-hidden="true"></canvas>
+
+  <!-- Floating Audio Ambiance Player -->
+  <aside class="floating-audio-control" aria-label="Music Controls">
+    <button id="audio-toggle-btn" class="audio-btn" title="Toggle Romantic Music" aria-label="Toggle Romantic Music">
+      <span class="music-icon">🎵</span>
+      <span class="music-waves" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+      </span>
+      <span class="music-status-text">Play Melody</span>
+    </button>
+  </aside>
+
+  <!-- Floating Cute Mascot Sticker (Transparent Overlay) -->
+  <aside class="floating-mascot-container" id="floating-mascot" title="Click me for a surprise kiss!" aria-label="Cute mascot">
+    <div class="mascot-badge">Tap me! 🐾</div>
+    <img src="assets/mascot.jpg" alt="Cute love mascot" class="mascot-img" id="mascot-img">
+    <div class="mascot-sparkles">✨</div>
+  </aside>
+
+  <!-- Hidden Easter Egg Floating Kisses (Interactive) -->
+  <div class="easter-eggs-layer" id="easter-eggs-layer"></div>
+
+  <!-- Top Progress Bar & Quest Tracker -->
+  <header class="quest-nav-container" id="quest-nav">
+    <div class="quest-glass-bar">
+      <div class="quest-title-pill">
+        <span class="heart-pulse">💖</span>
+        <span id="nav-gf-name" class="nav-name">For My Love</span>
+      </div>
+      <ol class="quest-steps-indicator" aria-label="Adventure Progress">
+        <li class="step-dot active" data-step="1" title="The Sealed Invitation">💌<span>1</span></li>
+        <li class="step-line"></li>
+        <li class="step-dot" data-step="2" title="The Love Gems">✨<span>2</span></li>
+        <li class="step-line"></li>
+        <li class="step-dot" data-step="3" title="Memory Lane">📸<span>3</span></li>
+        <li class="step-line"></li>
+        <li class="step-dot" data-step="4" title="The Love Letter">📜<span>4</span></li>
+        <li class="step-line"></li>
+        <li class="step-dot" data-step="5" title="Cake Cutting">🎂<span>5</span></li>
+        <li class="step-line"></li>
+        <li class="step-dot" data-step="6" title="Wish Video">🎥<span>6</span></li>
+      </ol>
+      <div class="love-counter-chip" id="love-clicks-chip">
+        <span class="chip-icon">✨</span>
+        <span id="total-clicks-count">0</span> Love Clicks
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Multi-Stage Interactive Journey Container -->
+  <main class="journey-wrapper">
+
+    <!-- ========================================================================= -->
+    <!-- STAGE 1: The Sealed Vintage Envelope (The Invitation)                     -->
+    <!-- ========================================================================= -->
+    <section class="stage-section active" id="stage-1" aria-labelledby="envelope-title">
+      <div class="stage-center-box">
+        <div class="floating-tagline" id="envelope-tagline">
+          ✨ A confidential birthday journey created with love, just for you. ✨
+        </div>
+
+        <!-- 3D Envelope Wrapper -->
+        <div class="envelope-scene" id="envelope-scene">
+          <!-- Transparent Floating Sticker Decor -->
+          <img src="assets/sticker_cupid_heart.svg" alt="Cupid Heart" class="floating-sticker sticker-envelope" aria-hidden="true">
+          
+          <div class="envelope-card-wrapper" id="envelope-wrapper">
+            
+            <div class="envelope-back"></div>
+            
+            <!-- Letter inside envelope -->
+            <article class="letter-paper" id="envelope-letter">
+              <div class="letter-inner">
+                <span class="letter-ribbon">👑 Special Delivery</span>
+                <h1 class="letter-title" id="letter-teaser-title">Hey Gorgeous! 💕</h1>
+                <p class="letter-date" id="letter-date-display">Today is YOUR day!</p>
+                <p class="letter-snippet" id="letter-teaser-body">
+                  Before you can reach your grand birthday surprise, you must embark on a sweet adventure through our memories.
+                  Find all the hidden keys, collect my love reasons, and prove you're ready for the grand finale!
+                </p>
+                <div class="letter-actions">
+                  <button type="button" class="btn-romantic-primary pulse-hover" id="btn-start-quest">
+                    <span>Begin Love Quest 🗝️</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Front Envelope Flap with 3D Wax Seal -->
+            <div class="envelope-front"></div>
+            <div class="envelope-flap" id="envelope-flap"></div>
+            
+            <!-- Interactive Wax Seal -->
+            <div class="wax-seal" id="wax-seal" role="button" tabindex="0" aria-label="Break Wax Seal">
+              <div class="seal-inner">
+                <span class="seal-heart">💖</span>
+                <span class="seal-text" id="seal-stamp-text">FOR HER</span>
+              </div>
+              <div class="seal-glow"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <p class="envelope-prompt" id="envelope-prompt-text">
+          👆 <span class="highlight-text">Tap the Golden Wax Seal</span> to open your surprise!
+        </p>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- STAGE 2: The Constellation of Love Crystals (Interactive Click Quest)     -->
+    <!-- ========================================================================= -->
+    <section class="stage-section" id="stage-2" aria-labelledby="stage2-heading">
+      <div class="stage-inner-container">
+        
+        <header class="stage-header">
+          <span class="stage-badge">QUEST I • CLICK HUNT</span>
+          <h2 id="stage2-heading" class="gradient-heading">The Constellation of Reasons</h2>
+          <p class="stage-subtext">
+            My love for you has a million reasons. Find and tap all <strong>6 floating crystals</strong> below to unlock the secret Memory Vault!
+          </p>
+          
+          <div class="crystal-progress-card">
+            <div class="progress-info-row">
+              <span class="progress-label">Crystals Collected:</span>
+              <span class="progress-numbers"><span id="crystals-found-count">0</span> / 6</span>
+            </div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" id="crystals-progress-fill" style="width: 0%"></div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Floating Orbs Playground Area -->
+        <div class="crystal-playground" id="crystal-playground">
+          <!-- Floating interactive crystal orbs dynamically injected via JS -->
+        </div>
+
+        <!-- Unlocked Reasons Grid (revealed as she clicks each) -->
+        <div class="revealed-reasons-grid" id="revealed-reasons-grid">
+          <!-- Cards populated dynamically -->
+        </div>
+
+        <!-- Stage 2 Completion Banner -->
+        <div class="stage-unlock-card hidden" id="stage2-unlock-banner">
+          <div class="unlock-icon">🎉</div>
+          <h3>Vault I Cleared!</h3>
+          <p>You unlocked all the reasons why my heart beats for you! The path to Memory Lane is now open.</p>
+          <button type="button" class="btn-romantic-primary" id="btn-goto-stage-3">
+            <span>Enter Memory Lane 📸 ✨</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- STAGE 3: Memory Lane & Interactive Scratch-Off Card                       -->
+    <!-- ========================================================================= -->
+    <section class="stage-section" id="stage-3" aria-labelledby="stage3-heading">
+      <div class="stage-inner-container">
+        
+        <header class="stage-header">
+          <span class="stage-badge">QUEST II • SWEET MEMORIES</span>
+          <h2 id="stage3-heading" class="gradient-heading">Our Favorite Moments</h2>
+          <p class="stage-subtext">
+            Tap any Polaroid to flip it over and read its handwritten secret, or click the photo to zoom!
+          </p>
+        </header>
+
+        <!-- 3D Flippable Polaroid Gallery -->
+        <div class="polaroid-gallery-grid" id="polaroid-gallery">
+          <!-- Cards injected via script.js -->
+        </div>
+
+        <!-- Interactive Scratch Card Feature -->
+        <div class="scratch-card-wrapper">
+          <div class="scratch-card-header">
+            <span class="sparkle-icon">✨</span>
+            <h3>The Secret Scratch-Off Promise</h3>
+            <p id="scratch-instruction-text">
+              Scratch off the golden foil below with your finger or mouse to reveal a hidden secret message!
+            </p>
+          </div>
+
+          <div class="scratch-card-box" id="scratch-box">
+            <!-- Hidden Secret Message Behind Foil -->
+            <div class="scratch-secret-content" id="scratch-secret">
+              <div class="secret-ribbon">💌 A Promise For Life</div>
+              <h4 id="scratch-secret-title">My Eternal Promise To You 💖</h4>
+              <p id="scratch-secret-body">
+                No matter how many years pass or where life takes us, I will always choose you, cherish you, and love you with every beat of my heart.
+              </p>
+              <div class="scratch-unlocked-badge">✨ PROMISE UNLOCKED ✨</div>
+            </div>
+
+            <!-- Canvas Foil Layer (She scratches this!) -->
+            <canvas id="scratch-canvas" class="scratch-canvas"></canvas>
+          </div>
+
+          <div class="scratch-status" id="scratch-status-text">
+            Scratch progress: <span id="scratch-percent">0%</span>
+          </div>
+
+          <div class="stage-unlock-card hidden" id="stage3-unlock-banner">
+            <div class="unlock-icon">📜</div>
+            <h3>Secret Discovered!</h3>
+            <p>You have unlocked the deepest chamber of my heart — my personal Love Letter to you.</p>
+            <button type="button" class="btn-romantic-primary" id="btn-goto-stage-4">
+              <span>Read The Love Letter 💌</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- STAGE 4: The Heartfelt Love Letter (Long Paragraphs & Devotion)           -->
+    <!-- ========================================================================= -->
+    <section class="stage-section" id="stage-4" aria-labelledby="stage4-heading">
+      <div class="stage-inner-container">
+        
+        <header class="stage-header">
+          <span class="stage-badge">QUEST III • FROM THE HEART</span>
+          <h2 id="stage4-heading" class="gradient-heading">A Letter For My Soulmate</h2>
+          <p class="stage-subtext">
+            Words can hardly capture how much you mean to me, but here is a piece of my soul written just for you.
+          </p>
+        </header>
+
+        <!-- Parchment Love Scroll -->
+        <article class="parchment-scroll">
+          <img src="assets/sticker_love_badge.svg" alt="Birthday Queen" class="floating-sticker sticker-parchment" aria-hidden="true">
+          <div class="scroll-ornament-top">❦ ❧</div>
+          
+          <div class="letter-salutation" id="letter-salutation-text">To My Dearest Love,</div>
+          
+          <div class="letter-body-paragraphs" id="letter-paragraphs-container">
+            <!-- Long emotional romantic paragraphs injected via config.js -->
+          </div>
+
+          <div class="letter-sign-off">
+            <p class="closing-text" id="letter-closing-text">Forever & Always Yours,</p>
+            <div class="signature-line" id="letter-signature-text">With All My Heart ❤️</div>
+          </div>
+
+          <!-- Interactive Love Tokens in Scroll -->
+          <div class="love-tokens-bar">
+            <span class="token-title">Send a sweet reaction back to me:</span>
+            <div class="token-buttons">
+              <button type="button" class="token-btn" data-reaction="kiss">💋 Send Kiss</button>
+              <button type="button" class="token-btn" data-reaction="hug">🤗 Send Warm Hug</button>
+              <button type="button" class="token-btn" data-reaction="blush">🥰 Blush</button>
+              <button type="button" class="token-btn" data-reaction="love">💖 I Love You Too</button>
+            </div>
+          </div>
+
+          <div class="scroll-ornament-bottom">❦ ❧</div>
+        </article>
+
+        <!-- Gateway to Cake Cutting -->
+        <div class="stage-unlock-card always-visible">
+          <div class="unlock-icon">🎂</div>
+          <h3>Ready For Your Birthday Cake?</h3>
+          <p>The time has come to make your birthday wish and cut the cake!</p>
+          <button type="button" class="btn-romantic-primary pulse-hover" id="btn-goto-stage-5">
+            <span>Enter The Cake Cutting Ceremony 🎂 🕯️</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- STAGE 5: The Grand Birthday Cake Cutting Ceremony 🎂🕯️                     -->
+    <!-- ========================================================================= -->
+    <section class="stage-section" id="stage-5" aria-labelledby="stage5-heading">
+      <div class="stage-inner-container">
+        
+        <header class="stage-header">
+          <span class="stage-badge">GRAND FINALE • STEP 1</span>
+          <h2 id="stage5-heading" class="gradient-heading" id="cake-main-title">Make a Birthday Wish! 🎂</h2>
+          <p class="stage-subtext" id="cake-main-subtitle">
+            Tap each flickering candle flame to blow them out, then grab the golden knife to slice the cake!
+          </p>
+        </header>
+
+        <!-- Interactive 3D Cake Cutting Stage -->
+        <div class="cake-ceremony-stage">
+          
+          <div class="candles-tracker" id="candles-tracker">
+            <span class="candle-stat">Candles Lit: <strong id="candles-remaining-count">3</strong></span>
+            <span class="candle-hint">(Tap each candle flame to extinguish it!)</span>
+          </div>
+
+          <!-- Cake Container with Candles & Slicing Action -->
+          <div class="cake-display-wrapper" id="cake-wrapper">
+            
+            <!-- Realistic Animated Candle Flames Overlay -->
+            <div class="candles-row" id="candles-row">
+              <div class="candle-item" data-candle="1">
+                <div class="candle-stick"></div>
+                <div class="candle-wick"></div>
+                <div class="candle-flame">
+                  <div class="flame-inner"></div>
+                  <div class="flame-glow"></div>
+                </div>
+                <div class="candle-smoke"></div>
+              </div>
+              
+              <div class="candle-item" data-candle="2">
+                <div class="candle-stick center-candle"></div>
+                <div class="candle-wick"></div>
+                <div class="candle-flame">
+                  <div class="flame-inner"></div>
+                  <div class="flame-glow"></div>
+                </div>
+                <div class="candle-smoke"></div>
+              </div>
+
+              <div class="candle-item" data-candle="3">
+                <div class="candle-stick"></div>
+                <div class="candle-wick"></div>
+                <div class="candle-flame">
+                  <div class="flame-inner"></div>
+                  <div class="flame-glow"></div>
+                </div>
+                <div class="candle-smoke"></div>
+              </div>
+            </div>
+
+            <!-- Cake Image with Interactive Slice Line -->
+            <div class="cake-image-box" id="cake-image-box">
+              <img src="assets/cake.jpg" alt="Magnificent Birthday Cake" class="cake-img" id="cake-img">
+              
+              <!-- Slice cut line indicator -->
+              <div class="knife-slice-line" id="slice-line"></div>
+              
+              <!-- Cut slice animation piece -->
+              <div class="cake-slice-piece" id="cake-slice-piece">
+                <img src="assets/cake.jpg" alt="Cake Slice" class="slice-cut-img">
+              </div>
+            </div>
+
+            <!-- Floating Golden Knife (Active once candles are blown) -->
+            <div class="golden-knife disabled" id="golden-knife" title="Click or Drag me across the cake to cut!">
+              <div class="knife-blade"></div>
+              <div class="knife-handle"></div>
+              <div class="knife-sparkle">✨</div>
+              <span class="knife-label">Slice Here! 🔪</span>
+            </div>
+
+          </div>
+
+          <!-- Cake Action Buttons -->
+          <div class="cake-controls-box">
+            <button type="button" class="btn-blow-candles" id="btn-blow-all">
+              <span>💨 Blow Out All Candles With a Wish!</span>
+            </button>
+            <button type="button" class="btn-cut-cake disabled" id="btn-trigger-cut">
+              <span>🔪 Slice The Cake!</span>
+            </button>
+          </div>
+
+          <!-- Celebration Reveal Card (appears after slicing) -->
+          <div class="stage-unlock-card hidden" id="cake-success-card">
+            <div class="unlock-icon">🎉</div>
+            <h3 id="cake-success-title">YAY! A SWEET WISH FOR A SWEETHEART! 🍰</h3>
+            <p id="cake-success-msg">
+              May every single dream you wished for today wrap you in warmth and come true!
+            </p>
+            <button type="button" class="btn-romantic-primary pulse-hover" id="btn-goto-stage-6">
+              <span>Watch Your Birthday Wish Video 🎥 💕</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- STAGE 6: The Grand Birthday Wish Video & Keepsake 🎥💌                     -->
+    <!-- ========================================================================= -->
+    <section class="stage-section" id="stage-6" aria-labelledby="stage6-heading">
+      <div class="stage-inner-container">
+        
+        <header class="stage-header">
+          <span class="stage-badge">THE ULTIMATE ELEMENT • CELEBRATION</span>
+          <h2 id="stage6-heading" class="gradient-heading" id="video-stage-title">Your Birthday Wish Screening 🎬</h2>
+          <p class="stage-subtext" id="video-stage-subtitle">
+            The grand finale you unlocked through every click, every memory, and all my love!
+          </p>
+        </header>
+
+        <!-- Cinema Mode Video Player Frame -->
+        <div class="cinema-video-frame">
+          <div class="neon-heart-border">
+            
+            <!-- Video Container: Dynamically renders local MP4, YouTube, or Animated Reel -->
+            <div class="video-embed-box" id="video-embed-box">
+              
+              <!-- Built-in Animated Memory Reel (Default showcase if no custom video URL is added) -->
+              <div class="animated-memory-reel" id="animated-memory-reel">
+                <div class="reel-slide-content">
+                  <div class="reel-slide active" data-reel-slide="0">
+                    <img src="assets/hero_couple.jpg" alt="Under the Stars" class="reel-slide-img">
+                    <div class="reel-caption-card">
+                      <h3>Happy Birthday, My Entire World 💖</h3>
+                      <p>"Every single second spent with you is my favorite memory."</p>
+                    </div>
+                  </div>
+                  <div class="reel-slide" data-reel-slide="1">
+                    <img src="assets/girlfriend_portrait.jpg" alt="The Queen" class="reel-slide-img">
+                    <div class="reel-caption-card">
+                      <h3>You Are Art in Human Form 🌸</h3>
+                      <p>"Never stop smiling — it makes the whole universe brighter."</p>
+                    </div>
+                  </div>
+                  <div class="reel-slide" data-reel-slide="2">
+                    <img src="assets/memory_date.jpg" alt="Date Memory" class="reel-slide-img">
+                    <div class="reel-caption-card">
+                      <h3>Forever My Partner in Crime ☕</h3>
+                      <p>"To more laughter, more late night chats, and infinite adventures."</p>
+                    </div>
+                  </div>
+                  <div class="reel-slide" data-reel-slide="3">
+                    <img src="assets/memory_sunset.jpg" alt="Beach Sunset" class="reel-slide-img">
+                    <div class="reel-caption-card">
+                      <h3>I Will Love You Today & Always 🌅</h3>
+                      <p>"Here is to growing older, happier, and even more in love."</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Memory Reel Controls -->
+                <div class="reel-controls-bar">
+                  <button type="button" class="reel-nav-btn" id="btn-reel-prev" aria-label="Previous Slide">‹</button>
+                  <button type="button" class="reel-play-toggle" id="btn-reel-toggle">⏸ Pause Slideshow</button>
+                  <button type="button" class="reel-nav-btn" id="btn-reel-next" aria-label="Next Slide">›</button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Glowing marquee quote below video -->
+            <div class="video-marquee-quote">
+              <p id="video-end-quote">"Happy Birthday to the girl who stole my heart! 💖"</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Celebration Action Buttons -->
+        <div class="grand-finale-actions">
+          
+          <button type="button" class="btn-fireworks" id="btn-blast-confetti">
+            <span>🎆 Blast Confetti & Fireworks Again!</span>
+          </button>
+          
+          <button type="button" class="btn-romantic-secondary" id="btn-share-whatsapp">
+            <span>💌 Send Him A "Thank You" Kiss On WhatsApp!</span>
+          </button>
+
+          <button type="button" class="btn-romantic-secondary" id="btn-download-card">
+            <span>🏷️ Save Digital Birthday Keepsake Card</span>
+          </button>
+
+          <button type="button" class="btn-reset-journey" id="btn-restart-quest">
+            <span>🔄 Replay The Whole Journey</span>
+          </button>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: Lightbox Photo Viewer                                              -->
+  <!-- ========================================================================= -->
+  <dialog id="lightbox-dialog" class="custom-dialog">
+    <div class="lightbox-content">
+      <button type="button" class="dialog-close-btn" id="lightbox-close" aria-label="Close dialog">✕</button>
+      <img src="" alt="Zoomed Memory" id="lightbox-img" class="lightbox-image">
+      <div class="lightbox-caption" id="lightbox-caption-text"></div>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: Secret Love Reason Modal                                           -->
+  <!-- ========================================================================= -->
+  <dialog id="reason-dialog" class="custom-dialog reason-pop-dialog">
+    <div class="reason-pop-box">
+      <div class="reason-pop-icon" id="reason-pop-icon">💖</div>
+      <h3 id="reason-pop-title" class="reason-pop-heading">Reason</h3>
+      <p id="reason-pop-text" class="reason-pop-body">Love message</p>
+      <button type="button" class="btn-romantic-primary" id="reason-pop-close">
+        <span>Keep Collecting! ✨</span>
+      </button>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================= -->
+  <!-- SECRET IN-APP CUSTOMIZER (FOR THE BOYFRIEND)                              -->
+  <!-- Easily tweak her name, photos, paragraphs, and video without touching code! -->
+  <!-- ========================================================================= -->
+  <aside class="secret-admin-trigger" title="Customize this page for your girlfriend!">
+    <button type="button" id="btn-open-customizer" class="admin-gear-btn" aria-label="Open Customizer Settings">
+      ⚙️ <span class="admin-tooltip">Personalize For Her</span>
+    </button>
+  </aside>
+
+  <dialog id="customizer-dialog" class="custom-dialog customizer-dialog">
+    <div class="customizer-panel">
+      <header class="customizer-header">
+        <div>
+          <h3>✨ Personalize Your Birthday Surprise</h3>
+          <p>Easily edit names, messages, and photos right here!</p>
+        </div>
+        <button type="button" class="dialog-close-btn" id="customizer-close" aria-label="Close customizer">✕</button>
+      </header>
+      
+      <div class="customizer-body">
+        
+        <div class="form-group">
+          <label for="edit-gf-name">Girlfriend's Name or Nickname:</label>
+          <input type="text" id="edit-gf-name" class="custom-input" placeholder="e.g. Sarah / My Princess">
+        </div>
+
+        <div class="form-group">
+          <label for="edit-sender-name">Your Name or Sign-off:</label>
+          <input type="text" id="edit-sender-name" class="custom-input" placeholder="e.g. Alex / Your Forever Love">
+        </div>
+
+        <div class="form-group">
+          <label for="edit-birthday-date">Birthday Date / Occasion:</label>
+          <input type="text" id="edit-birthday-date" class="custom-input" placeholder="e.g. October 24th">
+        </div>
+
+        <div class="form-group">
+          <label for="edit-video-url">Video Link (YouTube Embed / ID / or MP4 URL):</label>
+          <input type="text" id="edit-video-url" class="custom-input" placeholder="e.g. https://www.youtube.com/embed/dQw4w9WgXcQ or assets/my_video.mp4">
+          <small class="helper-text">Leave blank to use our built-in cute romantic memory slideshow!</small>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-bgm-url">Custom Romantic MP3 Song URL (Optional):</label>
+          <input type="text" id="edit-bgm-url" class="custom-input" placeholder="e.g. assets/our_song.mp3 or https://.../song.mp3">
+          <small class="helper-text">Leave blank to use the dreamy built-in romantic piano/harp synth!</small>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-scratch-secret">Secret Scratch Card Message:</label>
+          <textarea id="edit-scratch-secret" class="custom-textarea" rows="2" placeholder="The hidden message revealed when she scratches the golden foil"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-love-letter">Love Letter Paragraphs (One per line):</label>
+          <textarea id="edit-love-letter" class="custom-textarea" rows="4" placeholder="Your romantic paragraphs..."></textarea>
+        </div>
+
+        <div class="customizer-hosting-box">
+          <h4>🚀 Ready to Host on Vercel / Netlify for FREE?</h4>
+          <p>
+            1. All changes you save here are instantly applied in your browser.<br>
+            2. To make them permanent for hosting, simply open <code>config.js</code> in this folder and update the values!<br>
+            3. Check <code>HOSTING_GUIDE.md</code> for the easy 2-minute step-by-step Vercel hosting instructions.
+          </p>
+        </div>
+
+      </div>
+
+      <footer class="customizer-footer">
+        <button type="button" class="btn-romantic-secondary" id="btn-reset-defaults">Reset to Defaults</button>
+        <button type="button" class="btn-romantic-primary" id="btn-save-customizer">Save & Apply Changes ✨</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- Audio Element for Custom MP3 (if user specifies one) -->
+  <audio id="custom-audio-player" loop preload="auto"></audio>
+
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

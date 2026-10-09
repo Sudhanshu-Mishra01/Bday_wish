@@ -1,0 +1,11 @@
+{
+  "name": "romantic-birthday-surprise",
+  "version": "1.0.0",
+  "description": "An interactive, multi-stage romantic birthday surprise journey web app.",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": ["birthday", "romantic", "surprise", "interactive"],
+  "author": "",
+  "license": "MIT"
+}
