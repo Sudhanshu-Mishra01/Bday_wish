@@ -64,6 +64,7 @@
     scratchSecretTitle: document.getElementById('scratch-secret-title'),
     scratchSecretBody: document.getElementById('scratch-secret-body'),
     scratchPercent: document.getElementById('scratch-percent'),
+    btnScratchInstant: document.getElementById('btn-scratch-instant'),
     stage3UnlockBanner: document.getElementById('stage3-unlock-banner'),
     btnGotoStage4: document.getElementById('btn-goto-stage-4'),
 
@@ -330,6 +331,8 @@
   // ==============================================================================
   // 🗺️ STAGE NAVIGATION
   // ==============================================================================
+  let renderScratchFoil = null;
+
   function switchStage(stageNum) {
     if (stageNum < 1 || stageNum > 6) return;
     state.currentStage = stageNum;
@@ -349,6 +352,20 @@
       dot.classList.toggle('active', stepIdx === stageNum);
       dot.classList.toggle('completed', stepIdx < stageNum);
     });
+
+    // When entering Stage 3, ensure scratch foil is freshly and accurately drawn
+    if (stageNum === 3) {
+      setTimeout(() => {
+        if (typeof renderScratchFoil === 'function') {
+          renderScratchFoil();
+        }
+      }, 50);
+      setTimeout(() => {
+        if (typeof renderScratchFoil === 'function') {
+          renderScratchFoil();
+        }
+      }, 250);
+    }
 
     playChime();
     registerLoveClick();
@@ -567,54 +584,122 @@
     DOM.scratchSecretBody.textContent = cardData.secretMessage || 'I love you with all my heart!';
 
     const canvas = DOM.scratchCanvas;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const box = DOM.scratchBox;
 
-    let canvasInitialized = false;
+    let foilDrawn = false;
 
-    function resizeCanvas() {
+    renderScratchFoil = function () {
       if (state.scratchRevealed) return;
+
       const rect = box.getBoundingClientRect();
-      
-      // If canvas is already initialized and dimension has not changed, do nothing
-      if (canvasInitialized && canvas.width === rect.width && canvas.height === rect.height) {
+      const w = Math.round(rect.width || box.clientWidth || 440);
+      const h = Math.round(rect.height || box.clientHeight || 220);
+
+      // If dimensions are still 0 (hidden), retry shortly
+      if (w <= 0 || h <= 0) {
+        setTimeout(renderScratchFoil, 60);
         return;
       }
 
-      canvas.width = rect.width;
-      canvas.height = rect.height;
+      // If dimensions are identical and foil is already drawn, do not redraw
+      if (canvas.width === w && canvas.height === h && foilDrawn) {
+        return;
+      }
 
-      // Draw metallic rose-gold foil texture
-      const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      canvas.width = w;
+      canvas.height = h;
+      canvas.style.opacity = '1';
+      canvas.style.display = 'block';
+
+      ctx.globalCompositeOperation = 'source-over';
+
+      // Draw rich metallic rose-gold foil gradient
+      const grad = ctx.createLinearGradient(0, 0, w, h);
       grad.addColorStop(0, '#f6d365');
-      grad.addColorStop(0.3, '#fda085');
-      grad.addColorStop(0.6, '#ffd166');
-      grad.addColorStop(1, '#ff758c');
+      grad.addColorStop(0.25, '#fda085');
+      grad.addColorStop(0.55, '#ffd166');
+      grad.addColorStop(0.85, '#ff758c');
+      grad.addColorStop(1, '#e84393');
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, w, h);
 
-      // Add shimmer text & stars on foil
+      // Gold shimmer sparkle dots
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      for (let i = 0; i < 40; i++) {
+        const sx = (i * 47) % w;
+        const sy = (i * 31) % h;
+        ctx.beginPath();
+        ctx.arc(sx, sy, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Crisp instructional text
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 16px Outfit, sans-serif';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.55)';
+      ctx.shadowBlur = 6;
+      ctx.font = 'bold 18px Outfit, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('✨ Scratch Here to Reveal Secret ✨', canvas.width / 2, canvas.height / 2 - 8);
-      ctx.font = '13px Outfit, sans-serif';
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-      ctx.fillText('Use your finger or mouse!', canvas.width / 2, canvas.height / 2 + 18);
+      ctx.textBaseline = 'middle';
+      ctx.fillText('✨ Scratch Here to Reveal Secret! ✨', w / 2, h / 2 - 14);
 
-      canvasInitialized = true;
+      ctx.font = '600 13px Outfit, sans-serif';
+      ctx.fillStyle = '#fffdf0';
+      ctx.fillText('Swipe with your finger or mouse', w / 2, h / 2 + 16);
+      ctx.shadowBlur = 0;
+
+      foilDrawn = true;
+    };
+
+    window.addEventListener('resize', () => {
+      foilDrawn = false;
+      renderScratchFoil();
+    });
+
+    function revealScratchSecret(playEffects = true) {
+      if (state.scratchRevealed) return;
+      state.scratchRevealed = true;
+
+      DOM.scratchPercent.textContent = '100%';
+      canvas.style.transition = 'opacity 0.6s ease';
+      canvas.style.opacity = '0';
+      setTimeout(() => {
+        canvas.style.display = 'none';
+      }, 600);
+
+      if (DOM.btnScratchInstant) {
+        DOM.btnScratchInstant.style.display = 'none';
+      }
+
+      if (playEffects) {
+        playFanfare();
+        triggerGrandConfettiShow();
+      }
+      DOM.stage3UnlockBanner.classList.remove('hidden');
     }
 
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    if (DOM.btnScratchInstant) {
+      DOM.btnScratchInstant.addEventListener('click', () => {
+        revealScratchSecret(true);
+      });
+    }
 
     let isScratching = false;
 
-    function scratchAt(x, y) {
+    function scratchAt(clientX, clientY) {
       if (state.scratchRevealed) return;
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = (clientX - rect.left) * scaleX;
+      const y = (clientY - rect.top) * scaleY;
+
       ctx.globalCompositeOperation = 'destination-out';
       ctx.beginPath();
-      ctx.arc(x, y, 26, 0, Math.PI * 2);
+      ctx.arc(x, y, 32, 0, Math.PI * 2);
       ctx.fill();
 
       checkScratchProgress();
@@ -622,12 +707,11 @@
 
     function checkScratchProgress() {
       if (state.scratchRevealed) return;
-      
-      // Sample pixels to compute scratched percentage
+
       const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const pixels = imgData.data;
       let transparentPixels = 0;
-      const totalSampled = pixels.length / 16; // sample every 4th pixel for speed
+      const totalSampled = pixels.length / 16;
 
       for (let i = 3; i < pixels.length; i += 16) {
         if (pixels[i] === 0) {
@@ -638,49 +722,37 @@
       const percent = Math.min(100, Math.round((transparentPixels / totalSampled) * 100));
       DOM.scratchPercent.textContent = `${percent}%`;
 
-      if (percent > 45 && !state.scratchRevealed) {
-        state.scratchRevealed = true;
-        // Fade out remainder of canvas
-        canvas.style.transition = 'opacity 0.6s ease';
-        canvas.style.opacity = '0';
-        setTimeout(() => {
-          canvas.remove();
-        }, 600);
-
-        playFanfare();
-        triggerGrandConfettiShow();
-        DOM.stage3UnlockBanner.classList.remove('hidden');
+      if (percent > 40) {
+        revealScratchSecret(true);
       }
     }
 
     // Pointer events for desktop & mobile touch
     canvas.addEventListener('mousedown', (e) => {
       isScratching = true;
-      const rect = canvas.getBoundingClientRect();
-      scratchAt(e.clientX - rect.left, e.clientY - rect.top);
+      scratchAt(e.clientX, e.clientY);
     });
 
     window.addEventListener('mouseup', () => { isScratching = false; });
 
     canvas.addEventListener('mousemove', (e) => {
       if (!isScratching) return;
-      const rect = canvas.getBoundingClientRect();
-      scratchAt(e.clientX - rect.left, e.clientY - rect.top);
+      scratchAt(e.clientX, e.clientY);
     });
 
     canvas.addEventListener('touchstart', (e) => {
       isScratching = true;
-      const touch = e.touches[0];
-      const rect = canvas.getBoundingClientRect();
-      scratchAt(touch.clientX - rect.left, touch.clientY - rect.top);
+      if (e.touches && e.touches[0]) {
+        scratchAt(e.touches[0].clientX, e.touches[0].clientY);
+      }
       e.preventDefault();
     }, { passive: false });
 
     canvas.addEventListener('touchmove', (e) => {
       if (!isScratching) return;
-      const touch = e.touches[0];
-      const rect = canvas.getBoundingClientRect();
-      scratchAt(touch.clientX - rect.left, touch.clientY - rect.top);
+      if (e.touches && e.touches[0]) {
+        scratchAt(e.touches[0].clientX, e.touches[0].clientY);
+      }
       e.preventDefault();
     }, { passive: false });
 
