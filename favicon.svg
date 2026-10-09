@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="heartGrad" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#ff758c"/>
+      <stop offset="100%" stop-color="#e84393"/>
+    </radialGradient>
+  </defs>
+  <path d="M 50 30 C 40 15, 15 20, 25 45 C 32 60, 50 78, 50 78 C 50 78, 68 60, 75 45 C 85 20, 60 15, 50 30 Z" fill="url(#heartGrad)"/>
+  <circle cx="38" cy="34" r="3.5" fill="#ffffff" opacity="0.8"/>
+</svg>
