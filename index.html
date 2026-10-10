@@ -72,12 +72,20 @@
         <span class="meter-text" id="love-meter-text">20% Love</span>
       </div>
 
+      <button type="button" class="wallet-nav-chip" id="btn-open-wallet" title="View your unlocked love coupons!">
+        <span class="chip-icon">🎟️</span>
+        <span>Wallet (<strong id="wallet-coupons-count">0</strong>)</span>
+      </button>
+
       <div class="love-counter-chip" id="love-clicks-chip">
         <span class="chip-icon">✨</span>
         <span id="total-clicks-count">0</span> Love Clicks
       </div>
     </div>
   </header>
+
+  <!-- Reward Toast Notifications Container -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
   <!-- Floating Kiss Cannon & Bombardment Widget -->
   <aside class="floating-kiss-bombardment" id="kiss-cannon-widget" title="Click for an Infinite Kiss Storm! 💋">
@@ -117,8 +125,23 @@
                 <p class="letter-date" id="letter-date-display">Today is YOUR day!</p>
                 <p class="letter-snippet" id="letter-teaser-body">
                   Before you can reach your grand birthday surprise, you must embark on a sweet adventure through our memories.
-                  Find all the hidden keys, collect my love reasons, and prove you're ready for the grand finale!
+                  Prove you're ready by completing your first cute task below!
                 </p>
+
+                <!-- CUTE TASK 1: Affirmation Verification -->
+                <div class="cute-affirmation-box" id="cute-affirmation-box">
+                  <div class="affirmation-badge">Task 1 • Sweet Security Check 🐾</div>
+                  <p class="affirmation-question">Who is the prettiest, sweetest & most loved girl in the entire universe?</p>
+                  <div class="affirmation-buttons">
+                    <button type="button" class="btn-affirmation" data-ans="1">A) Me! 👸</button>
+                    <button type="button" class="btn-affirmation" data-ans="2">B) Also Me! 💅</button>
+                    <button type="button" class="btn-affirmation" data-ans="3">C) Definitely Me! 👑</button>
+                  </div>
+                  <div class="affirmation-feedback hidden" id="affirmation-feedback">
+                    🎉 <strong>100% CORRECT!</strong> Key Unlocked! Proceed below:
+                  </div>
+                </div>
+
                 <div class="letter-actions">
                   <button type="button" class="btn-romantic-primary pulse-hover" id="btn-start-quest">
                     <span>Begin Love Quest 🗝️</span>
@@ -183,11 +206,28 @@
           <!-- Cards populated dynamically -->
         </div>
 
-        <!-- Stage 2 Completion Banner -->
+        <!-- Stage 2 Completion Banner with Soulmate Quiz Task -->
         <div class="stage-unlock-card hidden" id="stage2-unlock-banner">
           <div class="unlock-icon">🎉</div>
           <h3>Vault I Cleared!</h3>
-          <p>You unlocked all the reasons why my heart beats for you! The path to Memory Lane is now open.</p>
+          <p>You collected all 6 reasons of love and unlocked <strong>6 Love Coupons</strong> in your wallet!</p>
+          
+          <!-- Task 2: Soulmate Compatibility Quiz -->
+          <div class="soulmate-quiz-container" id="soulmate-quiz-container">
+            <div class="quiz-badge">Task 2 • Soulmate Compatibility Quiz 🧩</div>
+            <h4 class="quiz-title">Answer 3 fun questions to unlock Memory Lane!</h4>
+            
+            <div class="quiz-questions-flow" id="quiz-questions-flow">
+              <!-- Dynamically populated from config.soulmateQuiz -->
+            </div>
+            
+            <div class="quiz-score-card hidden" id="quiz-score-card">
+              <div class="score-stars">⭐⭐⭐⭐⭐</div>
+              <h4>COMPATIBILITY: 10,000,000% ♾️ MATCH!</h4>
+              <p>You two were definitely made for each other. Memory Lane is now open!</p>
+            </div>
+          </div>
+
           <button type="button" class="btn-romantic-primary" id="btn-goto-stage-3">
             <span>Enter Memory Lane 📸 ✨</span>
           </button>
@@ -547,6 +587,30 @@
       <button type="button" class="btn-romantic-primary" id="reason-pop-close">
         <span>Keep Collecting! ✨</span>
       </button>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: Love Coupon Wallet                                                 -->
+  <!-- ========================================================================= -->
+  <dialog id="coupon-wallet-dialog" class="custom-dialog wallet-dialog">
+    <div class="wallet-panel">
+      <header class="wallet-header">
+        <div>
+          <span class="wallet-badge">👑 HER ROYAL PRIVILEGE</span>
+          <h3>🎟️ Your Love Coupon Wallet</h3>
+          <p>Cute vouchers you've won on this quest! Redeemable with your boyfriend anytime.</p>
+        </div>
+        <button type="button" class="dialog-close-btn" id="wallet-close" aria-label="Close wallet">✕</button>
+      </header>
+      
+      <div class="coupons-grid" id="coupons-grid">
+        <!-- Rendered dynamically from config.loveCoupons -->
+      </div>
+
+      <footer class="wallet-footer">
+        <p class="wallet-note">💡 Tap any coupon to redeem a sweet kiss with your boyfriend! 🥰</p>
+      </footer>
     </div>
   </dialog>
 

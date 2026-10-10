@@ -23,7 +23,12 @@
     cakeSliced: false,
     audioPlaying: false,
     activeReelSlide: 0,
-    reelInterval: null
+    reelInterval: null,
+    unlockedCoupons: new Set(),
+    redeemedCoupons: new Set(),
+    quizAnswers: {},
+    task1Completed: false,
+    loveMeterMaxed: false
   };
 
   // DOM Elements
@@ -37,6 +42,14 @@
     ambientCanvas: document.getElementById('ambient-canvas'),
     easterEggsLayer: document.getElementById('easter-eggs-layer'),
 
+    // Coupons, Tasks & Toast
+    btnOpenWallet: document.getElementById('btn-open-wallet'),
+    walletCouponsCount: document.getElementById('wallet-coupons-count'),
+    couponWalletDialog: document.getElementById('coupon-wallet-dialog'),
+    walletClose: document.getElementById('wallet-close'),
+    couponsGrid: document.getElementById('coupons-grid'),
+    toastContainer: document.getElementById('toast-container'),
+
     // Stage 1
     envelopeWrapper: document.getElementById('envelope-wrapper'),
     envelopeFlap: document.getElementById('envelope-flap'),
@@ -48,6 +61,8 @@
     letterDateDisplay: document.getElementById('letter-date-display'),
     btnStartQuest: document.getElementById('btn-start-quest'),
     envelopePromptText: document.getElementById('envelope-prompt-text'),
+    affirmationButtons: document.querySelectorAll('.btn-affirmation'),
+    affirmationFeedback: document.getElementById('affirmation-feedback'),
 
     // Stage 2
     crystalsFoundCount: document.getElementById('crystals-found-count'),
@@ -55,6 +70,9 @@
     crystalPlayground: document.getElementById('crystal-playground'),
     revealedReasonsGrid: document.getElementById('revealed-reasons-grid'),
     stage2UnlockBanner: document.getElementById('stage2-unlock-banner'),
+    soulmateQuizContainer: document.getElementById('soulmate-quiz-container'),
+    quizQuestionsFlow: document.getElementById('quiz-questions-flow'),
+    quizScoreCard: document.getElementById('quiz-score-card'),
     btnGotoStage3: document.getElementById('btn-goto-stage-3'),
 
     // Stage 3
@@ -478,6 +496,118 @@
   }
 
   // ==============================================================================
+  // 🎟️ LOVE COUPONS & FLOATING REWARD TOAST SYSTEM
+  // ==============================================================================
+  function showLoveToast(icon, title, desc, duration = 4000) {
+    if (!DOM.toastContainer) return;
+    const toast = document.createElement('div');
+    toast.className = 'love-toast';
+    toast.innerHTML = `
+      <span class="toast-icon">${icon}</span>
+      <div class="toast-text">
+        <div><strong>${title}</strong></div>
+        <div style="font-size: 0.78rem; opacity: 0.88; margin-top: 2px;">${desc}</div>
+      </div>
+    `;
+    DOM.toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.add('hiding');
+      setTimeout(() => toast.remove(), 400);
+    }, duration);
+  }
+
+  function unlockCouponByIndex(index, silent = false) {
+    const coupons = CFG.loveCoupons || [];
+    if (index < 0 || index >= coupons.length) return;
+    const coupon = coupons[index];
+    if (state.unlockedCoupons.has(coupon.id)) return;
+
+    state.unlockedCoupons.add(coupon.id);
+    if (DOM.walletCouponsCount) {
+      DOM.walletCouponsCount.textContent = state.unlockedCoupons.size;
+    }
+
+    // Pulse wallet chip in navbar
+    if (DOM.btnOpenWallet) {
+      DOM.btnOpenWallet.classList.add('pulse-hover');
+      setTimeout(() => {
+        if (DOM.btnOpenWallet) DOM.btnOpenWallet.classList.remove('pulse-hover');
+      }, 2500);
+    }
+
+    if (!silent) {
+      showLoveToast(coupon.icon, `🎟️ COUPON WON: ${coupon.title}`, `Added to your Love Wallet! Tap Wallet to view.`);
+      triggerConfettiBurst();
+      playFanfare();
+    }
+  }
+
+  function renderCouponWallet() {
+    if (!DOM.couponsGrid) return;
+    DOM.couponsGrid.innerHTML = '';
+
+    const coupons = CFG.loveCoupons || [];
+    coupons.forEach((coupon) => {
+      const isUnlocked = state.unlockedCoupons.has(coupon.id);
+      const isRedeemed = state.redeemedCoupons.has(coupon.id);
+
+      const card = document.createElement('div');
+      card.className = `coupon-card ${isUnlocked ? '' : 'locked'}`;
+
+      card.innerHTML = `
+        <div class="coupon-top-row">
+          <span class="coupon-icon">${coupon.icon}</span>
+          <span class="coupon-tag">${isUnlocked ? coupon.tag : '🔒 LOCKED'}</span>
+        </div>
+        <h4 class="coupon-title">${coupon.title}</h4>
+        <p class="coupon-desc">${isUnlocked ? coupon.desc : 'Complete quest tasks on screen to unlock this voucher!'}</p>
+        ${isUnlocked ? (
+          isRedeemed ? `
+            <div class="coupon-redeemed-badge">✅ REDEEMED! (Boyfriend owes you a kiss 💋)</div>
+          ` : `
+            <button type="button" class="btn-redeem-coupon" data-id="${coupon.id}">
+              💋 Redeem with a Kiss
+            </button>
+          `
+        ) : ''}
+      `;
+
+      if (isUnlocked && !isRedeemed) {
+        const btnRedeem = card.querySelector('.btn-redeem-coupon');
+        if (btnRedeem) {
+          btnRedeem.addEventListener('click', (e) => {
+            e.stopPropagation();
+            state.redeemedCoupons.add(coupon.id);
+            playKissSound();
+            triggerKissBombardment(e.clientX, e.clientY);
+            showLoveToast('💋', 'COUPON REDEEMED!', `Go claim your sweet kiss from him right now! 🥰`);
+            renderCouponWallet();
+          });
+        }
+      }
+
+      DOM.couponsGrid.appendChild(card);
+    });
+  }
+
+  function initWalletModal() {
+    if (DOM.btnOpenWallet && DOM.couponWalletDialog) {
+      DOM.btnOpenWallet.addEventListener('click', () => {
+        renderCouponWallet();
+        DOM.couponWalletDialog.showModal();
+        playChime();
+      });
+    }
+
+    if (DOM.walletClose && DOM.couponWalletDialog) {
+      DOM.walletClose.addEventListener('click', () => {
+        DOM.couponWalletDialog.close();
+      });
+    }
+  }
+
+  // ==============================================================================
   // 💌 STAGE 1: ENVELOPE & WAX SEAL INTERACTION
   // ==============================================================================
   function initStage1() {
@@ -503,13 +633,43 @@
       registerLoveClick(e.clientX, e.clientY);
 
       DOM.envelopeWrapper.classList.add('open');
-      DOM.envelopePromptText.innerHTML = '🎉 <strong>Seal Broken!</strong> Read your invitation above!';
+      DOM.envelopePromptText.innerHTML = '🎉 <strong>Seal Broken!</strong> Complete your sweet task on the letter above!';
 
       // Auto start music on first envelope click
       if (!state.audioPlaying) {
         toggleMusic();
       }
     });
+
+    // Cute Task 1: Sweet Security Check (Affirmation Verification)
+    if (DOM.affirmationButtons) {
+      DOM.affirmationButtons.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          DOM.affirmationButtons.forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+
+          playKissSound();
+          registerLoveClick(e.clientX, e.clientY);
+          triggerConfettiBurst({
+            x: e.clientX / window.innerWidth,
+            y: e.clientY / window.innerHeight
+          });
+
+          if (DOM.affirmationFeedback) {
+            DOM.affirmationFeedback.classList.remove('hidden');
+            DOM.affirmationFeedback.innerHTML = `🎉 <strong>100% CORRECT!</strong> Key Unlocked & You won Coupon #1: <em>Infinite Tight Hugs Pass</em>! 🫂`;
+          }
+
+          // Award Coupon #1 (index 0)
+          unlockCouponByIndex(0);
+
+          if (DOM.btnStartQuest) {
+            DOM.btnStartQuest.classList.add('pulse-hover');
+          }
+          state.task1Completed = true;
+        });
+      });
+    }
 
     DOM.btnStartQuest.addEventListener('click', function (e) {
       registerLoveClick(e.clientX, e.clientY);
@@ -573,12 +733,18 @@
         const pct = (state.crystalsFound / totalReasons) * 100;
         DOM.crystalsProgressFill.style.width = `${pct}%`;
 
+        // Award Love Coupon for this crystal (coupons 1 to 5)
+        if (index + 1 < (CFG.loveCoupons || []).length) {
+          unlockCouponByIndex(index + 1);
+        }
+
         // Check completion
         if (state.crystalsFound >= totalReasons) {
           setTimeout(() => {
             playFanfare();
             triggerGrandConfettiShow();
             DOM.stage2UnlockBanner.classList.remove('hidden');
+            renderSoulmateQuiz();
           }, 800);
         }
       });
@@ -589,6 +755,75 @@
     DOM.btnGotoStage3.addEventListener('click', (e) => {
       registerLoveClick(e.clientX, e.clientY);
       switchStage(3);
+    });
+  }
+
+  // ==============================================================================
+  // 🧩 TASK 2: SOULMATE COMPATIBILITY QUIZ
+  // ==============================================================================
+  function renderSoulmateQuiz() {
+    if (!DOM.quizQuestionsFlow) return;
+    DOM.quizQuestionsFlow.innerHTML = '';
+    const questions = CFG.soulmateQuiz || [];
+    let answeredCount = 0;
+
+    questions.forEach((q, qIndex) => {
+      const qBox = document.createElement('div');
+      qBox.className = 'quiz-question-box';
+      qBox.innerHTML = `
+        <div class="quiz-q-text">Q${qIndex + 1}: ${q.question}</div>
+        <div class="quiz-options-list"></div>
+        <div class="quiz-feedback hidden"></div>
+      `;
+
+      const optionsList = qBox.querySelector('.quiz-options-list');
+      const feedbackEl = qBox.querySelector('.quiz-feedback');
+
+      (q.options || []).forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'quiz-opt-btn';
+        btn.textContent = opt.text;
+
+        btn.addEventListener('click', (e) => {
+          if (qBox.dataset.answered === 'true') return;
+          qBox.dataset.answered = 'true';
+
+          optionsList.querySelectorAll('.quiz-opt-btn').forEach(b => b.classList.remove('answered'));
+          btn.classList.add('answered');
+
+          playKissSound();
+          registerLoveClick(e.clientX, e.clientY);
+          triggerConfettiBurst({
+            x: e.clientX / window.innerWidth,
+            y: e.clientY / window.innerHeight
+          });
+
+          if (feedbackEl) {
+            feedbackEl.classList.remove('hidden');
+            feedbackEl.textContent = `✨ ${opt.feedback}`;
+          }
+
+          answeredCount++;
+          if (answeredCount >= questions.length) {
+            setTimeout(() => {
+              playFanfare();
+              triggerGrandConfettiShow();
+              if (DOM.quizScoreCard) {
+                DOM.quizScoreCard.classList.remove('hidden');
+              }
+              if (DOM.btnGotoStage3) {
+                DOM.btnGotoStage3.classList.add('pulse-hover');
+              }
+              showLoveToast('👑', 'SOULMATE TEST: 10,000,000% MATCH!', 'Memory Lane is officially unlocked!');
+            }, 600);
+          }
+        });
+
+        optionsList.appendChild(btn);
+      });
+
+      DOM.quizQuestionsFlow.appendChild(qBox);
     });
   }
 
@@ -646,6 +881,23 @@
         </div>
       `;
 
+      // 3D Parallax Tilt for ultra-smooth responsiveness
+      polaroid.addEventListener('mousemove', (e) => {
+        if (polaroid.classList.contains('flipped')) return;
+        const rect = polaroid.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const rotX = -(y / rect.height) * 12;
+        const rotY = (x / rect.width) * 12;
+        polaroid.style.transform = `perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.04, 1.04, 1.04) translateY(-6px)`;
+      });
+
+      polaroid.addEventListener('mouseleave', () => {
+        if (!polaroid.classList.contains('flipped')) {
+          polaroid.style.transform = '';
+        }
+      });
+
       // Flip on click
       polaroid.addEventListener('click', (e) => {
         // If image itself was clicked on front, open zoom lightbox
@@ -657,6 +909,9 @@
         }
 
         polaroid.classList.toggle('flipped');
+        if (polaroid.classList.contains('flipped')) {
+          polaroid.style.transform = '';
+        }
         playChime();
         registerLoveClick(e.clientX, e.clientY);
       });
@@ -782,6 +1037,7 @@
         playFanfare();
         triggerGrandConfettiShow();
       }
+      showLoveToast('📜', 'PROMISE UNLOCKED!', 'A permanent promise recorded in the vault of his heart 💖');
       DOM.stage3UnlockBanner.classList.remove('hidden');
     }
 
@@ -886,21 +1142,35 @@
       btn.addEventListener('click', (e) => {
         const type = btn.dataset.reaction;
         let emoji = '💖';
-        if (type === 'kiss') emoji = '💋';
-        if (type === 'hug') emoji = '🤗';
-        if (type === 'blush') emoji = '🥰';
+        let toastTitle = 'Love Multiplied!';
+        let toastDesc = 'He loves you infinitely more than words could say! 💖';
+
+        if (type === 'kiss') {
+          emoji = '💋';
+          toastTitle = 'Kiss Received!';
+          toastDesc = 'A million sweet kisses delivered straight to his heart! 💋';
+        } else if (type === 'hug') {
+          emoji = '🤗';
+          toastTitle = 'Warm Hug Received!';
+          toastDesc = 'He is holding you tight in his warm embrace! 🧸';
+        } else if (type === 'blush') {
+          emoji = '🥰';
+          toastTitle = 'Blush Alert!';
+          toastDesc = 'You are the most adorable cutie in the universe! 🌸';
+        }
 
         playChime();
         registerLoveClick(e.clientX, e.clientY);
+        showLoveToast(emoji, toastTitle, toastDesc, 3500);
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 6; i++) {
           setTimeout(() => {
             spawnFloatingHeart(
               e.clientX + (Math.random() * 80 - 40),
               e.clientY + (Math.random() * 60 - 30),
               emoji
             );
-          }, i * 120);
+          }, i * 110);
         }
 
         btn.style.transform = 'scale(1.2)';
@@ -917,6 +1187,12 @@
   // ==============================================================================
   // 🎂 STAGE 5: INTERACTIVE CAKE CUTTING CEREMONY
   // ==============================================================================
+  const candleWishes = [
+    "✨ Wish 1: That your sweet smile never fades!",
+    "🌅 Wish 2: A lifetime of cozy adventures together!",
+    "🎂 Wish 3: Every secret dream of yours comes true!"
+  ];
+
   function initStage5() {
     state.candlesLit = DOM.candleItems.length;
     DOM.candlesRemainingCount.textContent = state.candlesLit;
@@ -949,21 +1225,33 @@
   }
 
   function blowOutCandle(candle, e) {
+    if (candle.classList.contains('blown')) return;
     candle.classList.add('blown');
     playCandleBlow();
     registerLoveClick(e ? e.clientX : undefined, e ? e.clientY : undefined);
+
+    const candleIdx = (parseInt(candle.dataset.candle, 10) || 1) - 1;
+    const wishMsg = candleWishes[candleIdx] || "✨ A magical birthday wish!";
+
+    // Spawn wish bubble above candle
+    const bubble = document.createElement('div');
+    bubble.className = 'candle-wish-bubble';
+    bubble.textContent = wishMsg;
+    candle.appendChild(bubble);
+
+    showLoveToast('🕯️', 'Birthday Wish Made!', wishMsg, 3500);
 
     state.candlesLit = Math.max(0, state.candlesLit - 1);
     DOM.candlesRemainingCount.textContent = state.candlesLit;
 
     if (state.candlesLit === 0) {
-      DOM.candlesTracker.innerHTML = '🎉 <strong>All candles blown out! Make your wish and slice the cake! 🍰</strong>';
+      DOM.candlesTracker.innerHTML = '🎉 <strong>All 3 candles blown out! Wishes sealed with love — now slice the cake! 🍰</strong>';
       DOM.goldenKnife.classList.remove('disabled');
       DOM.btnTriggerCut.classList.remove('disabled');
       DOM.btnBlowAll.style.display = 'none';
 
       playFanfare();
-      triggerConfettiBurst();
+      triggerGrandConfettiShow();
     }
   }
 
@@ -1465,6 +1753,7 @@
     initAmbientCanvas();
     initCustomizer();
     initMascotAndEasterEggs();
+    initWalletModal();
 
     // Pull any custom media from admin portal
     await loadAsyncCustomMedia();

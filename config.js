@@ -142,5 +142,82 @@ window.SURPRISE_CONFIG = {
     videoSrc: "", // e.g. "assets/wish_video.mp4" or "https://www.youtube.com/embed/YOUR_VIDEO_ID"
     videoType: "animated_reel", // 'local', 'youtube', or 'animated_reel'
     endQuote: "Happy Birthday to the girl who stole my heart! 💖"
-  }
+  },
+
+  // 🎟️ Cute Love Coupons (Awarded across the journey!)
+  loveCoupons: [
+    {
+      id: "coupon-hug",
+      icon: "🫂",
+      title: "Infinite Tight Hugs Pass",
+      tag: "UNLIMITED VALIDITY",
+      desc: "Redeemable anytime you feel stressed, cold, or just need to be wrapped in arms. No questions asked!"
+    },
+    {
+      id: "coupon-icecream",
+      icon: "🍨",
+      title: "Midnight Ice Cream & Drive",
+      tag: "LATE NIGHT SPECIAL",
+      desc: "Good for one late-night craving run to grab your favorite dessert and listen to music together."
+    },
+    {
+      id: "coupon-argument",
+      icon: "👑",
+      title: "'You Are Always Right' Card",
+      tag: "ROYAL IMMUNITY",
+      desc: "Play this card during any silly disagreement to instantly win and be declared 100% correct!"
+    },
+    {
+      id: "coupon-massage",
+      icon: "💆‍♀️",
+      title: "Royal Head & Shoulder Massage",
+      tag: "DELUXE SPA DAY",
+      desc: "Entitles you to a 30-minute pampering massage with soft music, scalp strokes, and gentle care."
+    },
+    {
+      id: "coupon-food",
+      icon: "🍕",
+      title: "Snack Feast on Demand",
+      tag: "ANYTIME TREAT",
+      desc: "Your boyfriend must order or cook whatever your heart desires, no matter how weird the combo!"
+    },
+    {
+      id: "coupon-forever",
+      icon: "💍",
+      title: "Eternal Boyfriend Devotion",
+      tag: "LIFETIME GUARANTEE",
+      desc: "100% guaranteed loyalty, adoration, goofy smiles, and listening ears for the rest of our days."
+    }
+  ],
+
+  // 🧩 Cute Soulmate Compatibility Quiz
+  soulmateQuiz: [
+    {
+      id: 1,
+      question: "Who fell in love first?",
+      options: [
+        { text: "Him (He was completely spellbound!)", feedback: "Fact! From the second he saw you, his heart was yours!" },
+        { text: "You (He was too cute to resist)", feedback: "Aww! You two are an absolute match made in heaven!" },
+        { text: "It was instant mutual destiny ✨", feedback: "100% written in the stars!" }
+      ]
+    },
+    {
+      id: 2,
+      question: "What is his favorite thing about you?",
+      options: [
+        { text: "Your radiant, sunshine smile 🌸", feedback: "Your smile lights up his entire universe!" },
+        { text: "Your cute laughter & goofy jokes 🤭", feedback: "Your laugh is literally his favorite song on repeat!" },
+        { text: "Literally EVERYTHING, impossible to choose! 💖", feedback: "Bingo! Every single trait, smile, and quirk of yours!" }
+      ]
+    },
+    {
+      id: 3,
+      question: "What is your official royal duty for your birthday?",
+      options: [
+        { text: "Be treated like an absolute Queen 👑", feedback: "Order accepted, Your Majesty! You run the world today!" },
+        { text: "Eat lots of delicious cake and smile 🍰", feedback: "Calories don't exist on your birthday!" },
+        { text: "Receive 10,000 forehead kisses 💋", feedback: "Starting right now: Mwah! Mwah! Mwah! 💋" }
+      ]
+    }
+  ]
 };
