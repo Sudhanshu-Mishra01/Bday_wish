@@ -152,6 +152,41 @@ body {
   border-radius: 2px;
 }
 
+.love-meter-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 105, 180, 0.15);
+  border: 1px solid rgba(255, 105, 180, 0.35);
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ffb8c6;
+  white-space: nowrap;
+}
+
+.meter-bar-track {
+  width: 55px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.meter-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6584, #ffd166);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 8px rgba(255, 101, 132, 0.8);
+}
+
+.meter-text {
+  font-size: 0.76rem;
+  color: var(--gold-glow);
+}
+
 .love-counter-chip {
   background: rgba(255, 105, 180, 0.15);
   border: 1px solid rgba(255, 105, 180, 0.3);
@@ -164,6 +199,85 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+/* Floating Kiss Cannon & Bombardment Widget */
+.floating-kiss-bombardment {
+  position: fixed;
+  bottom: 24px;
+  left: 175px;
+  z-index: 60;
+}
+
+.btn-kiss-cannon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #ff477e, #ff758c, #e84393);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(232, 67, 147, 0.5), 0 0 16px rgba(255, 101, 132, 0.4);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: pulseGlowBtn 2.4s infinite ease-in-out;
+}
+
+.btn-kiss-cannon:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 12px 32px rgba(232, 67, 147, 0.75), 0 0 25px rgba(255, 209, 102, 0.6);
+}
+
+.cannon-emoji {
+  font-size: 1.3rem;
+  animation: heartBeat 1.2s infinite ease-in-out;
+}
+
+/* Magical Cursor Trail & Kiss Particles */
+.cursor-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 50%;
+  animation: particleFade 0.75s forwards cubic-bezier(0.2, 0.8, 0.2, 1);
+  filter: drop-shadow(0 0 6px rgba(255, 209, 102, 0.8));
+}
+
+.kiss-storm-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  font-size: 2rem;
+  user-select: none;
+  animation: kissStormFly 2.2s forwards cubic-bezier(0.2, 0.8, 0.2, 1);
+  filter: drop-shadow(0 6px 14px rgba(232, 67, 147, 0.6));
+}
+
+@keyframes particleFade {
+  0% { transform: scale(1) translate(0, 0); opacity: 1; }
+  100% { transform: scale(0.1) translate(var(--tx, 0px), var(--ty, 10px)); opacity: 0; }
+}
+
+@keyframes kissStormFly {
+  0% {
+    transform: translate(0, 0) scale(0.3) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1.3) rotate(var(--rot, 15deg));
+  }
+  80% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(var(--vx, 0px), var(--vy, -400px)) scale(1.1) rotate(var(--rot-end, 45deg));
+    opacity: 0;
+  }
 }
 
 /* ==============================================================================
@@ -2026,9 +2140,13 @@ body {
     bottom: 14px;
     left: 14px;
   }
-  .audio-btn {
-    padding: 8px 14px;
-    font-size: 0.8rem;
+  .floating-kiss-bombardment {
+    bottom: 62px;
+    left: 14px;
+  }
+  .audio-btn, .btn-kiss-cannon {
+    padding: 7px 12px;
+    font-size: 0.78rem;
   }
   .music-status-text {
     display: none;

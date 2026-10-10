@@ -116,7 +116,13 @@
     btnOpenCustomizer: document.getElementById('btn-open-customizer'),
     customizerClose: document.getElementById('customizer-close'),
     btnSaveCustomizer: document.getElementById('btn-save-customizer'),
-    btnResetDefaults: document.getElementById('btn-reset-defaults')
+    btnResetDefaults: document.getElementById('btn-reset-defaults'),
+
+    // Interactive Bombardment & Love Meter
+    btnKissStorm: document.getElementById('btn-kiss-storm'),
+    loveMeterFill: document.getElementById('love-meter-fill'),
+    loveMeterText: document.getElementById('love-meter-text'),
+    floatingStickers: document.querySelectorAll('.floating-sticker')
   };
 
   // ==============================================================================
@@ -200,6 +206,25 @@
     });
   }
 
+  function playKissSound() {
+    initAudioContext();
+    if (!audioCtx) return;
+    try {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(700, audioCtx.currentTime + 0.08);
+      osc.frequency.exponentialRampToValueAtTime(1100, audioCtx.currentTime + 0.16);
+      gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.18);
+    } catch (e) {}
+  }
+
   // Built-in Romantic Procedural Background Arpeggio
   function startProceduralBGM() {
     initAudioContext();
@@ -266,16 +291,97 @@
   }
 
   // ==============================================================================
-  // 💖 LOVE CLICKS & PARTICLES TRACKER
+  // 💖 LOVE CLICKS, LOVE METER & KISS BOMBARDMENT ENGINE
   // ==============================================================================
+  let currentLoveMeter = 20;
+
+  function updateLoveMeter(amount = 3) {
+    currentLoveMeter = Math.min(100, currentLoveMeter + amount);
+    if (DOM.loveMeterFill) DOM.loveMeterFill.style.width = `${currentLoveMeter}%`;
+    if (DOM.loveMeterText) DOM.loveMeterText.textContent = `${currentLoveMeter}% Love`;
+
+    if (currentLoveMeter >= 100 && !state.loveMeterMaxed) {
+      state.loveMeterMaxed = true;
+      triggerGrandConfettiShow();
+      playFanfare();
+      triggerKissBombardment(window.innerWidth / 2, window.innerHeight / 2);
+    }
+  }
+
   function registerLoveClick(x, y) {
     state.loveClicks++;
     DOM.totalClicksCount.textContent = state.loveClicks;
+    updateLoveMeter(2);
 
     // Trigger subtle floating heart at click location
     if (x && y) {
       spawnFloatingHeart(x, y);
     }
+  }
+
+  function triggerKissBombardment(originX, originY) {
+    playKissSound();
+    registerLoveClick(originX, originY);
+    updateLoveMeter(5);
+
+    const emojis = ['💋', '💖', '🧸', '🤗', '🌸', '✨', '👑', '🥰', '💕', '🌹'];
+    const count = 36;
+    const startX = originX || (window.innerWidth / 2);
+    const startY = originY || (window.innerHeight / 2);
+
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const p = document.createElement('div');
+        p.className = 'kiss-storm-particle';
+        p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+        const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.4 - 0.2);
+        const dist = Math.random() * 300 + 100;
+        const vx = Math.cos(angle) * dist;
+        const vy = Math.sin(angle) * dist - (Math.random() * 160 + 60);
+        const rot = Math.random() * 50 - 25;
+        const rotEnd = rot + (Math.random() * 100 - 50);
+
+        p.style.left = `${startX}px`;
+        p.style.top = `${startY}px`;
+        p.style.setProperty('--vx', `${vx}px`);
+        p.style.setProperty('--vy', `${vy}px`);
+        p.style.setProperty('--rot', `${rot}deg`);
+        p.style.setProperty('--rot-end', `${rotEnd}deg`);
+
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 2300);
+      }, i * 32);
+    }
+
+    // Affectionate alert banner
+    const quotes = [
+      '💋 EMERGENCY KISS SHOWER ACTIVATED! 💋',
+      '🫂 Sending 100,000 warm hugs directly to your heart! 🧸',
+      '🥰 He is absolutely, irrevocably in love with you! 💖',
+      '👑 Royal Alert: The Birthday Queen deserves endless love! ✨',
+      '🌸 You are the sweetest girl in the entire universe! 💖'
+    ];
+    const q = quotes[Math.floor(Math.random() * quotes.length)];
+    const bubble = document.createElement('div');
+    bubble.className = 'stage-badge';
+    bubble.style.position = 'fixed';
+    bubble.style.top = '78px';
+    bubble.style.left = '50%';
+    bubble.style.transform = 'translateX(-50%)';
+    bubble.style.zIndex = '9999';
+    bubble.style.background = 'linear-gradient(135deg, #ff477e, #e84393)';
+    bubble.style.color = '#ffffff';
+    bubble.style.boxShadow = '0 10px 30px rgba(232, 67, 147, 0.6)';
+    bubble.style.fontSize = '0.92rem';
+    bubble.textContent = q;
+    document.body.appendChild(bubble);
+
+    setTimeout(() => {
+      bubble.style.transition = 'opacity 0.6s ease';
+      bubble.style.opacity = '0';
+      setTimeout(() => bubble.remove(), 600);
+    }, 2800);
   }
 
   function spawnFloatingHeart(x, y, emoji = '💖') {
@@ -1168,40 +1274,70 @@
   }
 
   // ==============================================================================
-  // 🐾 MASCOT & EASTER EGGS
+  // 🐾 MASCOT, STICKERS, KISS STORM & EASTER EGGS
   // ==============================================================================
   function initMascotAndEasterEggs() {
-    DOM.floatingMascot.addEventListener('click', (e) => {
-      playChime();
-      registerLoveClick(e.clientX, e.clientY);
+    // 1. Kiss Storm Launcher Button
+    if (DOM.btnKissStorm) {
+      DOM.btnKissStorm.addEventListener('click', (e) => {
+        triggerKissBombardment(e.clientX, e.clientY);
+      });
+    }
 
-      const cuteQuotes = [
-        'Sending you 100 kisses! 💋',
-        'You are the cutest human ever! 🧸',
-        'Smile, it looks gorgeous on you! ✨',
-        'You have stolen his entire heart! 💖',
-        '100% girlfriend perfection! 👑'
-      ];
-      const randomQuote = cuteQuotes[Math.floor(Math.random() * cuteQuotes.length)];
-      
-      const badge = DOM.floatingMascot.querySelector('.mascot-badge');
-      if (badge) {
-        badge.textContent = randomQuote;
-        setTimeout(() => { badge.textContent = 'Tap me! 🐾'; }, 3000);
-      }
+    // 2. Interactive Floating Mascot
+    if (DOM.floatingMascot) {
+      DOM.floatingMascot.addEventListener('click', (e) => {
+        playKissSound();
+        registerLoveClick(e.clientX, e.clientY);
 
-      for (let i = 0; i < 6; i++) {
-        setTimeout(() => {
-          spawnFloatingHeart(
-            e.clientX + (Math.random() * 80 - 40),
-            e.clientY + (Math.random() * 80 - 40),
-            ['💖', '🌸', '✨', '💋', '🧸'][i % 5]
-          );
-        }, i * 90);
-      }
-    });
+        const cuteQuotes = [
+          'Sending you 100 kisses! 💋',
+          'You are the cutest human ever! 🧸',
+          'Smile, it looks gorgeous on you! ✨',
+          'You have stolen his entire heart! 💖',
+          '100% girlfriend perfection! 👑'
+        ];
+        const randomQuote = cuteQuotes[Math.floor(Math.random() * cuteQuotes.length)];
+        
+        const badge = DOM.floatingMascot.querySelector('.mascot-badge');
+        if (badge) {
+          badge.textContent = randomQuote;
+          setTimeout(() => { badge.textContent = 'Tap me! 🐾'; }, 3000);
+        }
 
-    // Step dots click navigation
+        for (let i = 0; i < 8; i++) {
+          setTimeout(() => {
+            spawnFloatingHeart(
+              e.clientX + (Math.random() * 80 - 40),
+              e.clientY + (Math.random() * 80 - 40),
+              ['💖', '🌸', '✨', '💋', '🧸'][i % 5]
+            );
+          }, i * 80);
+        }
+      });
+    }
+
+    // 3. Clickable Interactive Floating Stickers
+    if (DOM.floatingStickers) {
+      DOM.floatingStickers.forEach((stk) => {
+        stk.style.pointerEvents = 'auto';
+        stk.style.cursor = 'pointer';
+        stk.addEventListener('click', (e) => {
+          e.stopPropagation();
+          playKissSound();
+          registerLoveClick(e.clientX, e.clientY);
+          triggerKissBombardment(e.clientX, e.clientY);
+        });
+      });
+    }
+
+    // 4. Magical Fairy Dust Cursor Trail
+    initCursorSparkleTrail();
+
+    // 5. Admin Shortcut & Route check
+    checkAdminRoute();
+
+    // 6. Step dots click navigation
     DOM.stepDots.forEach((dot) => {
       dot.addEventListener('click', () => {
         const step = parseInt(dot.dataset.step, 10);
@@ -1209,14 +1345,117 @@
       });
     });
 
-    // Audio toggle
+    // 7. Audio toggle
     DOM.audioToggleBtn.addEventListener('click', toggleMusic);
+  }
+
+  // Magical Fairy Dust & Heart Cursor Trail
+  function initCursorSparkleTrail() {
+    let lastTime = 0;
+    const colors = ['#ffd166', '#ff6584', '#ffb8c6', '#a855f7', '#ffffff'];
+
+    window.addEventListener('pointermove', (e) => {
+      const now = Date.now();
+      if (now - lastTime < 36) return;
+      lastTime = now;
+
+      const p = document.createElement('div');
+      p.className = 'cursor-particle';
+      const size = Math.random() * 8 + 4;
+      p.style.width = `${size}px`;
+      p.style.height = `${size}px`;
+      p.style.left = `${e.clientX - size / 2}px`;
+      p.style.top = `${e.clientY - size / 2}px`;
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.setProperty('--tx', `${(Math.random() - 0.5) * 20}px`);
+      p.style.setProperty('--ty', `${Math.random() * 18 + 6}px`);
+
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 700);
+    }, { passive: true });
+  }
+
+  // Hidden Admin Route & Secret Trigger
+  function checkAdminRoute() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('admin') === 'true' || window.location.hash === '#admin') {
+      window.location.href = 'admin.html';
+      return;
+    }
+
+    // Secret triple click on her name in top navbar opens admin.html
+    let nameClickCount = 0;
+    let nameClickTimer = null;
+    if (DOM.navGfName) {
+      DOM.navGfName.style.cursor = 'pointer';
+      DOM.navGfName.addEventListener('click', () => {
+        nameClickCount++;
+        clearTimeout(nameClickTimer);
+        if (nameClickCount >= 3) {
+          window.open('admin.html', '_blank');
+          nameClickCount = 0;
+        } else {
+          nameClickTimer = setTimeout(() => { nameClickCount = 0; }, 700);
+        }
+      });
+    }
+
+    // Secret keyboard shortcut: Ctrl+Shift+A or Cmd+Shift+A
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        window.open('admin.html', '_blank');
+      }
+    });
+  }
+
+  // Asynchronous IndexedDB Storage Sync
+  async function loadAsyncCustomMedia() {
+    if (!window.BdayStorage) return;
+
+    try {
+      const dbSettings = await BdayStorage.getSettings();
+      if (dbSettings) {
+        Object.assign(CFG, dbSettings);
+        if (DOM.navGfName) DOM.navGfName.textContent = CFG.recipientName || 'My Princess';
+      }
+
+      // Check uploaded photos
+      const portraitData = await BdayStorage.getMedia('photo_portrait');
+      const dateData = await BdayStorage.getMedia('photo_date');
+      const sunsetData = await BdayStorage.getMedia('photo_sunset');
+      const coupleData = await BdayStorage.getMedia('photo_couple');
+
+      if (portraitData && CFG.gallery && CFG.gallery[0]) CFG.gallery[0].image = portraitData;
+      if (dateData && CFG.gallery && CFG.gallery[1]) CFG.gallery[1].image = dateData;
+      if (sunsetData && CFG.gallery && CFG.gallery[2]) CFG.gallery[2].image = sunsetData;
+      if (coupleData && CFG.gallery && CFG.gallery[3]) CFG.gallery[3].image = coupleData;
+
+      if (portraitData || dateData || sunsetData || coupleData) {
+        initStage3();
+      }
+
+      // Check uploaded video
+      const customVideo = await BdayStorage.getMedia('custom_wish_video');
+      if (customVideo) {
+        let vSrc = '';
+        if (typeof customVideo === 'string') {
+          vSrc = customVideo;
+        } else if (customVideo instanceof Blob) {
+          vSrc = URL.createObjectURL(customVideo);
+        }
+        if (!CFG.video) CFG.video = {};
+        CFG.video.videoSrc = vSrc;
+        initStage6();
+      }
+    } catch (err) {
+      console.warn('Storage sync note:', err);
+    }
   }
 
   // ==============================================================================
   // 🚀 BOOTSTRAP APP
   // ==============================================================================
-  window.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('DOMContentLoaded', async () => {
     initStage1();
     initStage2();
     initStage3();
@@ -1226,6 +1465,9 @@
     initAmbientCanvas();
     initCustomizer();
     initMascotAndEasterEggs();
+
+    // Pull any custom media from admin portal
+    await loadAsyncCustomMedia();
   });
 
 })();

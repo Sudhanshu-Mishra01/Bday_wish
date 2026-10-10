@@ -64,12 +64,29 @@
         <li class="step-line"></li>
         <li class="step-dot" data-step="6" title="Wish Video">🎥<span>6</span></li>
       </ol>
+      <div class="love-meter-pill" id="love-meter-pill" title="Fill up the love gauge by exploring!">
+        <span class="meter-heart">💖</span>
+        <div class="meter-bar-track">
+          <div class="meter-bar-fill" id="love-meter-fill" style="width: 20%;"></div>
+        </div>
+        <span class="meter-text" id="love-meter-text">20% Love</span>
+      </div>
+
       <div class="love-counter-chip" id="love-clicks-chip">
         <span class="chip-icon">✨</span>
         <span id="total-clicks-count">0</span> Love Clicks
       </div>
     </div>
   </header>
+
+  <!-- Floating Kiss Cannon & Bombardment Widget -->
+  <aside class="floating-kiss-bombardment" id="kiss-cannon-widget" title="Click for an Infinite Kiss Storm! 💋">
+    <button type="button" class="btn-kiss-cannon" id="btn-kiss-storm" aria-label="Bombard With Kisses">
+      <span class="cannon-emoji">💋</span>
+      <span class="cannon-text">Kiss Shower!</span>
+      <span class="cannon-burst-particles">✨</span>
+    </button>
+  </aside>
 
   <!-- Main Multi-Stage Interactive Journey Container -->
   <main class="journey-wrapper">
@@ -614,6 +631,7 @@
   <audio id="custom-audio-player" loop preload="auto"></audio>
 
   <!-- Scripts -->
+  <script src="storage.js"></script>
   <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
