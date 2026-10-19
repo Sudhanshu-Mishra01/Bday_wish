@@ -1,3 +1,6 @@
+[build]
+  publish = "."
+
 # The studio (admin.*) is for local editing only — never serve it on the live site.
 [[redirects]]
   from = "/admin"
