@@ -3,266 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Secret Admin Portal — Birthday Architect 🛠️💖</title>
+  <meta name="robots" content="noindex, nofollow">
+  <title>Birthday Studio</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Caveat:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-
-  <!-- ========================================================================= -->
-  <!-- LOGIN MODAL / PASSWORD PROTECTION                                         -->
-  <!-- ========================================================================= -->
-  <div class="login-overlay" id="login-overlay">
-    <div class="login-card">
-      <div class="login-icon">🔒💖</div>
-      <h2>Secret Architect Portal</h2>
-      <p>Only the boyfriend can enter! Enter your passcode to personalize the surprise.</p>
-      
-      <form id="login-form">
-        <div class="input-wrap">
-          <input type="password" id="admin-passcode" class="admin-input" placeholder="Enter Passcode (default: love123)" required autofocus>
-        </div>
-        <button type="submit" class="btn-admin-primary">Unlock Portal ✨</button>
-      </form>
-      <div class="passcode-hint">💡 Default passcode: <code>love123</code></div>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">💛</span>
+      <div>
+        <strong>Birthday Studio</strong>
+        <small>Chetna ke liye — sirf tumhare liye dikhta hai</small>
+      </div>
     </div>
+    <div class="top-actions">
+      <span class="status" id="status" aria-live="polite"></span>
+      <a class="btn ghost" href="dashboard.html">📬 Uski activity</a>
+      <a class="btn ghost" href="/?preview" target="_blank" rel="noopener">Site dekho ↗</a>
+      <button type="button" class="btn primary" id="btn-save">Save</button>
+    </div>
+  </header>
+
+  <div class="banner hidden" id="offline-banner">
+    <strong>Studio server nahi chal raha.</strong>
+    Terminal me <code>python3 admin_server.py</code> chalao aur
+    <code>http://localhost:5173/admin.html</code> kholo. Tab tak, Save dabane pe naya
+    <code>config.js</code> download hoga — use project folder me purane wale ki jagah rakh dena.
+    Photos tab upload nahi hongi; unhe khud <code>assets/photos/</code> me daal ke path likh do.
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- MAIN ADMIN DASHBOARD                                                      -->
-  <!-- ========================================================================= -->
-  <div class="admin-container" id="admin-container" style="display: none;">
-    
-    <header class="admin-topbar">
-      <div class="brand-title">
-        <span class="brand-icon">🛠️💖</span>
-        <div>
-          <h1>Birthday Surprise Architect</h1>
-          <p>Upload her cute photos, set your wish video, and write your love messages!</p>
-        </div>
-      </div>
-      <div class="topbar-actions">
-        <a href="index.html" class="btn-preview-app" target="_blank">
-          🚀 Open Live Surprise App
-        </a>
-        <button type="button" class="btn-admin-logout" id="btn-logout">Logout</button>
-      </div>
-    </header>
-
-    <main class="admin-grid">
-
-      <!-- ===================================================================== -->
-      <!-- SECTION 1: PHOTO UPLOADER (POLAROID & PORTRAITS)                     -->
-      <!-- ===================================================================== -->
-      <section class="admin-card">
-        <div class="card-header">
-          <span class="card-icon">📸</span>
-          <div>
-            <h3>Upload Her Cute Photos</h3>
-            <p>Select images from your computer. They will automatically be saved and displayed!</p>
-          </div>
-        </div>
-
-        <div class="photo-upload-grid">
-          
-          <!-- Photo 1: Queen Portrait -->
-          <div class="photo-slot">
-            <div class="slot-title">👑 1. The Birthday Queen (Main Portrait)</div>
-            <div class="slot-dropzone" id="drop-portrait" data-target="photo_portrait">
-              <img src="assets/girlfriend_portrait.jpg" alt="Portrait Preview" class="slot-preview" id="prev-portrait">
-              <div class="slot-overlay">
-                <span>📁 Click to Upload</span>
-              </div>
-              <input type="file" class="file-input" id="file-portrait" accept="image/*">
-            </div>
-            <button type="button" class="btn-slot-remove" data-target="photo_portrait">Reset to Default</button>
-          </div>
-
-          <!-- Photo 2: Cozy Date Memory -->
-          <div class="photo-slot">
-            <div class="slot-title">☕ 2. Cozy Coffee Date Memory</div>
-            <div class="slot-dropzone" id="drop-memory-1" data-target="photo_date">
-              <img src="assets/memory_date.jpg" alt="Date Preview" class="slot-preview" id="prev-date">
-              <div class="slot-overlay">
-                <span>📁 Click to Upload</span>
-              </div>
-              <input type="file" class="file-input" id="file-date" accept="image/*">
-            </div>
-            <button type="button" class="btn-slot-remove" data-target="photo_date">Reset to Default</button>
-          </div>
-
-          <!-- Photo 3: Sunset Walk Memory -->
-          <div class="photo-slot">
-            <div class="slot-title">🌅 3. Sunset Walk Memory</div>
-            <div class="slot-dropzone" id="drop-memory-2" data-target="photo_sunset">
-              <img src="assets/memory_sunset.jpg" alt="Sunset Preview" class="slot-preview" id="prev-sunset">
-              <div class="slot-overlay">
-                <span>📁 Click to Upload</span>
-              </div>
-              <input type="file" class="file-input" id="file-sunset" accept="image/*">
-            </div>
-            <button type="button" class="btn-slot-remove" data-target="photo_sunset">Reset to Default</button>
-          </div>
-
-          <!-- Photo 4: Under the Stars / Couple -->
-          <div class="photo-slot">
-            <div class="slot-title">✨ 4. Under the Stars / Favorite Couple Pic</div>
-            <div class="slot-dropzone" id="drop-memory-3" data-target="photo_couple">
-              <img src="assets/hero_couple.jpg" alt="Couple Preview" class="slot-preview" id="prev-couple">
-              <div class="slot-overlay">
-                <span>📁 Click to Upload</span>
-              </div>
-              <input type="file" class="file-input" id="file-couple" accept="image/*">
-            </div>
-            <button type="button" class="btn-slot-remove" data-target="photo_couple">Reset to Default</button>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ===================================================================== -->
-      <!-- SECTION 2: WISH VIDEO MANAGER (LOCAL MP4 OR YOUTUBE)                 -->
-      <!-- ===================================================================== -->
-      <section class="admin-card">
-        <div class="card-header">
-          <span class="card-icon">🎬</span>
-          <div>
-            <h3>The Birthday Wish Video (Grand Finale)</h3>
-            <p>Upload a personal video or paste an unlisted YouTube video link.</p>
-          </div>
-        </div>
-
-        <div class="video-config-box">
-          
-          <div class="tab-selectors">
-            <button type="button" class="tab-btn active" data-tab="tab-video-upload">📁 Upload Local Video File</button>
-            <button type="button" class="tab-btn" data-tab="tab-video-youtube">🔗 YouTube / Online Link</button>
-          </div>
-
-          <!-- Tab 1: Local Video File Upload -->
-          <div class="tab-panel active" id="tab-video-upload">
-            <div class="video-dropzone" id="drop-video">
-              <div class="dropzone-inner">
-                <span class="dropzone-icon">📹</span>
-                <p><strong>Click to choose or Drag & Drop your wish video here</strong></p>
-                <small>Supports MP4, MOV, WEBM (High Quality, saved instantly)</small>
-              </div>
-              <input type="file" class="file-input" id="file-video" accept="video/mp4,video/webm,video/quicktime">
-            </div>
-            <div class="video-preview-wrapper" id="video-preview-wrapper" style="display: none;">
-              <video id="admin-video-player" controls class="admin-video-player"></video>
-              <button type="button" class="btn-slot-remove" id="btn-remove-video">Remove Uploaded Video</button>
-            </div>
-          </div>
-
-          <!-- Tab 2: YouTube / Web Link -->
-          <div class="tab-panel" id="tab-video-youtube">
-            <div class="form-group">
-              <label for="input-youtube-url">YouTube Video Embed or Watch URL:</label>
-              <input type="text" id="input-youtube-url" class="admin-input" placeholder="e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ or embed code">
-              <small class="helper-text">💡 Tip: You can upload your video as "Unlisted" on YouTube so only she can see it!</small>
-            </div>
-          </div>
-
-          <div class="form-group" style="margin-top: 16px;">
-            <label for="input-video-quote">Marquee Closing Quote Under Video:</label>
-            <input type="text" id="input-video-quote" class="admin-input" placeholder="Happy Birthday to the girl who stole my heart! 💖">
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ===================================================================== -->
-      <!-- SECTION 3: PERSONAL INFORMATION & DETAILS                            -->
-      <!-- ===================================================================== -->
-      <section class="admin-card">
-        <div class="card-header">
-          <span class="card-icon">💌</span>
-          <div>
-            <h3>Names & Occasion</h3>
-            <p>Customize her name and nicknames displayed throughout the site.</p>
-          </div>
-        </div>
-
-        <div class="form-grid-2">
-          <div class="form-group">
-            <label for="input-gf-name">Girlfriend's Name or Nickname:</label>
-            <input type="text" id="input-gf-name" class="admin-input" placeholder="e.g. Sarah / My Princess / Babu">
-          </div>
-          
-          <div class="form-group">
-            <label for="input-sender-name">Your Name / Sign-off:</label>
-            <input type="text" id="input-sender-name" class="admin-input" placeholder="e.g. Alex / Your Forever Love">
-          </div>
-
-          <div class="form-group">
-            <label for="input-bday-date">Birthday Date:</label>
-            <input type="text" id="input-bday-date" class="admin-input" placeholder="e.g. October 24th">
-          </div>
-
-          <div class="form-group">
-            <label for="input-bgm-url">Custom Music MP3 Link (Optional):</label>
-            <input type="text" id="input-bgm-url" class="admin-input" placeholder="Leave empty for built-in romantic harp/piano synth">
-          </div>
-        </div>
-      </section>
-
-      <!-- ===================================================================== -->
-      <!-- SECTION 4: LOVE LETTER & SCRATCH PROMISE                             -->
-      <!-- ===================================================================== -->
-      <section class="admin-card">
-        <div class="card-header">
-          <span class="card-icon">📜</span>
-          <div>
-            <h3>The Love Letter & Secret Scratch-Off Promise</h3>
-            <p>The deep, emotional paragraphs that will touch her heart.</p>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="input-scratch-secret">Secret Message Inside The Golden Scratch Card:</label>
-          <textarea id="input-scratch-secret" class="admin-textarea" rows="2" placeholder="The hidden promise revealed when she scratches the golden foil"></textarea>
-        </div>
-
-        <div class="form-group" style="margin-top: 14px;">
-          <label for="input-letter-paragraphs">Long Love Letter Paragraphs (Separate each paragraph with an empty line):</label>
-          <textarea id="input-letter-paragraphs" class="admin-textarea" rows="8" placeholder="Write your heartfelt paragraphs here..."></textarea>
-        </div>
-      </section>
-
-      <!-- ===================================================================== -->
-      <!-- SECTION 5: ACTIONS & EXPORT                                           -->
-      <!-- ===================================================================== -->
-      <section class="admin-card action-card">
-        <div class="save-bar">
-          <div>
-            <h3>Ready to surprise her? 💖</h3>
-            <p>Save your updates. They will immediately reflect on the live website!</p>
-          </div>
-          <div class="action-buttons-group">
-            <button type="button" class="btn-admin-secondary" id="btn-reset-all">Reset to Defaults</button>
-            <button type="button" class="btn-admin-secondary" id="btn-export-config">📥 Download config.js</button>
-            <button type="button" class="btn-admin-primary pulse-btn" id="btn-save-all">💾 Save Everything & Launch 🚀</button>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
+  <div class="layout">
+    <nav class="sidenav" id="sidenav" aria-label="Sections"></nav>
+    <main class="sections" id="sections"></main>
   </div>
 
-  <!-- Notification Toast -->
-  <div class="toast-notification" id="admin-toast"></div>
-
-  <!-- Scripts -->
-  <script src="storage.js"></script>
-  <script src="config.js"></script>
-  <script src="admin.js"></script>
+  <script src="config.js?studio"></script>
+  <script src="admin.js?v=6"></script>
 </body>
 </html>

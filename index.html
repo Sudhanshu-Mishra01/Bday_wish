@@ -1,702 +1,671 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi-Latn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>A Special Birthday Surprise For You 💖</title>
-  <meta name="description" content="A personalized interactive romantic birthday journey filled with love, sweet memories, and special surprises.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#120a26">
+  <title>Shhh… sirf tumhare liye 🤫</title>
+  <meta name="description" content="Ek chhota sa surprise.">
+  <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  
-  <!-- Modern Romantic Typography -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Sacramento&display=swap" rel="stylesheet">
-  
-  <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="style.css">
-  
-  <!-- Canvas Confetti Library via CDN -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css?v=8.0">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
-<body class="theme-romantic">
+<body>
 
-  <!-- Ambient Background Canvas (Petals, Stars, Glowing Bokeh) -->
-  <canvas id="ambient-canvas" aria-hidden="true"></canvas>
+  <!-- Night sky (stars) -->
+  <canvas id="sky" aria-hidden="true"></canvas>
 
-  <!-- Floating Audio Ambiance Player -->
-  <aside class="floating-audio-control" aria-label="Music Controls">
-    <button id="audio-toggle-btn" class="audio-btn" title="Toggle Romantic Music" aria-label="Toggle Romantic Music">
-      <span class="music-icon">🎵</span>
-      <span class="music-waves" aria-hidden="true">
-        <span></span><span></span><span></span><span></span>
-      </span>
-      <span class="music-status-text">Play Melody</span>
-    </button>
-  </aside>
+  <!-- Fairy lights string: switched on at midnight, switched off at goodnight -->
+  <div class="fairy-lights" id="fairy-lights" aria-hidden="true"></div>
 
-  <!-- Floating Cute Mascot Sticker (Transparent Overlay) -->
-  <aside class="floating-mascot-container" id="floating-mascot" title="Click me for a surprise kiss!" aria-label="Cute mascot">
-    <div class="mascot-badge">Tap me! 🐾</div>
-    <img src="assets/mascot.jpg" alt="Cute love mascot" class="mascot-img" id="mascot-img">
-    <div class="mascot-sparkles">✨</div>
-  </aside>
+  <!-- Top progress -->
+  <div class="progress" id="progress" aria-hidden="true">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
 
-  <!-- Hidden Easter Egg Floating Kisses (Interactive) -->
-  <div class="easter-eggs-layer" id="easter-eggs-layer"></div>
+  <!-- Sound toggle -->
+  <button type="button" class="sound-btn" id="sound-btn" aria-label="Music on/off" hidden>
+    <span class="sound-on">🔊</span><span class="sound-off">🔇</span>
+  </button>
 
-  <!-- Top Progress Bar & Quest Tracker -->
-  <header class="quest-nav-container" id="quest-nav">
-    <div class="quest-glass-bar">
-      <div class="quest-title-pill">
-        <span class="heart-pulse">💖</span>
-        <span id="nav-gf-name" class="nav-name">For My Love</span>
-      </div>
-      <ol class="quest-steps-indicator" aria-label="Adventure Progress">
-        <li class="step-dot active" data-step="1" title="The Sealed Invitation">💌<span>1</span></li>
-        <li class="step-line"></li>
-        <li class="step-dot" data-step="2" title="The Love Gems">✨<span>2</span></li>
-        <li class="step-line"></li>
-        <li class="step-dot" data-step="3" title="Memory Lane">📸<span>3</span></li>
-        <li class="step-line"></li>
-        <li class="step-dot" data-step="4" title="The Love Letter">📜<span>4</span></li>
-        <li class="step-line"></li>
-        <li class="step-dot" data-step="5" title="Cake Cutting">🎂<span>5</span></li>
-        <li class="step-line"></li>
-        <li class="step-dot" data-step="6" title="Wish Video">🎥<span>6</span></li>
-      </ol>
-      <div class="love-meter-pill" id="love-meter-pill" title="Fill up the love gauge by exploring!">
-        <span class="meter-heart">💖</span>
-        <div class="meter-bar-track">
-          <div class="meter-bar-fill" id="love-meter-fill" style="width: 20%;"></div>
+  <div class="toast-layer" id="toast-layer" aria-live="polite"></div>
+
+  <main id="app">
+
+    <!-- ===================================================== -->
+    <!-- 0. LOCK — countdown until midnight                     -->
+    <!-- ===================================================== -->
+    <section class="scene" data-scene="lock" aria-labelledby="lock-title">
+      <div class="scene-inner center">
+        <div class="moon" aria-hidden="true"></div>
+        <button type="button" class="gift-box" id="lock-gift" aria-label="Gift box">
+          <span class="gift-lid"></span>
+          <span class="gift-body"></span>
+          <span class="gift-ribbon"></span>
+        </button>
+        <h1 class="title" id="lock-title"></h1>
+        <p class="lead" id="lock-sub"></p>
+        <div class="countdown" id="countdown">
+          <div><strong data-cd="d">0</strong><span>din</span></div>
+          <div><strong data-cd="h">0</strong><span>ghante</span></div>
+          <div><strong data-cd="m">0</strong><span>minute</span></div>
+          <div><strong data-cd="s">0</strong><span>second</span></div>
         </div>
-        <span class="meter-text" id="love-meter-text">20% Love</span>
-      </div>
-
-      <button type="button" class="wallet-nav-chip" id="btn-open-wallet" title="View your unlocked love coupons!">
-        <span class="chip-icon">🎟️</span>
-        <span>Wallet (<strong id="wallet-coupons-count">0</strong>)</span>
-      </button>
-
-      <div class="love-counter-chip" id="love-clicks-chip">
-        <span class="chip-icon">✨</span>
-        <span id="total-clicks-count">0</span> Love Clicks
-      </div>
-    </div>
-  </header>
-
-  <!-- Reward Toast Notifications Container -->
-  <div class="toast-container" id="toast-container" aria-live="polite"></div>
-
-  <!-- Floating Kiss Cannon & Bombardment Widget -->
-  <aside class="floating-kiss-bombardment" id="kiss-cannon-widget" title="Click for an Infinite Kiss Storm! 💋">
-    <button type="button" class="btn-kiss-cannon" id="btn-kiss-storm" aria-label="Bombard With Kisses">
-      <span class="cannon-emoji">💋</span>
-      <span class="cannon-text">Kiss Shower!</span>
-      <span class="cannon-burst-particles">✨</span>
-    </button>
-  </aside>
-
-  <!-- Main Multi-Stage Interactive Journey Container -->
-  <main class="journey-wrapper">
-
-    <!-- ========================================================================= -->
-    <!-- STAGE 1: The Sealed Vintage Envelope (The Invitation)                     -->
-    <!-- ========================================================================= -->
-    <section class="stage-section active" id="stage-1" aria-labelledby="envelope-title">
-      <div class="stage-center-box">
-        <div class="floating-tagline" id="envelope-tagline">
-          ✨ A confidential birthday journey created with love, just for you. ✨
-        </div>
-
-        <!-- 3D Envelope Wrapper -->
-        <div class="envelope-scene" id="envelope-scene">
-          <!-- Transparent Floating Sticker Decor -->
-          <img src="assets/sticker_cupid_heart.svg" alt="Cupid Heart" class="floating-sticker sticker-envelope" aria-hidden="true">
-          
-          <div class="envelope-card-wrapper" id="envelope-wrapper">
-            
-            <div class="envelope-back"></div>
-            
-            <!-- Letter inside envelope -->
-            <article class="letter-paper" id="envelope-letter">
-              <div class="letter-inner">
-                <span class="letter-ribbon">👑 Special Delivery</span>
-                <h1 class="letter-title" id="letter-teaser-title">Hey Gorgeous! 💕</h1>
-                <p class="letter-date" id="letter-date-display">Today is YOUR day!</p>
-                <p class="letter-snippet" id="letter-teaser-body">
-                  Before you can reach your grand birthday surprise, you must embark on a sweet adventure through our memories.
-                  Prove you're ready by completing your first cute task below!
-                </p>
-
-                <!-- CUTE TASK 1: Affirmation Verification -->
-                <div class="cute-affirmation-box" id="cute-affirmation-box">
-                  <div class="affirmation-badge">Task 1 • Sweet Security Check 🐾</div>
-                  <p class="affirmation-question">Who is the prettiest, sweetest & most loved girl in the entire universe?</p>
-                  <div class="affirmation-buttons">
-                    <button type="button" class="btn-affirmation" data-ans="1">A) Me! 👸</button>
-                    <button type="button" class="btn-affirmation" data-ans="2">B) Also Me! 💅</button>
-                    <button type="button" class="btn-affirmation" data-ans="3">C) Definitely Me! 👑</button>
-                  </div>
-                  <div class="affirmation-feedback hidden" id="affirmation-feedback">
-                    🎉 <strong>100% CORRECT!</strong> Key Unlocked! Proceed below:
-                  </div>
-                </div>
-
-                <div class="letter-actions">
-                  <button type="button" class="btn-romantic-primary pulse-hover" id="btn-start-quest">
-                    <span>Begin Love Quest 🗝️</span>
-                  </button>
-                </div>
-              </div>
-            </article>
-
-            <!-- Front Envelope Flap with 3D Wax Seal -->
-            <div class="envelope-front"></div>
-            <div class="envelope-flap" id="envelope-flap"></div>
-            
-            <!-- Interactive Wax Seal -->
-            <div class="wax-seal" id="wax-seal" role="button" tabindex="0" aria-label="Break Wax Seal">
-              <div class="seal-inner">
-                <span class="seal-heart">💖</span>
-                <span class="seal-text" id="seal-stamp-text">FOR HER</span>
-              </div>
-              <div class="seal-glow"></div>
-            </div>
-
-          </div>
-        </div>
-
-        <p class="envelope-prompt" id="envelope-prompt-text">
-          👆 <span class="highlight-text">Tap the Golden Wax Seal</span> to open your surprise!
-        </p>
+        <p class="tease" id="lock-tease"></p>
       </div>
     </section>
 
-    <!-- ========================================================================= -->
-    <!-- STAGE 2: The Constellation of Love Crystals (Interactive Click Quest)     -->
-    <!-- ========================================================================= -->
-    <section class="stage-section" id="stage-2" aria-labelledby="stage2-heading">
-      <div class="stage-inner-container">
-        
-        <header class="stage-header">
-          <span class="stage-badge">QUEST I • CLICK HUNT</span>
-          <h2 id="stage2-heading" class="gradient-heading">The Constellation of Reasons</h2>
-          <p class="stage-subtext">
-            My love for you has a million reasons. Find and tap all <strong>6 floating crystals</strong> below to unlock the secret Memory Vault!
-          </p>
-          
-          <div class="crystal-progress-card">
-            <div class="progress-info-row">
-              <span class="progress-label">Crystals Collected:</span>
-              <span class="progress-numbers"><span id="crystals-found-count">0</span> / 6</span>
-            </div>
-            <div class="progress-bar-track">
-              <div class="progress-bar-fill" id="crystals-progress-fill" style="width: 0%"></div>
-            </div>
+    <!-- ===================================================== -->
+    <!-- 1. HELLO — midnight whisper & lights                   -->
+    <!-- ===================================================== -->
+    <section class="scene" data-scene="hello" aria-labelledby="hello-name">
+      <div class="scene-inner center">
+        <div class="whispers" id="whispers" aria-live="polite"></div>
+        <button type="button" class="btn btn-glow hidden" id="btn-lights"></button>
+        <p class="hint hidden" id="sound-hint"></p>
+
+        <div class="birthday-reveal hidden" id="birthday-reveal">
+          <div class="chetna-avatar-wrap">
+            <img src="assets/chetna_avatar.jpg" alt="Chetna Birthday Queen" class="chetna-avatar" />
           </div>
+          <p class="hb-small">Happy Birthday</p>
+          <h1 class="hb-name" id="hello-name"></h1>
+          <p class="lead" id="hello-sub"></p>
+          <button type="button" class="btn btn-primary" id="btn-hello-next"></button>
+        </div>
+
+        <button type="button" class="link-btn hidden" id="btn-resume">Jahan chhoda tha, wahin se? →</button>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 2. RULE — smash "Log kya kahenge?"                     -->
+    <!-- ===================================================== -->
+    <section class="scene" data-scene="rule" aria-labelledby="rule-heading">
+      <div class="scene-inner center">
+        <h2 class="title" id="rule-heading"></h2>
+        <button type="button" class="signboard" id="signboard" aria-label="Board ko tap karo">
+          <span class="sign-post"></span>
+          <span class="sign-face">
+            <span class="sign-text" id="sign-text"></span>
+            <svg class="sign-cracks" viewBox="0 0 300 140" preserveAspectRatio="none" aria-hidden="true">
+              <path class="crack c1" d="M150 0 L140 40 L160 62 L138 100 L150 140"/>
+              <path class="crack c2" d="M0 50 L60 60 L90 48 L140 40"/>
+              <path class="crack c3" d="M300 70 L240 66 L210 80 L160 62"/>
+              <path class="crack c4" d="M40 140 L80 110 L138 100"/>
+              <path class="crack c5" d="M270 0 L230 30 L200 34 L160 62"/>
+            </svg>
+          </span>
+        </button>
+        <p class="hit-line" id="hit-line" aria-live="polite"></p>
+        <p class="hint" id="rule-instruction"></p>
+
+        <div class="card reveal-card hidden" id="rule-broken">
+          <h3 id="rule-broken-title"></h3>
+          <p id="rule-broken-body"></p>
+          <button type="button" class="btn btn-primary" id="btn-promise"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 3. PLAYGROUND — four childish toys                     -->
+    <!-- ===================================================== -->
+    <section class="scene" data-scene="playground" aria-labelledby="pg-title">
+      <div class="scene-inner">
+        <header class="scene-head">
+          <h2 class="title" id="pg-title"></h2>
+          <p class="lead" id="pg-sub"></p>
         </header>
 
-        <!-- Floating Orbs Playground Area -->
-        <div class="crystal-playground" id="crystal-playground">
-          <!-- Floating interactive crystal orbs dynamically injected via JS -->
-        </div>
-
-        <!-- Unlocked Reasons Grid (revealed as she clicks each) -->
-        <div class="revealed-reasons-grid" id="revealed-reasons-grid">
-          <!-- Cards populated dynamically -->
-        </div>
-
-        <!-- Stage 2 Completion Banner with Soulmate Quiz Task -->
-        <div class="stage-unlock-card hidden" id="stage2-unlock-banner">
-          <div class="unlock-icon">🎉</div>
-          <h3>Vault I Cleared!</h3>
-          <p>You collected all 6 reasons of love and unlocked <strong>6 Love Coupons</strong> in your wallet!</p>
-          
-          <!-- Task 2: Soulmate Compatibility Quiz -->
-          <div class="soulmate-quiz-container" id="soulmate-quiz-container">
-            <div class="quiz-badge">Task 2 • Soulmate Compatibility Quiz 🧩</div>
-            <h4 class="quiz-title">Answer 3 fun questions to unlock Memory Lane!</h4>
-            
-            <div class="quiz-questions-flow" id="quiz-questions-flow">
-              <!-- Dynamically populated from config.soulmateQuiz -->
-            </div>
-            
-            <div class="quiz-score-card hidden" id="quiz-score-card">
-              <div class="score-stars">⭐⭐⭐⭐⭐</div>
-              <h4>COMPATIBILITY: 10,000,000% ♾️ MATCH!</h4>
-              <p>You two were definitely made for each other. Memory Lane is now open!</p>
-            </div>
-          </div>
-
-          <button type="button" class="btn-romantic-primary" id="btn-goto-stage-3">
-            <span>Enter Memory Lane 📸 ✨</span>
+        <div class="toy-grid">
+          <button type="button" class="toy" data-toy="balloons">
+            <span class="toy-icon">🎈</span><span class="toy-name">Balloon Phodo</span><span class="toy-check">✓</span>
+          </button>
+          <button type="button" class="toy" data-toy="tareef">
+            <span class="toy-icon">💐</span><span class="toy-name">Tareef Machine</span><span class="toy-check">✓</span>
+          </button>
+          <button type="button" class="toy" data-toy="lantern">
+            <span class="toy-icon">🏮</span><span class="toy-name">Wish Lantern</span><span class="toy-check">✓</span>
+          </button>
+          <button type="button" class="toy" data-toy="wardrobe">
+            <span class="toy-icon">👗</span><span class="toy-name">Apne Mann Ke Kapde</span><span class="toy-check">✓</span>
           </button>
         </div>
 
+        <p class="hint center-text" id="pg-progress">0 / 4 khilone khele</p>
+        <div class="center-text">
+          <button type="button" class="btn btn-primary hidden" id="btn-pg-next">Ab ghumne chalein? 🏍️</button>
+        </div>
+      </div>
+
+      <!-- Toy panels (overlay sheets) -->
+      <div class="sheet" id="toy-balloons" role="dialog" aria-modal="true" aria-label="Balloon Phodo">
+        <div class="sheet-inner">
+          <button type="button" class="sheet-close" aria-label="Band karo">✕</button>
+          <h3>Balloon Phodo 🎈</h3>
+          <p class="hint">Har balloon me ek chhupi baat hai. Saare phodo!</p>
+          <div class="balloon-field" id="balloon-field"></div>
+          <p class="balloon-msg" id="balloon-msg" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="sheet" id="toy-tareef" role="dialog" aria-modal="true" aria-label="Tareef Machine">
+        <div class="sheet-inner">
+          <button type="button" class="sheet-close" aria-label="Band karo">✕</button>
+          <h3>Tareef Machine 💐</h3>
+          <p class="hint" id="tareef-intro"></p>
+          <div class="machine">
+            <div class="machine-screen"><span id="tareef-count">0</span> tareefein nikli</div>
+            <div class="machine-slot"><div class="slip" id="tareef-slip">Button dabao 👇</div></div>
+            <button type="button" class="machine-btn" id="btn-tareef">TAREEF DO</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sheet" id="toy-lantern" role="dialog" aria-modal="true" aria-label="Wish Lantern">
+        <div class="sheet-inner">
+          <button type="button" class="sheet-close" aria-label="Band karo">✕</button>
+          <h3>Wish Lantern 🏮</h3>
+          <p class="hint" id="lantern-intro"></p>
+          <div class="lantern-sky" id="lantern-sky" aria-hidden="true">
+            <div class="lantern-moon"></div>
+            <div class="lantern-city"></div>
+          </div>
+          <p class="lantern-reply" id="lantern-reply" aria-live="polite"></p>
+          <div class="lantern-suggest" id="lantern-suggest"></div>
+          <form class="lantern-form" id="lantern-form">
+            <input type="text" id="lantern-input" maxlength="80" autocomplete="off">
+            <button type="submit" class="btn btn-glow" id="btn-lantern"></button>
+          </form>
+          <p class="lantern-count" id="lantern-count"></p>
+        </div>
+      </div>
+
+      <div class="sheet" id="toy-wardrobe" role="dialog" aria-modal="true" aria-label="Apne Mann Ke Kapde">
+        <div class="sheet-inner wardrobe-sheet">
+          <button type="button" class="sheet-close" aria-label="Band karo">✕</button>
+          <h3>Apne Mann Ke Kapde 👗</h3>
+          <p class="hint" id="wardrobe-intro"></p>
+          <div class="wardrobe">
+            <div class="doll-stage">
+              <svg class="doll" id="doll" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 600" role="img" aria-label="Billu ka 3D outfit"></svg>
+              <div class="stamp hidden" id="wardrobe-stamp"></div>
+            </div>
+            <div class="wd-tabs" id="wd-tabs" role="tablist"></div>
+            <div class="wd-options" id="wd-options"></div>
+            <div class="wd-actions">
+              <button type="button" class="btn btn-ghost" id="btn-wd-random">🎲 Surprise me</button>
+              <button type="button" class="btn btn-primary" id="btn-wardrobe-done">Ye pehnungi! ✨</button>
+            </div>
+            <div class="wd-result hidden" id="wd-result">
+              <img id="wd-photo" alt="Billu ka look">
+              <p id="wd-result-text"></p>
+              <div class="wd-actions">
+                <button type="button" class="btn btn-glow" id="btn-wd-save">Photo save karo 📸</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- ========================================================================= -->
-    <!-- STAGE 3: Memory Lane & Interactive Scratch-Off Card                       -->
-    <!-- ========================================================================= -->
-    <section class="stage-section" id="stage-3" aria-labelledby="stage3-heading">
-      <div class="stage-inner-container">
-        
-        <header class="stage-header">
-          <span class="stage-badge">QUEST II • SWEET MEMORIES</span>
-          <h2 id="stage3-heading" class="gradient-heading">Our Favorite Moments</h2>
-          <p class="stage-subtext">
-            Tap any Polaroid to flip it over and read its handwritten secret, or click the photo to zoom!
-          </p>
+    <!-- ===================================================== -->
+    <!-- 4. RIDE — bike to the mountains                        -->
+    <!-- ===================================================== -->
+    <section class="scene scene-ride" data-scene="ride" aria-labelledby="ride-title">
+      <div class="ride-world" id="ride-world" aria-hidden="true">
+        <div class="ride-sky" id="ride-sky"></div>
+        <div class="ride-stars"></div>
+        <div class="ride-moon"></div>
+        <div class="ride-sun" id="ride-sun"></div>
+        <!-- Mountain / forest layers are painted procedurally in script.js -->
+        <div class="layer layer-far"></div>
+        <div class="ride-haze"></div>
+        <div class="layer layer-mid"></div>
+        <div class="layer layer-trees"></div>
+        <div class="road"><div class="road-dash" id="road-dash"></div></div>
+        <div class="ride-night"></div>
+        <img class="bike-art hidden" id="bike-art" alt="">
+        <canvas class="bike-art hidden" id="bike-canvas" width="1376" height="768" aria-hidden="true"></canvas>
+        <!-- Cinematic silhouette: him riding, her side-saddle behind him (Royal Enfield Classic 350) -->
+        <svg class="bike" id="bike" viewBox="0 0 260 160">
+          <defs>
+            <linearGradient id="beamGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#fff3cf" stop-opacity=".8"/>
+              <stop offset="25%" stop-color="#ffe8a3" stop-opacity=".45"/>
+              <stop offset="100%" stop-color="#fff3cf" stop-opacity="0"/>
+            </linearGradient>
+            <radialGradient id="lampGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="40%" stop-color="#fffbea"/>
+              <stop offset="100%" stop-color="#ffc857"/>
+            </radialGradient>
+            <linearGradient id="chromeBar" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity=".9"/>
+              <stop offset="50%" stop-color="#9e95a8" stop-opacity=".7"/>
+              <stop offset="100%" stop-color="#554d60" stop-opacity=".8"/>
+            </linearGradient>
+            <radialGradient id="tailGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ff5252"/>
+              <stop offset="60%" stop-color="#d50000"/>
+              <stop offset="100%" stop-color="#8b0000"/>
+            </radialGradient>
+          </defs>
+
+          <!-- 1. Headlight Luminous Beam -->
+          <path class="beam" d="M194 62 L390 14 L390 118 Z" fill="url(#beamGrad)"/>
+
+          <!-- 2. Rear Wheel (Center 58, 124 - Radius 27, Ground y=151) -->
+          <g class="wheel" style="transform-origin:58px 124px">
+            <!-- Tire -->
+            <circle cx="58" cy="124" r="26" fill="none" stroke="#0a0610" stroke-width="6"/>
+            <!-- Rim -->
+            <circle cx="58" cy="124" r="20" fill="none" stroke="#6d647a" stroke-width="1.4"/>
+            <!-- Inner Rim Lip -->
+            <circle cx="58" cy="124" r="18.5" fill="none" stroke="#332c3d" stroke-width="0.8"/>
+            <!-- Brake Hub & Sprocket -->
+            <circle cx="58" cy="124" r="9.5" fill="#1b1522" stroke="#4e4659" stroke-width="0.8"/>
+            <!-- 16 Classic Wire Spokes -->
+            <path d="M58 104 V144 M38 124 H78 M44 110 L72 138 M72 110 L44 138 M41 114 L75 134 M75 114 L41 134 M50 106 L66 142 M66 106 L50 142 M47 107 L69 141 M69 107 L47 141 M39 120 L77 128 M77 120 L39 128 M40 128 L76 120 M76 128 L40 120" stroke="#52495e" stroke-width="0.75" opacity=".85"/>
+            <!-- Center Axle Bolt -->
+            <circle cx="58" cy="124" r="3.8" fill="#7a7086"/>
+            <circle cx="58" cy="124" r="1.8" fill="#ffffff" opacity=".8"/>
+          </g>
+
+          <!-- 3. Front Wheel (Center 204, 124 - Radius 27, Ground y=151) -->
+          <g class="wheel" style="transform-origin:204px 124px">
+            <!-- Tire -->
+            <circle cx="204" cy="124" r="26" fill="none" stroke="#0a0610" stroke-width="6"/>
+            <!-- Rim -->
+            <circle cx="204" cy="124" r="20" fill="none" stroke="#6d647a" stroke-width="1.4"/>
+            <!-- Inner Rim Lip -->
+            <circle cx="204" cy="124" r="18.5" fill="none" stroke="#332c3d" stroke-width="0.8"/>
+            <!-- Disc Brake Rotor -->
+            <circle cx="204" cy="124" r="13" fill="none" stroke="#564c63" stroke-width="1.4" stroke-dasharray="2.5 1.5"/>
+            <!-- Brake Hub -->
+            <circle cx="204" cy="124" r="6.5" fill="#1b1522" stroke="#4e4659" stroke-width="0.8"/>
+            <!-- 16 Classic Wire Spokes -->
+            <path d="M204 104 V144 M184 124 H224 M190 110 L218 138 M218 110 L190 138 M187 114 L221 134 M221 114 L187 134 M196 106 L212 142 M212 106 L196 142 M193 107 L215 141 M215 107 L193 141 M185 120 L223 128 M223 120 L185 128 M186 128 L222 120 M222 128 L186 120" stroke="#52495e" stroke-width="0.75" opacity=".85"/>
+            <!-- Center Axle Bolt -->
+            <circle cx="204" cy="124" r="3.8" fill="#7a7086"/>
+            <circle cx="204" cy="124" r="1.8" fill="#ffffff" opacity=".8"/>
+          </g>
+
+          <!-- 4. Main Silhouette Group (Coupled with Sunrise Rim Light Glow) -->
+          <g class="sil">
+            <!-- === HER FLYING DUPATTA (Fluttering in the wind) === -->
+            <path class="dupatta-fly" d="M84 52 C72 54 58 48 42 54 C30 58 18 54 6 56 C2 57 0 62 4 64 C12 67 22 62 34 66 C46 70 60 64 74 66 C80 67 84 63 86 58 Z" fill="#220c18" opacity=".92"/>
+            <path class="dupatta-fly" d="M80 56 C68 59 52 52 38 60 C26 65 14 62 4 67 C16 73 30 68 46 72 C60 76 72 68 82 66 Z" fill="#2f1022" opacity=".7"/>
+
+            <!-- === HER FLYING VOLUMINOUS WAVY HAIR === -->
+            <path class="hair-fly" d="M92 24 C82 20 68 22 52 28 C42 32 32 40 26 48 C36 43 46 41 56 41 C46 46 38 54 32 63 C44 56 56 53 68 51 C62 57 56 63 52 71 C62 64 72 59 82 54 C80 60 76 66 73 73 C82 64 88 56 94 48 C91 54 88 61 86 68 C94 58 98 49 100 40 Z" fill="#0d0812"/>
+
+            <!-- === HER HEAD PROFILE & FEATURES (Chetna reference likeness) === -->
+            <!-- Head Base / Neck / Chin -->
+            <path d="M94 22 C91 22 88 24 86 27 C84 31 84 38 86 42 C87 45 89 48 91 50 C93 47 95 44 96 42 C99 41 101 39 100 36 C99 34 98 33 100 32 C101 31 101 29 99 28 C98 25 96 22 94 22 Z"/>
+            <!-- Soft front wavy lock over her shoulder -->
+            <path d="M92 36 C90 42 88 48 89 54 C90 58 93 62 95 64 C94 59 93 54 94 48 C95 43 95 39 94 36 Z" fill="#0d0812"/>
+            <!-- Her Torso & Kurta Bodice -->
+            <path d="M84 48 C80 53 79 61 80 69 C81 74 83 78 85 82 L98 83 C101 78 101 70 100 64 C99 57 97 51 94 47 Z"/>
+            <!-- Her Right Arm wrapped affectionately around his waist -->
+            <path d="M86 52 C89 56 94 60 100 62 C106 63 112 64 116 64 C117 63 117 61 115 60 C110 59 104 58 98 56 C94 54 90 51 88 49 Z"/>
+            <!-- Her Slender Hand resting on his jacket -->
+            <path d="M114 61 C116 61 118 62 119 64 C118 65 116 66 114 65 C113 64 113 62 114 61 Z" fill="#ffd8be"/>
+            <!-- Her Side-Saddle Legs & Flowing Anarkali Kurta Hem -->
+            <path d="M82 80 C78 86 76 94 77 102 C79 110 84 116 92 118 C96 117 99 114 101 110 C104 104 104 96 102 90 C100 85 96 81 92 80 Z"/>
+            <!-- Pleated flared folds of the Kurta draping over the seat -->
+            <path d="M77 82 C73 88 71 96 72 105 C74 112 79 118 86 121 C88 119 88 116 86 112 C83 106 82 98 83 91 Z"/>
+            <!-- Her dainty feet & pointed Golden Juttis resting side by side -->
+            <path d="M93 117 C91 120 90 123 93 125 C96 126 99 125 101 123 C100 121 98 119 96 117 Z" fill="#d4af37"/>
+
+            <!-- === HIM (The Rider - Alert Cruiser Stance) === -->
+            <!-- Full-face Motorcycle Helmet with aerodynamic contour -->
+            <path d="M116 16 C124 14 133 17 137 24 C140 30 139 37 134 41 C130 43 124 43 119 41 C114 38 112 32 113 25 C114 20 115 17 116 16 Z"/>
+            <!-- Sleek Visor -->
+            <path d="M128 22 C134 23 138 27 137 32 C134 33 129 33 126 31 C126 27 127 24 128 22 Z" fill="#252030"/>
+            <!-- Rider Jacket Collar & Neck -->
+            <path d="M117 38 L123 39 L125 45 L116 44 Z"/>
+            <!-- Rider Jacket Torso (leaning slightly forward into the wind) -->
+            <path d="M112 44 C117 43 124 44 130 46 C134 52 135 60 134 68 C132 75 129 80 125 84 L108 83 C106 77 106 69 107 61 C108 54 110 48 112 44 Z"/>
+            <!-- Rider Arms extended naturally to Handlebar Grips -->
+            <path d="M124 46 C132 46 142 48 150 47 C155 46 159 45 162 44 L161 49 C157 50 152 51 146 52 C138 53 130 52 124 50 Z"/>
+            <!-- Gloved Hands on Handlebars -->
+            <path d="M159 43 C162 42 165 43 165 46 C164 48 161 48 159 47 Z"/>
+            <!-- Rider Thigh hugging the teardrop tank -->
+            <path d="M114 78 C120 78 128 79 135 81 C140 83 143 87 141 91 C138 93 133 93 127 92 C120 90 115 86 112 82 Z"/>
+            <!-- Rider Lower Leg & Sturdy Boots on Footpeg -->
+            <path d="M138 88 C139 94 138 102 136 110 C135 114 132 118 127 119 C123 119 123 116 125 113 C127 108 129 101 130 94 Z"/>
+            <path d="M125 114 C128 113 133 114 136 116 C135 119 130 120 125 120 Z" fill="#0d0812"/>
+
+            <!-- === THE MOTORCYCLE: ROYAL ENFIELD CLASSIC 350 === -->
+            <!-- Classic Round Headlight Bucket / Casquette Nacelle -->
+            <path d="M176 56 C182 54 190 56 195 62 C194 68 188 73 182 74 C177 73 174 69 174 63 Z" fill="#120b18"/>
+            <!-- Handlebar Stem & Crossbar -->
+            <path d="M174 55 L164 45 M164 45 L158 44" stroke="#120b18" stroke-width="3.2" fill="none"/>
+            <!-- Round Chrome Rear-view Mirror -->
+            <path d="M166 44 L168 32" stroke="#120b18" stroke-width="1.5" fill="none"/>
+            <circle cx="168" cy="31" r="3.5" fill="#686074"/>
+
+            <!-- Front Telescopic Forks & Gaiters -->
+            <path d="M178 60 L204 124 M183 62 L207 122" stroke="#120b18" stroke-width="3.8" fill="none"/>
+            <!-- Ribbed Fork Gaiters -->
+            <path d="M186 84 L195 104" stroke="#0a050e" stroke-width="6" stroke-linecap="round" fill="none"/>
+
+            <!-- Front Mudguard / Fender -->
+            <path d="M180 108 C182 96 193 91 206 91 C218 91 228 98 232 108 L227 110 C223 102 215 96 206 96 C196 96 188 101 184 110 Z" fill="#120b18"/>
+            <!-- Front Fender Stay Braces -->
+            <path d="M204 124 L225 107 M204 124 L184 107" stroke="#120b18" stroke-width="1.4" fill="none"/>
+
+            <!-- Iconic Teardrop Fuel Tank -->
+            <path d="M172 64 C170 57 158 55 144 55 C132 55 122 62 116 72 C124 75 138 75 152 74 C162 73 169 70 172 64 Z" fill="#120b18"/>
+
+            <!-- Sprung Rider Saddle & Pillion Pad -->
+            <path d="M104 74 C108 72 116 72 122 74 C120 78 114 80 106 80 Z" fill="#0d0812"/>
+            <path d="M74 76 C80 74 92 74 100 76 C98 81 88 82 76 81 Z" fill="#0d0812"/>
+
+            <!-- Engine Cylinder & Crankcase Block -->
+            <!-- Cylinder Block with Cooling Fins -->
+            <path d="M116 78 H146 V102 H116 Z" fill="#120b18"/>
+            <!-- Engine Crankcase & Rounded Clutch Cover -->
+            <path d="M104 100 C110 96 142 96 148 102 C154 110 152 124 144 128 C132 133 112 133 104 124 C98 116 98 106 104 100 Z" fill="#120b18"/>
+
+            <!-- Long Chrome Peashooter Exhaust Pipe & Silencer -->
+            <!-- Header pipe emerging from front of cylinder -->
+            <path d="M146 84 C152 86 156 94 156 104 C156 114 152 122 144 127 C138 130 128 130 110 130 L22 130 L22 125 L110 125 C126 125 136 124 142 120 C148 116 150 108 149 100 C148 94 144 88 138 86 Z" fill="#120b18"/>
+
+            <!-- Rear Metal Mudguard / Fender -->
+            <path d="M28 118 C28 96 46 86 76 88 L78 94 C54 92 38 100 34 118 Z" fill="#120b18"/>
+            <!-- Chrome Pillion Grab Rail -->
+            <path d="M66 88 C68 81 74 80 82 81 L82 84 C76 83 72 84 70 89 Z" fill="#5b5466"/>
+
+            <!-- Rear Dual Shock Absorber with Spring -->
+            <path d="M58 124 L72 96" stroke="#120b18" stroke-width="4.5" fill="none"/>
+          </g>
+
+          <!-- 5. Chrome & Luminous Accent Overlays (Delicate highlights that elevate the silhouette) -->
+          <!-- Exhaust Chrome Specular Gleam -->
+          <path d="M26 126.5 L124 126.5" stroke="url(#chromeBar)" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>
+          <!-- Engine Cooling Fin Slats -->
+          <path d="M118 82 H144 M118 86 H144 M118 90 H144 M118 94 H144 M118 98 H144" stroke="#52495e" stroke-width="1.1" opacity=".85"/>
+          <!-- Tank Chrome Filler Cap -->
+          <ellipse cx="144" cy="55" rx="2.5" ry="1.2" fill="#d2cadb"/>
+          <!-- Headlight Chrome Bezel & Lens -->
+          <path d="M190 56 C194 58 195 62 195 66 C194 70 191 72 188 72" fill="none" stroke="#ffffff" stroke-width="1.2" opacity=".9"/>
+          <circle cx="191" cy="63" r="6.5" fill="url(#lampGrad)"/>
+          <circle cx="191" cy="63" r="14" fill="#fff2c2" opacity=".22"/>
+
+          <!-- Vintage Red Tail Lamp & Ambient Glow -->
+          <rect x="25" y="103" width="5.5" height="4.5" rx="1.5" fill="url(#tailGrad)"/>
+          <circle cx="27" cy="105" r="7" fill="#ff3b3b" opacity=".3"/>
+
+          <!-- Chetna's Sparkle Accents (Silver Jhumka & Golden Kangan) -->
+          <!-- Silver-oxidised Jhumka at her ear -->
+          <circle cx="88" cy="37" r="1.8" fill="#ffffff" opacity=".95"/>
+          <path d="M86 39 L90 39 L89 42 L87 42 Z" fill="#e0e0e8" opacity=".9"/>
+          <circle cx="88" cy="43" r="0.8" fill="#ffffff"/>
+          <!-- Stack of Golden Bangles on her wrist -->
+          <ellipse cx="108" cy="62" rx="1.6" ry="3" fill="none" stroke="#ffd700" stroke-width="1.2" opacity=".9"/>
+          <ellipse cx="111" cy="62.5" rx="1.6" ry="3" fill="none" stroke="#ffd700" stroke-width="1.2" opacity=".9"/>
+          <!-- Tiny Ruby Bindi on her forehead -->
+          <circle cx="98" cy="28" r="0.8" fill="#c2185b" opacity=".95"/>
+        </svg>
+        <div class="milestone-sign" id="milestone-sign"></div>
+      </div>
+
+      <div class="ride-ui">
+        <header class="scene-head">
+          <h2 class="title" id="ride-title"></h2>
+          <p class="lead" id="ride-sub"></p>
         </header>
-
-        <!-- 3D Flippable Polaroid Gallery -->
-        <div class="polaroid-gallery-grid" id="polaroid-gallery">
-          <!-- Cards injected via script.js -->
+        <div class="story-card hidden" id="story-card" aria-live="polite">
+          <p class="story-sign" id="story-sign"></p>
+          <p class="story-text" id="story-text"></p>
         </div>
-
-        <!-- Interactive Scratch Card Feature -->
-        <div class="scratch-card-wrapper">
-          <div class="scratch-card-header">
-            <span class="sparkle-icon">✨</span>
-            <h3>The Secret Scratch-Off Promise</h3>
-            <p id="scratch-instruction-text">
-              Scratch off the golden foil below with your finger or mouse to reveal a hidden secret message!
-            </p>
-          </div>
-
-          <div class="scratch-card-box" id="scratch-box">
-            <!-- Hidden Secret Message Behind Foil -->
-            <div class="scratch-secret-content" id="scratch-secret">
-              <div class="secret-ribbon">💌 A Promise For Life</div>
-              <h4 id="scratch-secret-title">My Eternal Promise To You 💖</h4>
-              <p id="scratch-secret-body">
-                No matter how many years pass or where life takes us, I will always choose you, cherish you, and love you with every beat of my heart.
-              </p>
-              <div class="scratch-unlocked-badge">✨ PROMISE UNLOCKED ✨</div>
-            </div>
-
-            <!-- Canvas Foil Layer (She scratches this!) -->
-            <canvas id="scratch-canvas" class="scratch-canvas"></canvas>
-          </div>
-
-          <div class="scratch-status-row">
-            <div class="scratch-status" id="scratch-status-text">
-              Scratch progress: <strong id="scratch-percent">0%</strong>
-            </div>
-            <button type="button" class="btn-scratch-instant" id="btn-scratch-instant">
-              ✨ Reveal Secret Instantly
-            </button>
-          </div>
-
-          <div class="stage-unlock-card hidden" id="stage3-unlock-banner">
-            <div class="unlock-icon">📜</div>
-            <h3>Secret Discovered!</h3>
-            <p>You have unlocked the deepest chamber of my heart — my personal Love Letter to you.</p>
-            <button type="button" class="btn-romantic-primary" id="btn-goto-stage-4">
-              <span>Read The Love Letter 💌</span>
-            </button>
-          </div>
+        <div class="ride-controls">
+          <div class="ride-meter"><div class="ride-meter-fill" id="ride-meter-fill"></div></div>
+          <button type="button" class="btn btn-glow ride-hold" id="btn-ride"></button>
+          <button type="button" class="btn btn-primary hidden" id="btn-ride-next">Aage chalo →</button>
         </div>
-
       </div>
     </section>
 
-    <!-- ========================================================================= -->
-    <!-- STAGE 4: The Heartfelt Love Letter (Long Paragraphs & Devotion)           -->
-    <!-- ========================================================================= -->
-    <section class="stage-section" id="stage-4" aria-labelledby="stage4-heading">
-      <div class="stage-inner-container">
-        
-        <header class="stage-header">
-          <span class="stage-badge">QUEST III • FROM THE HEART</span>
-          <h2 id="stage4-heading" class="gradient-heading">A Letter For My Soulmate</h2>
-          <p class="stage-subtext">
-            Words can hardly capture how much you mean to me, but here is a piece of my soul written just for you.
-          </p>
+    <!-- ===================================================== -->
+    <!-- 5. COURT — "Tumhe meri kadar nahi"                     -->
+    <!-- ===================================================== -->
+    <section class="scene" data-scene="court" aria-labelledby="court-title">
+      <div class="scene-inner">
+        <header class="scene-head">
+          <div class="court-badge-wrap">
+            <img src="assets/chetna_avatar.jpg" alt="Judge Mishrayin" class="court-avatar" />
+            <span class="court-badge-tag">Honourable Judge Mishrayin 🧑‍⚖️</span>
+          </div>
+          <h2 class="title" id="court-title"></h2>
+          <p class="case-title" id="court-case-title"></p>
+          <p class="lead" id="court-case-text"></p>
         </header>
 
-        <!-- Parchment Love Scroll -->
-        <article class="parchment-scroll">
-          <img src="assets/sticker_love_badge.svg" alt="Birthday Queen" class="floating-sticker sticker-parchment" aria-hidden="true">
-          <div class="scroll-ornament-top">❦ ❧</div>
-          
-          <div class="letter-salutation" id="letter-salutation-text">To My Dearest Love,</div>
-          
-          <div class="letter-body-paragraphs" id="letter-paragraphs-container">
-            <!-- Long emotional romantic paragraphs injected via config.js -->
-          </div>
+        <div class="card court-q" id="court-q">
+          <p class="court-q-text" id="court-question"></p>
+          <div class="court-answers" id="court-answers"></div>
+          <p class="court-reply hidden" id="court-reply"></p>
+        </div>
 
-          <div class="letter-sign-off">
-            <p class="closing-text" id="letter-closing-text">Forever & Always Yours,</p>
-            <div class="signature-line" id="letter-signature-text">With All My Heart ❤️</div>
-          </div>
+        <div class="exhibits hidden" id="exhibits"></div>
 
-          <!-- Interactive Love Tokens in Scroll -->
-          <div class="love-tokens-bar">
-            <span class="token-title">Send a sweet reaction back to me:</span>
-            <div class="token-buttons">
-              <button type="button" class="token-btn" data-reaction="kiss">💋 Send Kiss</button>
-              <button type="button" class="token-btn" data-reaction="hug">🤗 Send Warm Hug</button>
-              <button type="button" class="token-btn" data-reaction="blush">🥰 Blush</button>
-              <button type="button" class="token-btn" data-reaction="love">💖 I Love You Too</button>
-            </div>
-          </div>
+        <div class="center-text">
+          <button type="button" class="btn btn-glow hidden" id="btn-gavel"></button>
+        </div>
 
-          <div class="scroll-ornament-bottom">❦ ❧</div>
+        <div class="card verdict hidden" id="verdict">
+          <div class="gavel" aria-hidden="true">🔨</div>
+          <h3 id="verdict-title"></h3>
+          <p id="verdict-text"></p>
+          <button type="button" class="btn btn-primary" id="btn-court-next">Yaadein dekhein? 📸</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 6. MEMORIES — polaroids                                -->
+    <!-- ===================================================== -->
+    <section class="scene" data-scene="memories" aria-labelledby="mem-title">
+      <div class="scene-inner">
+        <header class="scene-head">
+          <h2 class="title" id="mem-title"></h2>
+          <p class="lead" id="mem-sub"></p>
+        </header>
+        <div class="polaroids" id="polaroids"></div>
+        <div class="center-text">
+          <button type="button" class="btn btn-primary" id="btn-mem-next">Upar dekho, taare… ✨</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 6b. STARS — connect the stars into a heart             -->
+    <!-- ===================================================== -->
+    <section class="scene" data-scene="stars" aria-labelledby="stars-title">
+      <div class="scene-inner">
+        <header class="scene-head">
+          <h2 class="title" id="stars-title"></h2>
+          <p class="lead" id="stars-sub"></p>
+        </header>
+        <div class="star-sky" id="star-sky">
+          <svg viewBox="0 0 300 280" id="star-svg" aria-label="Taare">
+            <defs>
+              <radialGradient id="heartFill" cx=".5" cy=".45" r=".6">
+                <stop offset="0" stop-color="#ffd27a" stop-opacity=".55"/>
+                <stop offset="1" stop-color="#ff8fb1" stop-opacity=".15"/>
+              </radialGradient>
+            </defs>
+            <g id="star-dust"></g>
+            <path id="heart-fill" d="" fill="url(#heartFill)" opacity="0"/>
+            <g id="star-lines"></g>
+            <g id="star-points"></g>
+          </svg>
+        </div>
+        <p class="star-sentence" id="star-sentence" aria-live="polite"></p>
+        <div class="card reveal-card center-text hidden" id="stars-done">
+          <h3 id="stars-done-title"></h3>
+          <p id="stars-done-text"></p>
+          <button type="button" class="btn btn-primary" id="btn-stars-next">Ek cheez likhi hai tumhare liye ✍️</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 7. POEM                                                -->
+    <!-- ===================================================== -->
+    <section class="scene" data-scene="poem" aria-labelledby="poem-title">
+      <div class="scene-inner">
+        <header class="scene-head">
+          <h2 class="title" id="poem-title"></h2>
+          <p class="lead" id="poem-sub"></p>
+        </header>
+        <button type="button" class="notebook" id="notebook" aria-label="Agli line padho">
+          <span class="poem-lines" id="poem-lines"></span>
+          <span class="tap-more" id="tap-more">tap karo, agli line 👆</span>
+        </button>
+
+        <div class="card reply-card hidden" id="reply-card">
+          <label for="reply-text" id="reply-prompt"></label>
+          <textarea id="reply-text" rows="3"></textarea>
+          <p class="reply-saved hidden" id="reply-saved" aria-live="polite"></p>
+          <div class="reply-actions">
+            <button type="button" class="btn btn-glow" id="btn-reply-send"></button>
+            <button type="button" class="btn btn-ghost" id="btn-poem-next">Cake time! 🎂</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 8. CAKE — "2" & "4" candles                            -->
+    <!-- ===================================================== -->
+    <section class="scene" data-scene="cake" aria-labelledby="cake-title">
+      <div class="scene-inner center">
+        <h2 class="title" id="cake-title"></h2>
+        <p class="lead" id="cake-sub"></p>
+
+        <div class="cake" id="cake">
+          <div class="candles">
+            <button type="button" class="candle" data-candle="0" aria-label="Candle 2"><span class="flame"></span><span class="num">2</span></button>
+            <button type="button" class="candle" data-candle="1" aria-label="Candle 4"><span class="flame"></span><span class="num">4</span></button>
+          </div>
+          <div class="tier tier-top"><span class="drip"></span></div>
+          <div class="tier tier-bottom"><span class="sprinkles"></span><span class="cake-name" id="cake-name"></span></div>
+          <div class="plate"></div>
+        </div>
+
+        <button type="button" class="btn btn-ghost" id="btn-mic"></button>
+
+        <div class="wish-overlay hidden" id="wish-overlay">
+          <p class="wish-text" id="wish-text"></p>
+          <div class="wish-timer">
+            <svg class="wish-ring" viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="52" class="ring-bg"/>
+              <circle cx="60" cy="60" r="52" class="ring-fg" id="wish-ring-fg"/>
+            </svg>
+            <span class="wish-sec" id="wish-sec">10</span>
+          </div>
+        </div>
+
+        <div class="card reveal-card hidden" id="cake-done">
+          <h3>🎉 Happy Birthday! 🎉</h3>
+          <p id="wish-done"></p>
+          <button type="button" class="btn btn-primary" id="btn-cake-next">Chitthi se pehle… kuch baatein 💬</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 8b. QUESTIONS — "Dil ki baatein" chat                  -->
+    <!-- ===================================================== -->
+    <section class="scene" data-scene="questions" aria-labelledby="q-title">
+      <div class="scene-inner">
+        <header class="scene-head">
+          <h2 class="title" id="q-title"></h2>
+          <p class="lead" id="q-sub"></p>
+        </header>
+        <div class="chat" id="chat" aria-live="polite"></div>
+        <div class="chat-choices" id="chat-choices"></div>
+        <div class="chat-end hidden" id="chat-end">
+          <button type="button" class="btn btn-primary" id="btn-q-next"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 9. LETTER + COUPONS                                    -->
+    <!-- ===================================================== -->
+    <section class="scene" data-scene="letter" aria-labelledby="letter-title">
+      <div class="scene-inner">
+        <header class="scene-head">
+          <h2 class="title" id="letter-title"></h2>
+        </header>
+
+        <button type="button" class="envelope" id="envelope" aria-label="Chitthi kholo">
+          <span class="env-back"></span>
+          <span class="env-flap"></span>
+          <span class="env-front"></span>
+          <span class="env-seal">💛</span>
+          <span class="env-hint">tap karke kholo</span>
+        </button>
+
+        <article class="letter hidden" id="letter">
+          <p class="letter-salutation" id="letter-salutation"></p>
+          <div id="letter-body"></div>
+          <p class="letter-closing" id="letter-closing"></p>
+          <p class="letter-sign" id="letter-sign"></p>
         </article>
-
-        <!-- Gateway to Cake Cutting -->
-        <div class="stage-unlock-card always-visible">
-          <div class="unlock-icon">🎂</div>
-          <h3>Ready For Your Birthday Cake?</h3>
-          <p>The time has come to make your birthday wish and cut the cake!</p>
-          <button type="button" class="btn-romantic-primary pulse-hover" id="btn-goto-stage-5">
-            <span>Enter The Cake Cutting Ceremony 🎂 🕯️</span>
-          </button>
+        <div class="center-text hidden" id="letter-save-row">
+          <button type="button" class="btn btn-ghost" id="btn-letter-save">📥 Chitthi save karo — hamesha ke liye</button>
         </div>
 
+        <section class="coupons hidden" id="coupons" aria-labelledby="coupons-title">
+          <h3 class="title small" id="coupons-title"></h3>
+          <p class="hint" id="coupons-sub"></p>
+          <div class="coupon-grid" id="coupon-grid"></div>
+          <div class="center-text">
+            <button type="button" class="btn btn-primary" id="btn-letter-next">Bas ek aakhri cheez… 🌙</button>
+          </div>
+        </section>
       </div>
     </section>
 
-    <!-- ========================================================================= -->
-    <!-- STAGE 5: The Grand Birthday Cake Cutting Ceremony 🎂🕯️                     -->
-    <!-- ========================================================================= -->
-    <section class="stage-section" id="stage-5" aria-labelledby="stage5-heading">
-      <div class="stage-inner-container">
-        
-        <header class="stage-header">
-          <span class="stage-badge">GRAND FINALE • STEP 1</span>
-          <h2 id="stage5-heading" class="gradient-heading" id="cake-main-title">Make a Birthday Wish! 🎂</h2>
-          <p class="stage-subtext" id="cake-main-subtitle">
-            Tap each flickering candle flame to blow them out, then grab the golden knife to slice the cake!
-          </p>
-        </header>
-
-        <!-- Interactive 3D Cake Cutting Stage -->
-        <div class="cake-ceremony-stage">
-          
-          <div class="candles-tracker" id="candles-tracker">
-            <span class="candle-stat">Candles Lit: <strong id="candles-remaining-count">3</strong></span>
-            <span class="candle-hint">(Tap each candle flame to extinguish it!)</span>
-          </div>
-
-          <!-- Cake Container with Candles & Slicing Action -->
-          <div class="cake-display-wrapper" id="cake-wrapper">
-            
-            <!-- Realistic Animated Candle Flames Overlay -->
-            <div class="candles-row" id="candles-row">
-              <div class="candle-item" data-candle="1">
-                <div class="candle-stick"></div>
-                <div class="candle-wick"></div>
-                <div class="candle-flame">
-                  <div class="flame-inner"></div>
-                  <div class="flame-glow"></div>
-                </div>
-                <div class="candle-smoke"></div>
-              </div>
-              
-              <div class="candle-item" data-candle="2">
-                <div class="candle-stick center-candle"></div>
-                <div class="candle-wick"></div>
-                <div class="candle-flame">
-                  <div class="flame-inner"></div>
-                  <div class="flame-glow"></div>
-                </div>
-                <div class="candle-smoke"></div>
-              </div>
-
-              <div class="candle-item" data-candle="3">
-                <div class="candle-stick"></div>
-                <div class="candle-wick"></div>
-                <div class="candle-flame">
-                  <div class="flame-inner"></div>
-                  <div class="flame-glow"></div>
-                </div>
-                <div class="candle-smoke"></div>
-              </div>
-            </div>
-
-            <!-- Cake Image with Interactive Slice Line -->
-            <div class="cake-image-box" id="cake-image-box">
-              <img src="assets/cake.jpg" alt="Magnificent Birthday Cake" class="cake-img" id="cake-img">
-              
-              <!-- Slice cut line indicator -->
-              <div class="knife-slice-line" id="slice-line"></div>
-              
-              <!-- Cut slice animation piece -->
-              <div class="cake-slice-piece" id="cake-slice-piece">
-                <img src="assets/cake.jpg" alt="Cake Slice" class="slice-cut-img">
-              </div>
-            </div>
-
-            <!-- Floating Golden Knife (Active once candles are blown) -->
-            <div class="golden-knife disabled" id="golden-knife" title="Click or Drag me across the cake to cut!">
-              <div class="knife-blade"></div>
-              <div class="knife-handle"></div>
-              <div class="knife-sparkle">✨</div>
-              <span class="knife-label">Slice Here! 🔪</span>
-            </div>
-
-          </div>
-
-          <!-- Cake Action Buttons -->
-          <div class="cake-controls-box">
-            <button type="button" class="btn-blow-candles" id="btn-blow-all">
-              <span>💨 Blow Out All Candles With a Wish!</span>
-            </button>
-            <button type="button" class="btn-cut-cake disabled" id="btn-trigger-cut">
-              <span>🔪 Slice The Cake!</span>
-            </button>
-          </div>
-
-          <!-- Celebration Reveal Card (appears after slicing) -->
-          <div class="stage-unlock-card hidden" id="cake-success-card">
-            <div class="unlock-icon">🎉</div>
-            <h3 id="cake-success-title">YAY! A SWEET WISH FOR A SWEETHEART! 🍰</h3>
-            <p id="cake-success-msg">
-              May every single dream you wished for today wrap you in warmth and come true!
-            </p>
-            <button type="button" class="btn-romantic-primary pulse-hover" id="btn-goto-stage-6">
-              <span>Watch Your Birthday Wish Video 🎥 💕</span>
-            </button>
-          </div>
-
+    <!-- ===================================================== -->
+    <!-- 10. GOODNIGHT                                          -->
+    <!-- ===================================================== -->
+    <section class="scene" data-scene="goodnight" aria-labelledby="gn-title">
+      <div class="scene-inner center">
+        <div class="moon big" aria-hidden="true"></div>
+        <div id="gn-ask">
+          <h2 class="title" id="gn-title"></h2>
+          <p class="lead" id="gn-text"></p>
+          <button type="button" class="btn btn-glow" id="btn-lights-off"></button>
         </div>
-
-      </div>
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- STAGE 6: The Grand Birthday Wish Video & Keepsake 🎥💌                     -->
-    <!-- ========================================================================= -->
-    <section class="stage-section" id="stage-6" aria-labelledby="stage6-heading">
-      <div class="stage-inner-container">
-        
-        <header class="stage-header">
-          <span class="stage-badge">THE ULTIMATE ELEMENT • CELEBRATION</span>
-          <h2 id="stage6-heading" class="gradient-heading" id="video-stage-title">Your Birthday Wish Screening 🎬</h2>
-          <p class="stage-subtext" id="video-stage-subtitle">
-            The grand finale you unlocked through every click, every memory, and all my love!
-          </p>
-        </header>
-
-        <!-- Cinema Mode Video Player Frame -->
-        <div class="cinema-video-frame">
-          <div class="neon-heart-border">
-            
-            <!-- Video Container: Dynamically renders local MP4, YouTube, or Animated Reel -->
-            <div class="video-embed-box" id="video-embed-box">
-              
-              <!-- Built-in Animated Memory Reel (Default showcase if no custom video URL is added) -->
-              <div class="animated-memory-reel" id="animated-memory-reel">
-                <div class="reel-slide-content">
-                  <div class="reel-slide active" data-reel-slide="0">
-                    <img src="assets/hero_couple.jpg" alt="Under the Stars" class="reel-slide-img">
-                    <div class="reel-caption-card">
-                      <h3>Happy Birthday, My Entire World 💖</h3>
-                      <p>"Every single second spent with you is my favorite memory."</p>
-                    </div>
-                  </div>
-                  <div class="reel-slide" data-reel-slide="1">
-                    <img src="assets/girlfriend_portrait.jpg" alt="The Queen" class="reel-slide-img">
-                    <div class="reel-caption-card">
-                      <h3>You Are Art in Human Form 🌸</h3>
-                      <p>"Never stop smiling — it makes the whole universe brighter."</p>
-                    </div>
-                  </div>
-                  <div class="reel-slide" data-reel-slide="2">
-                    <img src="assets/memory_date.jpg" alt="Date Memory" class="reel-slide-img">
-                    <div class="reel-caption-card">
-                      <h3>Forever My Partner in Crime ☕</h3>
-                      <p>"To more laughter, more late night chats, and infinite adventures."</p>
-                    </div>
-                  </div>
-                  <div class="reel-slide" data-reel-slide="3">
-                    <img src="assets/memory_sunset.jpg" alt="Beach Sunset" class="reel-slide-img">
-                    <div class="reel-caption-card">
-                      <h3>I Will Love You Today & Always 🌅</h3>
-                      <p>"Here is to growing older, happier, and even more in love."</p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Memory Reel Controls -->
-                <div class="reel-controls-bar">
-                  <button type="button" class="reel-nav-btn" id="btn-reel-prev" aria-label="Previous Slide">‹</button>
-                  <button type="button" class="reel-play-toggle" id="btn-reel-toggle">⏸ Pause Slideshow</button>
-                  <button type="button" class="reel-nav-btn" id="btn-reel-next" aria-label="Next Slide">›</button>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Glowing marquee quote below video -->
-            <div class="video-marquee-quote">
-              <p id="video-end-quote">"Happy Birthday to the girl who stole my heart! 💖"</p>
-            </div>
-
-          </div>
+        <div class="hidden" id="gn-final">
+          <h2 class="hb-name small" id="gn-final-title"></h2>
+          <p class="lead" id="gn-final-text"></p>
+          <p class="signature" id="gn-sign"></p>
+          <button type="button" class="link-btn" id="btn-replay">↺ Phir se shuru se</button>
         </div>
-
-        <!-- Celebration Action Buttons -->
-        <div class="grand-finale-actions">
-          
-          <button type="button" class="btn-fireworks" id="btn-blast-confetti">
-            <span>🎆 Blast Confetti & Fireworks Again!</span>
-          </button>
-          
-          <button type="button" class="btn-romantic-secondary" id="btn-share-whatsapp">
-            <span>💌 Send Him A "Thank You" Kiss On WhatsApp!</span>
-          </button>
-
-          <button type="button" class="btn-romantic-secondary" id="btn-download-card">
-            <span>🏷️ Save Digital Birthday Keepsake Card</span>
-          </button>
-
-          <button type="button" class="btn-reset-journey" id="btn-restart-quest">
-            <span>🔄 Replay The Whole Journey</span>
-          </button>
-
-        </div>
-
       </div>
     </section>
 
   </main>
 
-  <!-- ========================================================================= -->
-  <!-- MODAL: Lightbox Photo Viewer                                              -->
-  <!-- ========================================================================= -->
-  <dialog id="lightbox-dialog" class="custom-dialog">
-    <div class="lightbox-content">
-      <button type="button" class="dialog-close-btn" id="lightbox-close" aria-label="Close dialog">✕</button>
-      <img src="" alt="Zoomed Memory" id="lightbox-img" class="lightbox-image">
-      <div class="lightbox-caption" id="lightbox-caption-text"></div>
-    </div>
-  </dialog>
+  <audio id="music" loop preload="none"></audio>
 
-  <!-- ========================================================================= -->
-  <!-- MODAL: Secret Love Reason Modal                                           -->
-  <!-- ========================================================================= -->
-  <dialog id="reason-dialog" class="custom-dialog reason-pop-dialog">
-    <div class="reason-pop-box">
-      <div class="reason-pop-icon" id="reason-pop-icon">💖</div>
-      <h3 id="reason-pop-title" class="reason-pop-heading">Reason</h3>
-      <p id="reason-pop-text" class="reason-pop-body">Love message</p>
-      <button type="button" class="btn-romantic-primary" id="reason-pop-close">
-        <span>Keep Collecting! ✨</span>
-      </button>
-    </div>
-  </dialog>
-
-  <!-- ========================================================================= -->
-  <!-- MODAL: Love Coupon Wallet                                                 -->
-  <!-- ========================================================================= -->
-  <dialog id="coupon-wallet-dialog" class="custom-dialog wallet-dialog">
-    <div class="wallet-panel">
-      <header class="wallet-header">
-        <div>
-          <span class="wallet-badge">👑 HER ROYAL PRIVILEGE</span>
-          <h3>🎟️ Your Love Coupon Wallet</h3>
-          <p>Cute vouchers you've won on this quest! Redeemable with your boyfriend anytime.</p>
-        </div>
-        <button type="button" class="dialog-close-btn" id="wallet-close" aria-label="Close wallet">✕</button>
-      </header>
-      
-      <div class="coupons-grid" id="coupons-grid">
-        <!-- Rendered dynamically from config.loveCoupons -->
-      </div>
-
-      <footer class="wallet-footer">
-        <p class="wallet-note">💡 Tap any coupon to redeem a sweet kiss with your boyfriend! 🥰</p>
-      </footer>
-    </div>
-  </dialog>
-
-  <!-- ========================================================================= -->
-  <!-- SECRET IN-APP CUSTOMIZER (FOR THE BOYFRIEND)                              -->
-  <!-- Easily tweak her name, photos, paragraphs, and video without touching code! -->
-  <!-- ========================================================================= -->
-  <aside class="secret-admin-trigger" title="Customize this page for your girlfriend!">
-    <button type="button" id="btn-open-customizer" class="admin-gear-btn" aria-label="Open Customizer Settings">
-      ⚙️ <span class="admin-tooltip">Personalize For Her</span>
-    </button>
-  </aside>
-
-  <dialog id="customizer-dialog" class="custom-dialog customizer-dialog">
-    <div class="customizer-panel">
-      <header class="customizer-header">
-        <div>
-          <h3>✨ Personalize Your Birthday Surprise</h3>
-          <p>Easily edit names, messages, and photos right here!</p>
-        </div>
-        <button type="button" class="dialog-close-btn" id="customizer-close" aria-label="Close customizer">✕</button>
-      </header>
-      
-      <div class="customizer-body">
-        
-        <div class="form-group">
-          <label for="edit-gf-name">Girlfriend's Name or Nickname:</label>
-          <input type="text" id="edit-gf-name" class="custom-input" placeholder="e.g. Sarah / My Princess">
-        </div>
-
-        <div class="form-group">
-          <label for="edit-sender-name">Your Name or Sign-off:</label>
-          <input type="text" id="edit-sender-name" class="custom-input" placeholder="e.g. Alex / Your Forever Love">
-        </div>
-
-        <div class="form-group">
-          <label for="edit-birthday-date">Birthday Date / Occasion:</label>
-          <input type="text" id="edit-birthday-date" class="custom-input" placeholder="e.g. October 24th">
-        </div>
-
-        <div class="form-group">
-          <label for="edit-video-url">Video Link (YouTube Embed / ID / or MP4 URL):</label>
-          <input type="text" id="edit-video-url" class="custom-input" placeholder="e.g. https://www.youtube.com/embed/dQw4w9WgXcQ or assets/my_video.mp4">
-          <small class="helper-text">Leave blank to use our built-in cute romantic memory slideshow!</small>
-        </div>
-
-        <div class="form-group">
-          <label for="edit-bgm-url">Custom Romantic MP3 Song URL (Optional):</label>
-          <input type="text" id="edit-bgm-url" class="custom-input" placeholder="e.g. assets/our_song.mp3 or https://.../song.mp3">
-          <small class="helper-text">Leave blank to use the dreamy built-in romantic piano/harp synth!</small>
-        </div>
-
-        <div class="form-group">
-          <label for="edit-scratch-secret">Secret Scratch Card Message:</label>
-          <textarea id="edit-scratch-secret" class="custom-textarea" rows="2" placeholder="The hidden message revealed when she scratches the golden foil"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="edit-love-letter">Love Letter Paragraphs (One per line):</label>
-          <textarea id="edit-love-letter" class="custom-textarea" rows="4" placeholder="Your romantic paragraphs..."></textarea>
-        </div>
-
-        <div class="customizer-hosting-box">
-          <h4>🚀 Ready to Host on Vercel / Netlify for FREE?</h4>
-          <p>
-            1. All changes you save here are instantly applied in your browser.<br>
-            2. To make them permanent for hosting, simply open <code>config.js</code> in this folder and update the values!<br>
-            3. Check <code>HOSTING_GUIDE.md</code> for the easy 2-minute step-by-step Vercel hosting instructions.
-          </p>
-        </div>
-
-      </div>
-
-      <footer class="customizer-footer">
-        <button type="button" class="btn-romantic-secondary" id="btn-reset-defaults">Reset to Defaults</button>
-        <button type="button" class="btn-romantic-primary" id="btn-save-customizer">Save & Apply Changes ✨</button>
-      </footer>
-    </div>
-  </dialog>
-
-  <!-- Audio Element for Custom MP3 (if user specifies one) -->
-  <audio id="custom-audio-player" loop preload="auto"></audio>
-
-  <!-- Scripts -->
-  <script src="storage.js"></script>
-  <script src="config.js"></script>
-  <script src="script.js"></script>
+  <script src="config.js?v=5.0"></script>
+  <script src="wardrobe.js?v=8.1"></script>
+  <script src="script.js?v=8.1"></script>
 </body>
 </html>

@@ -1,0 +1,13 @@
+# Local-only files: the studio, its server, backups, and docs
+admin.html
+admin.js
+admin.css
+admin_server.py
+.backups
+.claude
+README.md
+HOSTING_GUIDE.md
+package.json
+.logs
+assets/reference
+GEMINI_PROMPTS.md

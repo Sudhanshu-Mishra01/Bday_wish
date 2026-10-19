@@ -1,0 +1,6 @@
+.backups/
+.DS_Store
+__pycache__/
+.logs/
+.claude/
+assets/reference/

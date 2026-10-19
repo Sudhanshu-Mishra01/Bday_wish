@@ -1,4 +1,41 @@
+# The studio (admin.*) is for local editing only — never serve it on the live site.
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+  from = "/admin"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/admin.html"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/admin.js"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/admin.css"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/admin_server.py"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/.backups/*"
+  to = "/"
+  status = 302
+  force = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

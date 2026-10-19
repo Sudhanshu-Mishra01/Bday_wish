@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dashboard</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css?v=1">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">📬</span>
+      <div>
+        <strong>Uski activity</strong>
+        <small id="subtitle">Jo bhi wo karegi, yahan dikhega</small>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="status" id="status" aria-live="polite"></span>
+      <label class="toggle"><input type="checkbox" id="live" checked> Live</label>
+      <button type="button" class="btn ghost" id="btn-refresh">↻ Refresh</button>
+      <a class="btn ghost hidden" id="studio-link" href="admin.html">🛠 Studio</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <form class="card key-box hidden" id="key-box">
+      <h2>🔒 Dashboard key</h2>
+      <p id="key-msg">Wahi key daalo jo Vercel me <code>ADMIN_KEY</code> rakhi hai. Ye sirf is device pe yaad rahegi.</p>
+      <div class="key-row">
+        <input type="password" id="key-input" autocomplete="current-password" placeholder="Admin key" required>
+        <button type="submit" class="btn primary">Kholo</button>
+      </div>
+    </form>
+
+    <div class="notice hidden" id="notice"></div>
+
+    <div id="content" class="hidden">
+      <div class="tests-row">
+        <label class="toggle"><input type="checkbox" id="show-tests"> <span id="tests-label">Test (?preview) entries bhi dikhao</span></label>
+        <button type="button" class="link danger" id="btn-clear-tests">Test entries hatao</button>
+      </div>
+
+      <section class="stats" id="stats"></section>
+
+      <section class="card" id="sec-answers">
+        <h2>💬 Uske jawaab</h2>
+        <div id="answers"></div>
+      </section>
+
+      <div class="grid2">
+        <section class="card" id="sec-wishes">
+          <h2>🏮 Uski wishes</h2>
+          <div id="wishes"></div>
+        </section>
+        <section class="card" id="sec-poem">
+          <h2>✍️ Uski likhi line</h2>
+          <div id="poem"></div>
+        </section>
+      </div>
+
+      <section class="card" id="sec-looks">
+        <h2>👗 Uske banaye looks</h2>
+        <div class="looks" id="looks"></div>
+      </section>
+
+      <section class="card" id="sec-coupons">
+        <h2>🎟️ Claim kiye coupons</h2>
+        <div id="coupons"></div>
+      </section>
+
+      <section class="card" id="sec-timeline">
+        <h2>🕐 Poori timeline <small>(naya sabse upar)</small></h2>
+        <ol class="timeline" id="timeline"></ol>
+      </section>
+
+      <p class="footer-actions"><button type="button" class="link danger" id="btn-clear-all">Saari activity mita do</button></p>
+    </div>
+  </main>
+
+  <script src="config.js?dash"></script>
+  <script src="wardrobe.js?v=8.1"></script>
+  <script src="dashboard.js?v=2"></script>
+</body>
+</html>

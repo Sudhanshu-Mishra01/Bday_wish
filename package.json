@@ -1,11 +1,9 @@
 {
-  "name": "romantic-birthday-surprise",
-  "version": "1.0.0",
-  "description": "An interactive, multi-stage romantic birthday surprise journey web app.",
+  "name": "chetna-birthday",
+  "version": "2.0.0",
+  "private": true,
+  "description": "A midnight birthday surprise for Chetna.",
   "scripts": {
-    "start": "npx serve ."
-  },
-  "keywords": ["birthday", "romantic", "surprise", "interactive"],
-  "author": "",
-  "license": "MIT"
+    "start": "python3 admin_server.py"
+  }
 }
