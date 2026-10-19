@@ -657,14 +657,16 @@
 
       if (hits < needed) {
         Sound.thud();
-        shards(x, y, 3);
+        shards(x, y, 4);
+        hearts(x, y, ['✨', '🕊️', '👑', '💫', '💛'], 3);
         return;
       }
       Sound.crash();
       if (navigator.vibrate) navigator.vibrate([40, 30, 80]);
       board.classList.add('broken');
-      shards(x, y, 22);
-      confettiBurst({ origin: { x: x / window.innerWidth, y: y / window.innerHeight } });
+      shards(x, y, 24);
+      hearts(x, y, ['👑', '🕊️', '✨', '💛', '🌸'], 16);
+      confettiBurst({ origin: { x: x / window.innerWidth, y: y / window.innerHeight }, particleCount: 90, spread: 90 });
       $('rule-instruction').classList.add('hidden');
       setTimeout(() => {
         board.classList.add('hidden');
@@ -1607,7 +1609,7 @@
   // balloon through three sky-islands (fireflies, a singing lake, a mirror palace).
   // Each island gives her a light; the three lights make the moon bloom.
   // ==============================================================================
-  const DREAM_STEPS = ['fireflies', 'lake', 'mirrors', 'moon'];
+  const DREAM_STEPS = ['fireflies', 'lake', 'mirrors', 'starlight', 'moon'];
   // Mirror puzzles: f = "/" mirror, b = "\" mirror, P = crystal pillar (stops the beam),
   // G = moon-pearl (the beam must pass through it), R = sleeping rose.
   // Moonlight falls in from the top at column `src`. Each puzzle has exactly one solution.
@@ -1779,6 +1781,36 @@
       ${stars}`;
   }
 
+  function starlightArt() {
+    const y = 370;
+    const stars = Array.from({ length: 12 }, (_, i) => `<circle class="twinkle" style="animation-delay:${(i * 0.35).toFixed(2)}s" cx="${(24 + ((i * 73) % 312)).toFixed(0)}" cy="${(24 + ((i * 47) % 110)).toFixed(0)}" r="${0.8 + (i % 3) * 0.6}" fill="#fff6dc"/>`).join('');
+    return dreamDefs() + `
+      <defs>
+        <radialGradient id="dStardust" cx=".5" cy=".5" r=".5">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="35%" stop-color="#ffe3a8" stop-opacity=".9"/>
+          <stop offset="70%" stop-color="#ff9ec6" stop-opacity=".35"/>
+          <stop offset="100%" stop-color="#ff9ec6" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="dBridge" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#ffd27a" stop-opacity=".25"/>
+          <stop offset="50%" stop-color="#ff9ec6" stop-opacity=".8"/>
+          <stop offset="100%" stop-color="#ffd27a" stop-opacity=".25"/>
+        </linearGradient>
+      </defs>
+      ${dreamIsland(y, 44)}
+      ${dreamCloud(64, y - 24, 44, 'url(#dSoftPink)', 0.8)}
+      ${dreamCloud(296, y - 18, 48, 'url(#dSoftPink)', 0.8)}
+      ${dreamCloud(180, y + 8, 58, 'url(#dSoft)', 0.9)}
+      ${dreamWillow(42, y - 30, 0.75)}
+      ${stars}
+      <g id="starlight-world">
+        <path id="starlight-bridge" d="M 64 240 Q 180 90 296 240" fill="none" stroke="url(#dBridge)" stroke-width="2.5" stroke-dasharray="5 5" opacity=".4"/>
+        <g id="starlight-lines" stroke="#ffd27a" stroke-width="2.2" stroke-linecap="round" filter="drop-shadow(0 0 6px #ffd27a)"></g>
+        <g id="starlight-stars"></g>
+      </g>`;
+  }
+
   function dockArt() {
     return dreamDefs() + `
       ${dreamCloud(70, 430, 46, 'url(#dSoftPink)', 0.85)}
@@ -1910,8 +1942,8 @@
     const balloon = $('dream-balloon');
     const orbs = [...document.querySelectorAll('#dream-orbs .orb')];
     const part = (k) => D[k] || {};
-    const ORB_COLORS = ['#ffd27a', '#c9b2ff', '#a8e8ff'];
-    let level = Math.min(store.get('dream_lv', 0), 3); // islands finished so far
+    const ORB_COLORS = ['#ffd27a', '#c9b2ff', '#a8e8ff', '#ff9ec6'];
+    let level = Math.min(store.get('dream_lv', 0), 4); // islands finished so far
     let stop = null; // ends the current island's loops and listeners
     let lidsEl = null;
 
@@ -2090,7 +2122,7 @@
       $('dream-sub').textContent = name;
       ISLANDS[next]();
       world.classList.remove('enter');
-      setPhase(next === 3 ? 'moon' : 'play');
+      setPhase(next === 4 ? 'moon' : 'play');
     }
 
     function intro() {
@@ -2645,7 +2677,76 @@
       load(0);
     }
 
-    // ---------- The moon: hold, give it the three lights, it blooms ----------
+    // ---------- Island 4: Taaron ka Jharna — tap 5 stars of wishes & memories ----------
+    function starlight() {
+      const St = part('starlight');
+      svg.innerHTML = starlightArt();
+      say(St.howTo);
+      const STARS = [[64, 240], [112, 175], [180, 130], [248, 175], [296, 240]];
+      const NOTES = [523.25, 587.33, 659.25, 783.99, 880];
+      const starGroup = svg.querySelector('#starlight-stars');
+      const linesGroup = svg.querySelector('#starlight-lines');
+      const bridge = svg.querySelector('#starlight-bridge');
+      let litCount = 0;
+      let litStars = new Set();
+      let lastLit = null;
+      let alive = true;
+
+      STARS.forEach(([x, y], i) => {
+        const g = document.createElementNS(NS, 'g');
+        g.setAttribute('class', 'star-point');
+        g.setAttribute('transform', `translate(${x} ${y})`);
+        g.setAttribute('role', 'button');
+        g.setAttribute('tabindex', '0');
+        g.setAttribute('aria-label', `Taara ${i + 1}`);
+        g.innerHTML = `
+          <circle r="26" fill="url(#dStardust)" opacity=".3"/>
+          <path d="M0 -15 L4 -4 L15 0 L4 4 L0 15 L-4 4 L-15 0 L-4 -4 Z" fill="#fff6dc"/>
+          <circle r="3.2" fill="#ffffff"/>
+        `;
+        const tap = () => {
+          if (!alive || litStars.has(i)) return;
+          litStars.add(i);
+          g.classList.add('lit');
+          Sound.note(NOTES[litCount]);
+          const whisperText = (St.whispers || [])[i] || '✨';
+          whisper(whisperText, x, y - 26);
+          if (lastLit !== null) {
+            const line = document.createElementNS(NS, 'line');
+            line.setAttribute('x1', STARS[lastLit][0]);
+            line.setAttribute('y1', STARS[lastLit][1]);
+            line.setAttribute('x2', x);
+            line.setAttribute('y2', y);
+            linesGroup.appendChild(line);
+          }
+          lastLit = i;
+          litCount++;
+          if (litCount < STARS.length) {
+            say(`${litCount} / 5 taare roshan ✨`);
+          } else {
+            alive = false;
+            if (bridge) {
+              bridge.style.opacity = '0.9';
+              bridge.style.strokeDasharray = 'none';
+            }
+            Sound.sparkle();
+            setTimeout(Sound.fanfare, 300);
+            confettiBurst({ particleCount: 45, origin: { x: 0.5, y: 0.4 } });
+            say(St.sparkle || '✨');
+            setTimeout(() => {
+              finishIsland(3, 180, 130);
+            }, 1400);
+          }
+        };
+        g.addEventListener('click', tap);
+        g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tap(); } });
+        starGroup.appendChild(g);
+      });
+
+      stop = () => { alive = false; };
+    }
+
+    // ---------- The moon: hold, give it the four lights, it blooms ----------
     function moon(already = false) {
       const Mo = part('moon');
       svg.innerHTML = moonArt();
@@ -2653,7 +2754,7 @@
       const halo = svg.querySelector('#moon-halo');
       const ring = svg.querySelector('#moon-ring');
       const RING = 2 * Math.PI * 104;
-      const GIVE_AT = [0.14, 0.44, 0.74];
+      const GIVE_AT = [0.12, 0.36, 0.60, 0.84];
       const PENTA = [392, 440, 523.25, 587.33, 659.25, 783.99, 880, 1046.5];
       let p = 0;
       let given = 0;
@@ -2682,7 +2783,7 @@
         p = holding ? Math.min(1, p + dt / 4.2) : Math.max(0, p - dt * 0.16);
         // a light once given stays given
         p = Math.max(p, given ? GIVE_AT[given - 1] : 0);
-        while (given < 3 && p >= GIVE_AT[given]) giveLight(given++);
+        while (given < 4 && p >= GIVE_AT[given]) giveLight(given++);
         if (holding && now - lastNote > 360) {
           lastNote = now;
           Sound.note(PENTA[Math.min(PENTA.length - 1, Math.floor(p * PENTA.length))]);
@@ -2757,7 +2858,7 @@
         p = 1;
         paint();
         orbs.forEach((o) => o.classList.add('lit', 'given'));
-        svg.classList.add('bloomed', 'gift-0', 'gift-1', 'gift-2');
+        svg.classList.add('bloomed', 'gift-0', 'gift-1', 'gift-2', 'gift-3');
         say(Mo.bloomed || '🌕');
         showFinal();
         return;
@@ -2780,20 +2881,20 @@
       stop = () => { cancelAnimationFrame(raf); unbind(); };
     }
 
-    const ISLANDS = [fireflies, lake, mirrors, moon];
+    const ISLANDS = [fireflies, lake, mirrors, starlight, moon];
 
     // ---------- start, or carry on where she left off ----------
     orbs.forEach((o, i) => o.classList.toggle('lit', i < level));
     if (store.get('dream_done', false)) {
       scene.classList.add('dreaming');
-      setSky(4);
+      setSky(5);
       setPhase('moon');
       $('dream-sub').textContent = part('moon').name || '';
       moon(true);
     } else if (level > 0) {
       scene.classList.add('dreaming');
       setSky(level + 1);
-      setPhase(level === 3 ? 'moon' : 'play');
+      setPhase(level === 4 ? 'moon' : 'play');
       $('dream-sub').textContent = part(DREAM_STEPS[level]).name || '';
       ISLANDS[level]();
     } else {
@@ -2884,7 +2985,100 @@
       <path d="M0 140 C80 118 200 120 300 136 L300 180 L0 180 Z" fill="#1d3a32"/>
       <g fill="#0c1a16"><circle cx="138" cy="136" r="6.5"/><path d="M142 134 C160 132 180 133 196 136 L196 142 C180 141 160 141 142 140 Z"/>
       <circle cx="126" cy="138" r="6"/><path d="M122 132 C116 130 108 132 104 136 L108 138 C112 136 116 135 122 136 Z"/><path d="M120 136 C104 136 86 138 72 142 L72 147 C88 144 104 142 120 142 Z"/></g>
-      ${[[60, 120], [90, 110], [220, 112], [250, 126], [180, 104]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.6" fill="#f6e27a"/><circle cx="${x}" cy="${y}" r="5" fill="#f6e27a" opacity=".2"/>`).join('')}`
+      ${[[60, 120], [90, 110], [220, 112], [250, 126], [180, 104]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.6" fill="#f6e27a"/><circle cx="${x}" cy="${y}" r="5" fill="#f6e27a" opacity=".2"/>`).join('')}`,
+    balcony: () => `
+      <defs><linearGradient id="sa-balc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#91b5e0"/><stop offset=".5" stop-color="#fec5bb"/><stop offset="1" stop-color="#fae1dd"/></linearGradient></defs>
+      <rect width="300" height="180" fill="url(#sa-balc)"/>
+      <circle cx="150" cy="75" r="22" fill="#fff5d6" opacity=".95"/>
+      <path d="M0 115 L60 70 L110 100 L170 60 L240 105 L300 75 L300 135 L0 135 Z" fill="#7582a8" opacity=".7"/>
+      <path d="M0 128 L80 98 L150 120 L220 95 L300 118 L300 150 L0 150 Z" fill="#4d5d85" opacity=".85"/>
+      <rect y="142" width="300" height="38" fill="#362820"/>
+      <path d="M0 126 H300 M0 134 H300" stroke="#7a5540" stroke-width="2.5"/>
+      ${Array.from({ length: 25 }, (_, i) => `<line x1="${i * 12 + 6}" y1="126" x2="${i * 12 + 6}" y2="142" stroke="#7a5540" stroke-width="1.8"/>`).join('')}
+      <ellipse cx="40" cy="126" rx="9" ry="5" fill="#4a7c59"/><circle cx="40" cy="122" r="7" fill="#2d5a3c"/>
+      <ellipse cx="260" cy="126" rx="10" ry="5" fill="#4a7c59"/><circle cx="260" cy="122" r="8" fill="#2d5a3c"/>
+      <rect x="135" y="128" width="30" height="14" rx="2" fill="#8a5a3c"/>
+      <path d="M142 124 h6 l-1 4 h-4 z M152 124 h6 l-1 4 h-4 z" fill="#fff4e6"/>
+      <path d="M145 120 c-1 -3 2 -4 0 -6 M155 120 c-1 -3 2 -4 0 -6" fill="none" stroke="#fff" stroke-width="0.8" opacity=".7"/>
+      ${coupleStanding(150, 154, 0.78, '#241a22')}`,
+    cozyroom: () => `
+      <defs><radialGradient id="sa-room" cx=".5" cy=".6" r=".6"><stop offset="0" stop-color="#442a4f"/><stop offset="1" stop-color="#191024"/></radialGradient></defs>
+      <rect width="300" height="180" fill="url(#sa-room)"/>
+      <rect x="90" y="20" width="120" height="75" rx="37" fill="#0f172a"/>
+      ${Array.from({ length: 14 }, (_, i) => `<circle cx="${98 + (i * 27) % 104}" cy="${26 + (i * 19) % 60}" r="${i % 3 ? 0.7 : 1.2}" fill="#fff" opacity=".8"/>`).join('')}
+      <circle cx="175" cy="45" r="9" fill="#fde68a"/>
+      <rect x="90" y="20" width="120" height="75" rx="37" fill="none" stroke="#50355f" stroke-width="3"/>
+      <line x1="150" y1="20" x2="150" y2="95" stroke="#50355f" stroke-width="2"/>
+      <path d="M10 15 Q150 40 290 15" fill="none" stroke="#6b4c6e" stroke-width="1.2"/>
+      ${[25, 60, 95, 130, 170, 205, 240, 275].map((x, i) => `<circle cx="${x}" cy="${18 + Math.sin(i) * 3 + 3}" r="3" fill="#fef08a"/><circle cx="${x}" cy="${18 + Math.sin(i) * 3 + 3}" r="8" fill="#fef08a" opacity=".25"/>`).join('')}
+      <ellipse cx="150" cy="155" rx="100" ry="22" fill="#7a3e65"/>
+      <ellipse cx="105" cy="150" rx="16" ry="11" fill="#f472b6" transform="rotate(-12 105 150)"/>
+      <ellipse cx="195" cy="150" rx="16" ry="11" fill="#fb923c" transform="rotate(12 195 150)"/>
+      <rect x="138" y="152" width="24" height="6" rx="2" fill="#fde68a" transform="rotate(4 138 152)"/>
+      <g fill="#1a0f20"><circle cx="138" cy="126" r="8"/><circle cx="162" cy="128" r="7.5"/><path d="M124 158 C124 138 136 134 148 134 C160 134 176 138 176 158 Z"/><path d="M152 122 C148 132 148 142 150 150 L156 148 C154 140 155 130 162 124 Z"/></g>
+      <path d="M120 148 C140 140 160 140 180 148 L178 165 L122 165 Z" fill="#e11d48" opacity=".7"/>`,
+    maggi: () => `
+      <defs><linearGradient id="sa-kit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#312e3b"/><stop offset="1" stop-color="#181520"/></linearGradient></defs>
+      <rect width="300" height="180" fill="url(#sa-kit)"/>
+      <circle cx="150" cy="38" r="14" fill="#fafafa" stroke="#d4d4d8" stroke-width="2"/>
+      <line x1="150" y1="38" x2="150" y2="30" stroke="#18181b" stroke-width="2"/>
+      <line x1="150" y1="38" x2="157" y2="38" stroke="#ef4444" stroke-width="1.5"/>
+      <rect x="40" y="65" width="220" height="8" rx="2" fill="#78350f"/>
+      ${[55, 75, 95, 205, 225, 245].map((x, i) => `<rect x="${x}" y="50" width="12" height="15" rx="2" fill="${['#fbbf24', '#f87171', '#34d399', '#60a5fa', '#f472b6', '#a78bfa'][i]}"/>`).join('')}
+      <rect y="125" width="300" height="55" fill="#3f3f46"/><rect y="120" width="300" height="6" fill="#71717a"/>
+      <rect x="120" y="112" width="60" height="10" rx="3" fill="#18181b"/>
+      <ellipse cx="150" cy="112" rx="22" ry="8" fill="#fbbf24"/>
+      <path d="M135 110 Q145 106 155 110 T165 110" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+      ${[142, 150, 158].map((x) => `<circle cx="${x}" cy="111" r="1.5" fill="#15803d"/>`).join('')}
+      <path d="M142 102 C139 94 145 88 142 80 M150 100 C147 92 153 86 150 78 M158 102 C155 94 161 88 158 80" fill="none" stroke="#fff" stroke-width="1.2" opacity=".65"/>
+      <g fill="#1a121e"><circle cx="95" cy="100" r="9"/><path d="M82 140 C82 118 90 112 98 112 C106 112 114 118 114 140 Z"/>
+      <circle cx="205" cy="98" r="8.5"/><path d="M198 94 C194 106 194 118 196 126 L202 122 C200 112 201 102 206 96 Z"/><path d="M190 140 C190 118 198 110 206 110 C214 110 222 118 222 140 Z"/></g>
+      <path d="M110 125 L125 115" stroke="#1a121e" stroke-width="3" stroke-linecap="round"/>
+      <path d="M190 125 L175 115" stroke="#1a121e" stroke-width="3" stroke-linecap="round"/>`,
+    icecream: () => `
+      <defs><linearGradient id="sa-ice" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1222"/><stop offset="1" stop-color="#221b38"/></linearGradient>
+      <linearGradient id="sa-lamp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fef08a" stop-opacity=".7"/><stop offset="1" stop-color="#fef08a" stop-opacity="0"/></linearGradient></defs>
+      <rect width="300" height="180" fill="url(#sa-ice)"/>
+      ${Array.from({ length: 26 }, (_, i) => `<circle cx="${(i * 61) % 300}" cy="${(i * 31) % 90}" r="${i % 4 ? 0.8 : 1.3}" fill="#fff" opacity=".8"/>`).join('')}
+      <path d="M220 20 L200 150 L260 150 Z" fill="url(#sa-lamp)"/>
+      <path d="M220 20 L220 150" stroke="#334155" stroke-width="3.5"/>
+      <circle cx="220" cy="20" r="7" fill="#fef08a"/><circle cx="220" cy="20" r="16" fill="#fef08a" opacity=".35"/>
+      <rect y="148" width="300" height="32" fill="#1e293b"/><line y1="148" y2="148" x1="0" x2="300" stroke="#475569" stroke-width="2"/>
+      <g fill="#0f172a" stroke="#0f172a"><circle cx="70" cy="144" r="13" fill="none" stroke-width="3"/><circle cx="118" cy="144" r="13" fill="none" stroke-width="3"/>
+      <path d="M70 144 L88 132 L112 132 L118 144" fill="none" stroke-width="3"/><path d="M82 131 C84 122 98 122 108 126 L106 133 Z" stroke-width="1"/></g>
+      <g fill="#0b0e1b"><circle cx="148" cy="116" r="8"/><path d="M136 148 C136 130 144 125 152 125 C160 125 168 130 168 148 Z"/>
+      <circle cx="172" cy="114" r="7.8"/><path d="M165 110 C162 120 162 130 164 136 L168 134 C167 126 167 118 172 112 Z"/><path d="M162 148 C162 130 168 123 174 123 C180 123 186 130 186 148 Z"/></g>
+      <path d="M158 125 L160 132 L156 132 Z" fill="#d97706"/><circle cx="158" cy="124" r="3.2" fill="#ec4899"/>
+      <path d="M166 125 L168 132 L164 132 Z" fill="#d97706"/><circle cx="166" cy="124" r="3.2" fill="#92400e"/>`,
+    veranda: () => `
+      <defs><linearGradient id="sa-gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f97316"/><stop offset=".45" stop-color="#fbbf24"/><stop offset="1" stop-color="#fed7aa"/></linearGradient></defs>
+      <rect width="300" height="180" fill="url(#sa-gold)"/>
+      <circle cx="230" cy="85" r="26" fill="#fff7ed"/><circle cx="230" cy="85" r="48" fill="#ffedd5" opacity=".35"/>
+      <path d="M0 130 L60 105 L140 125 L210 100 L300 120 L300 180 L0 180 Z" fill="#78350f" opacity=".3"/>
+      <rect y="0" width="300" height="24" fill="#3f2e27"/>
+      <rect x="25" y="24" width="8" height="116" fill="#543d34"/>
+      <rect x="270" y="24" width="8" height="116" fill="#543d34"/>
+      <rect y="138" width="300" height="42" fill="#2d1f19"/><line y1="138" y2="138" x1="0" x2="300" stroke="#543d34" stroke-width="3"/>
+      <rect x="50" y="122" width="22" height="16" rx="2" fill="#78350f"/>
+      <rect x="54" y="126" width="14" height="8" rx="1" fill="#fef08a" opacity=".7"/>
+      <circle cx="61" cy="130" r="2" fill="#1c1917"/><circle cx="67" cy="130" r="2" fill="#1c1917"/>
+      <path d="M58 114 q3 -4 6 0 t6 0" fill="none" stroke="#78350f" stroke-width="1.2"/>
+      <text x="75" y="112" font-size="11" fill="#451a03">♪</text><text x="83" y="102" font-size="9" fill="#451a03">♫</text>
+      <g fill="#1f1614"><circle cx="140" cy="116" r="7.5"/><path d="M130 144 C130 128 136 124 142 124 C148 124 154 128 154 144 Z"/>
+      <circle cx="160" cy="116" r="7.2"/><path d="M152 144 C152 128 158 124 164 124 C170 124 176 128 176 144 Z"/>
+      <path d="M144 128 L158 128" stroke="#1f1614" stroke-width="3.5" stroke-linecap="round"/></g>
+      <path d="M120 140 H184" stroke="#451a03" stroke-width="4"/><line x1="126" y1="140" x2="124" y2="155" stroke="#451a03" stroke-width="3"/><line x1="178" y1="140" x2="180" y2="155" stroke="#451a03" stroke-width="3"/>`,
+    oldtravel: () => `
+      <defs><linearGradient id="sa-trv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset=".6" stop-color="#c084fc"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+      <rect width="300" height="180" fill="url(#sa-trv)"/>
+      <circle cx="70" cy="45" r="16" fill="#fef08a"/>
+      <path d="M220 30 Q240 28 260 22" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="3,3"/>
+      <path d="M260 22 l-6 1 l2 4 z" fill="#fff"/>
+      <ellipse cx="230" cy="65" rx="10" ry="13" fill="#ef4444"/><polygon points="225,78 235,78 232,83 228,83" fill="#b91c1c"/>
+      <rect y="134" width="300" height="46" fill="#15803d"/><path d="M0 134 C80 120 180 142 300 130 L300 180 L0 180 Z" fill="#166534"/>
+      <rect x="55" y="132" width="22" height="16" rx="2" fill="#b45309"/><rect x="53" y="136" width="26" height="3" fill="#78350f"/>
+      <rect x="70" y="126" width="18" height="22" rx="2" fill="#0284c7"/><rect x="68" y="132" width="22" height="3" fill="#0369a1"/>
+      ${coupleStanding(170, 150, 0.9, '#1e293b')}`
   };
   const storySvg = (id) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 180">${(STORY_ART[id] || STORY_ART.sunset)()}</svg>`;
 
@@ -3025,17 +3219,22 @@
         <span class="polaroid-inner">
           <span class="pol-face pol-front">
             <span class="tape"></span>
+            <span class="pol-title"></span>
+            <span class="pol-date"></span>
+            <p class="pol-note"></p>
+            <span class="pol-tap-hint">📸 Tap to see photo ✨</span>
+          </span>
+          <span class="pol-face pol-back">
             <img alt="" loading="lazy">
             <span class="pol-cap"><span class="pol-title"></span><span class="pol-date"></span></span>
           </span>
-          <span class="pol-face pol-back"><p></p></span>
         </span>`;
-      const img = b.querySelector('img');
+      const img = b.querySelector('.pol-back img');
       img.src = m.photo;
       img.alt = m.title;
-      b.querySelector('.pol-title').textContent = m.title;
-      b.querySelector('.pol-date').textContent = m.date || '';
-      b.querySelector('.pol-back p').textContent = m.caption;
+      b.querySelectorAll('.pol-title').forEach((el) => { el.textContent = m.title; });
+      b.querySelectorAll('.pol-date').forEach((el) => { el.textContent = m.date || ''; });
+      b.querySelector('.pol-note').textContent = m.caption;
       b.addEventListener('click', () => { b.classList.toggle('flipped'); Sound.whoosh(); });
       wrap.appendChild(b);
     });

@@ -41,49 +41,49 @@ window.SURPRISE_CONFIG = {
     "board": "LOG KYA KAHENGE?",
     "instruction": "Is board ko tod do. Tap, tap, tap! 👊",
     "hitLines": [
-      "Log? Kaun log? 🙄",
-      "Padosan aunty so rahi hain 😴",
-      "Sharma ji ka beta bhi so gaya 💤",
-      "Society ka group bhi offline hai 📵",
-      "Last one! Zor se! 💥"
+      "Duniya ki baatein bahar chhod do ✨",
+      "Tum kisi ki umeedon ke liye nahi, apni khushi ke liye bani ho 🦋",
+      "Tumhare pankh bohot mazboot hain, bas udna shuru karo 🕊️",
+      "Jab tum apne haq se jeeti ho, tab duniya sabse khoobsurat lagti hai 💫",
+      "Aakhri chot! Apni azaadi ke naam! Zor se! 💥👑"
     ],
-    "brokenTitle": "Toot gaya! 🎉",
-    "brokenBody": "Aaj se — kam se kam aaj ke din — sirf ek sawaal matter karta hai: \"Mera mann kya kehta hai?\" Yahan koi judge nahi karega. Na main, na koi aur.",
-    "promiseButton": "Pinky promise 🤙"
+    "brokenTitle": "Azaad ho gayi meri Billu! 👑✨",
+    "brokenBody": "Zamaane ki fiqr chhod, tu bas muskura de,\nTere har ek khwaab ko, main apna aasmaan bana doon... 🕊️💛\n\nAaj se — aur aane wale har ek kal me — tumhe kisi se permission lene ki zaroorat nahi hai. Tum jaisi ho, waisi hi sabse anmol ho. Tumhara bachpana, tumhari hasi, tumhare sapne — in sabki hifazat ki zimmedaari meri hai.\n\nAane wale kal me chahe kitni bhi mushkilein aayein, main hamesha tumhare peeche ek deewar ban ke khada rahunga.\n\nBas ek waada: Tum kabhi apni chamak kam nahi hone dogi? 🤙✨",
+    "promiseButton": "Pinky promise, hamesha ke liye 🤙💛"
   },
   "playground": {
     "title": "Bachpan Wala Playground 🎠",
-    "subtitle": "Yahan sab allowed hai. Chaaron khilone khelo, phir aage ka raasta khulega.",
+    "subtitle": "Yahan sab allowed hai. Paanchon khilone khelo, phir aage ka raasta khulega.",
     "balloons": [
       "Pop! 24 ki ho gayi, par balloon phodne ki khushi abhi bhi 5 saal wali hai na? 🤭",
       "Fact: gussa karti ho tab bhi cute lagti ho. Haan haan, taunt bhi cute hai 😌",
+      "Tere chehre ki muskaan pe hum fida hain,\nTere bina toh yeh saari duniya bewajah hai 💛",
       "Breaking news: Mishrayin ne aaj phir ek dil chura liya 📰",
-      "Ye balloon bewkoof tha. Bilkul tumhari tarah. (Pyaari wali bewkoof 🙈)",
-      "Billu + bike + pahad = coming soon 🏍️⛰️",
-      "Tumhara \"sone do na please\" wala voice — all-time favourite 😴",
-      "Tum naachti ho to duniya ruk jaati hai 💃",
-      "Last balloon. Ek secret: main tumse bahut, bahut pyaar karta hoon 💛"
+      "Billu + bike + pahad + subah ki thandi chai = coming soon 🏍️⛰️",
+      "Tumhara 'sone do na please' wala voice — meri zindagi ka favourite ringtone 😴",
+      "Ek din hamara chhota sa ghar hoga, aur har subah tumhari hasi se shuru hogi 🏡✨",
+      "Last balloon. Ek secret: Main kal bhi tumse pyaar karta tha, aaj bhi karta hoon, aur aane wale 100 saal tak karta rahunga 💛💍"
     ],
     "tareefIntro": "Shikayat thi na ki main tareef nahi karta? Lo, poori machine laga di. Jitni chahiye utni nikalo 😌",
     "compliments": [
       "Tum samajhdaar ho. Seriously, mujhse zyada 🧠",
       "Tum sundar ho. Itni ki mirror bhi sharmata hoga 🪞",
+      "Tere husn ki tareef me kya likhein,\nChand bhi sharma jaye jab tu muskuraye 🌙✨",
       "Tumhari smile = mera favourite notification 🔔",
       "Tumhari poetry me jo baat hai, wo kisi kitaab me nahi 📖",
-      "Tumhara dil bachche jaisa saaf hai 🤍",
-      "Tum naachti ho to beat bhi tumhe follow karti hai 💃",
+      "Tumhara dil bachche jaisa saaf hai — wahi meri sabse badi daulat hai 🤍",
+      "Ek din tum dulhan banogi aur meri maang me tumhara naam hoga 👰🤵💍",
       "Gusse me bhi tumhare taunt me pyaar hi dikhta hai 😤💛",
-      "Tumhari aankhein? No comments. Speechless 👀",
-      "Tum meri sabse achhi aadat ho 🫶",
-      "Tumhari cute baatein mera stress-buster hain 🧸",
+      "Tumhari aankhein? Inme doob ke poori zindagi bitayi ja sakti hai 👀",
+      "Pahadon pe jab thand lagegi, toh meri jacket hamesha tumhari hogi 🧥⛰️",
       "Tum Shinchan se zyada naughty ho, aur usse zyada cute bhi 😜",
       "Tum Horrid Henry nahi, Perfect Billu ho 😇",
-      "Tum care karti ho bina dikhaye. Mujhe sab dikhta hai 🌸",
-      "Tumhare saath \"kuch nahi karna\" bhi best plan lagta hai ☁️",
+      "Budhaape me jab daant gir jaayenge, tab bhi tumhe Maggi mash karke khilaunga 👵👴",
+      "Tumhare saath 'kuch nahi karna' bhi duniya ka best plan lagta hai ☁️",
       "Tum jitni strong ho, utni hi soft bhi 🌷",
-      "Tumhari awaaz me ek sukoon hai 🎶",
-      "Tum mera \"ghar\" wali feeling ho 🏡",
-      "Neend me bhi cute lagti ho. Haan, maine imagine kiya hai 😴",
+      "Tumhari awaaz me ek ajeeb sa sukoon hai 🎶",
+      "Tum mera 'ghar' wali feeling ho 🏡",
+      "Har janam me mujhe tum hi milna, thoda late chalega par tum hi aana 💫",
       "Tumhari hasi ke liye main har bahas haar sakta hoon 😂",
       "Tum meri ho — ye meri kismat ki sabse badi tareef hai 💛"
     ],
@@ -96,12 +96,12 @@ window.SURPRISE_CONFIG = {
       "Har birthday aise hi saath manaayein 🎂",
       "Main jo banna chahti hoon, wo ban jaaun ✨",
       "Ek din hamara chhota sa ghar ho 🏡",
-      "Mere apne hamesha khush rahein 🙏"
+      "Hum dono budhaape tak haath pakad ke chalein 👵👴"
     ],
     "lanternReplies": [
       "Wish mil gayi ✨ Iski zimmedaari ab meri.",
       "Ye wali to pakka poori hogi. Promise 😌",
-      "Upar wale ne bhi \"seen\" kar liya hai 💛",
+      "Upar wale ne bhi 'seen' kar liya hai 💛",
       "Tumhari har wish ke peeche main khada hoon. Hamesha."
     ],
     "lanternEmpty": "Pehle ek wish likho ✍️",
@@ -244,8 +244,9 @@ window.SURPRISE_CONFIG = {
     "travel": [
       "Neeche mat dekhna… bas mera haath pakde rehna 🤍",
       "Badal itne paas hain ki chhoo lo ☁️ Yahan na koi alarm hai, na koi 'log kya kahenge'.",
-      "Thoda aur upar… dekho, chaand bhi humein dekh ke muskura raha hai 🌙",
-      "Bas aakhri safar… chaand tak 🌕"
+      "Thoda aur upar… hawaon me ek ajeeb sa sukoon hai, bilkul tumhari tarah 🌸",
+      "Dekho… taaron ka jharna beh raha hai, har taare me ek khwaab hai ✨",
+      "Bas aakhri safar… chaand tak, jahan hamara jhoola intezaar kar raha hai 🌕"
     ],
     "fireflies": {
       "name": "🌿 Jugnuon ka Bagh",
@@ -291,9 +292,23 @@ window.SURPRISE_CONFIG = {
       "done": "Raasta kitna bhi ghumaavdaar ho, meri har roshni ghoom-phir ke tum tak hi pahunchti hai. 🌹",
       "orb": "Chaandni"
     },
+    "starlight": {
+      "name": "✨ Taaron Ka Jharna",
+      "howTo": "Aasmaan ke 5 sunehre taaron ko tap karo — ek ek taara, ek ek khwaab ✨",
+      "whispers": [
+        "Pehli muskaan 💛",
+        "Pehle 'haan' ka din 💍",
+        "Hamara chhota sa ghar 🏡",
+        "Saath me pahadon ki hawa ⛰️",
+        "Hamesha ka saath 🤍"
+      ],
+      "sparkle": "Dekho… saare taare aapas me jud rahe hain ✨",
+      "done": "Ye taare nahi hain… ye aane wale kal ke wo saare lamhe hain jo hum saath jeeyenge. 💛",
+      "orb": "Ehsaas"
+    },
     "moon": {
       "name": "🌕 Chaand ka Jhoola",
-      "howTo": "Teeno roshniyan chaand ko de do — neeche wala button dabake rakho 💛",
+      "howTo": "Chaaron roshniyan chaand ko de do — neeche wala button dabake rakho 💛",
       "hold": "Dabake rakho 💛",
       "holding": "Bas… thoda aur… chaand khil raha hai 🌙",
       "bloomed": "Chaand khil gaya… aur jhoole pe dekho, kaun baitha hai 🤍",
@@ -304,43 +319,43 @@ window.SURPRISE_CONFIG = {
   },
   "memories": {
     "title": "Hamari Yaadein 📸",
-    "subtitle": "Har photo ke peeche ek baat chhupi hai. Tap karke palto.",
+    "subtitle": "Har note ke peeche hamara ek pal chhupa hai. Tap karke photo dekho 📸✨",
     "items": [
       {
         "photo": "assets/photos/memory-1.jpg",
         "title": "Birthday girl 👑",
         "date": "21 Oct",
-        "caption": "Is chehre ke liye main kuch bhi kar sakta hoon. Haan, ye wala bhi."
+        "caption": "Is muskaan pe toh poori duniya qurbaan hai... Har saal tumhari umar badhegi, par mera pyaar har lamhe me dugna hoga. Happy Birthday meri jaan 🎂💛"
       },
       {
         "photo": "assets/photos/memory-2.jpg",
         "title": "Jab baatein shuru hui 💬",
-        "date": "Shuruaat",
-        "caption": "Pata nahi tha ki ek \"hi\" itni door tak le jaayega."
+        "date": "Pehli Mulaqaat",
+        "caption": "Pata nahi tha ki ek anjaan sa 'Hello' aage chal kar meri har subah ki pehli dua aur har raat ka aakhri sukoon ban jaayega... 📱✨"
       },
       {
         "photo": "assets/photos/memory-3.jpg",
         "title": "Gift wala reaction 🎁",
-        "date": "Favourite moment",
-        "caption": "Is reaction ke liye gift dena padta hai. Worth it, har baar."
+        "date": "Favourite Expression",
+        "caption": "Tumhari aankhon ki wo masoom chamak jab tum surprise hoti ho... Aane wale 50 saalon me bhi aise hi tumhare chehre pe khushiyan laane ka waada hai 🎁✨"
       },
       {
         "photo": "assets/photos/memory-4.jpg",
-        "title": "Cute wali Billu 🧸",
-        "date": "Hamesha",
-        "caption": "Jab tum cute baatein karti ho, main bas sunta rehta hoon. Aur muskurata rehta hoon."
+        "title": "Pyaari wali Billu 🧸",
+        "date": "Cute Moments",
+        "caption": "Jab tum naak phula ke gussa hoti ho na, sach me itni pyaari lagti ho ki gusse me bhi gale lagane ka mann karta hai. Lifetime ke liye tumhare saare taunts accepted 🙈💛"
       },
       {
         "photo": "assets/photos/memory-5.jpg",
-        "title": "Hum dono 💛",
-        "date": "Ab se hamesha",
-        "caption": "Tumne haan bola, aur meri duniya thodi aur sundar ho gayi."
+        "title": "Hum dono ka 'HAAN' 💍",
+        "date": "The Promise",
+        "caption": "Wo din jab do dilon ne hamesha ke liye ek dusre ko chun liya. Ab agla kadam dhol, mandap, saat phere aur tum officially 'Mrs. Mishrayin' 👰🤵💍"
       },
       {
         "photo": "assets/photos/memory-6.jpg",
-        "title": "Agla stop: Pahad ⛰️",
-        "date": "Coming soon",
-        "caption": "Ye photo abhi khaali thi. Isse hum dono milke bharenge — bike pe, pahadon pe."
+        "title": "Agla stop: Pahad & Hum ⛰️",
+        "date": "Future Journey",
+        "caption": "Thandi hawa, pahadon ka rasta, bike pe mera haath aur tumhara sar mere kandhe pe... Bas hum dono, hawaein aur sukoon 🏍️🏔️"
       }
     ]
   },
@@ -390,14 +405,14 @@ window.SURPRISE_CONFIG = {
     "subtitle": "\"2\" aur \"4\" — dono candles bujhao. Mic me phoonko, ya flame pe tap karo.",
     "micButton": "🎤 Phoonk se bujhao",
     "wishText": "Aankhein band karo… aur wish maango 🤫",
-    "wishDone": "Wish save ho gayi ✅ Poori karne me main poori jaan laga dunga."
+    "wishDone": "Wish aasmaan tak pahunch gayi ✨ Tumhari har khushi poori karne me main apni jaan laga dunga. Happy Birthday meri jaan! 🎂💛"
   },
   "story": {
     "title": "Hamari Kahani 📖",
     "subtitle": "Is kahani ka har mod tum chunogi. Aur phir… hum ise sach karenge.",
     "stages": [
       {
-        "q": "Hamari perfect date?",
+        "q": "Hamari perfect date kaisi hogi? ☕🌅",
         "options": [
           {
             "id": "cafe",
@@ -412,7 +427,7 @@ window.SURPRISE_CONFIG = {
         ]
       },
       {
-        "q": "Hamara agla adventure?",
+        "q": "Hamara agla adventure kahan hoga? ⛰️🌊",
         "options": [
           {
             "id": "mountains",
@@ -427,7 +442,7 @@ window.SURPRISE_CONFIG = {
         ]
       },
       {
-        "q": "Cuddle mood kya hai?",
+        "q": "Raat ka cuddle mood kaisa hoga? 🍿🛋️",
         "options": [
           {
             "id": "movie",
@@ -440,11 +455,56 @@ window.SURPRISE_CONFIG = {
             "line": "Aur raat ko — kuch nahi karenge. Bas saath lete rahenge, taare ginte hue, bekaar ki baatein karte hue. Mere liye wahi sabse best plan hai."
           }
         ]
+      },
+      {
+        "q": "Hamara pehla chhota sa aashiyana? 🏡✨",
+        "options": [
+          {
+            "id": "balcony",
+            "label": "Pahad-facing balcony & chai ☕🪴",
+            "line": "Hamare ghar ki ek aisi balcony hogi jahan se thandi hawa aati ho, dher saare paudhe hon, aur subah ki pehli chai hum dono ek hi cup se aadha-aadha pi rahe hon."
+          },
+          {
+            "id": "cozyroom",
+            "label": "Fairy lights & floor cushions ✨📚",
+            "line": "Hamare kamre me warm fairy lights hongi, dher saare cushions, soft blanket aur tumhari favourite books. Tum poetry padhogi aur main bas sununga."
+          }
+        ]
+      },
+      {
+        "q": "Raat ke 2 baje wali bhookh aur masti? 🍜🚗",
+        "options": [
+          {
+            "id": "maggi",
+            "label": "2 AM Maggi cook-off 🍜",
+            "line": "Raat ke 2 baje dono kitchen me — tum chef banogi, main helper. Thodi cheezein girayenge, dher saara hasenge, aur garam Maggi share karenge."
+          },
+          {
+            "id": "icecream",
+            "label": "Late night ice-cream drive 🍦🚗",
+            "line": "Raat ko achanak bike nikalenge, thandi hawa me udte hue tumhare favourite ice-cream parlour tak jaayenge — tum chocolate khaogi, main strawberry."
+          }
+        ]
+      },
+      {
+        "q": "Hamara budhaapa… 50 saal baad? 👵👴",
+        "options": [
+          {
+            "id": "veranda",
+            "label": "Veranda me puraane gaane 📻",
+            "line": "Baal safed ho chuke honge, par jab main tumhara jhurriyon wala haath pakad ke puraane gaane gungunaunga, tumhari aankhein ab bhi bilkul aaj jaisi chamkengi."
+          },
+          {
+            "id": "oldtravel",
+            "label": "Befikar world tour ✈️🌍",
+            "line": "Dono dada-dadi ban kar bhi bachchon ki tarah duniya ghumenge — tum rasta bhatkaogi aur main muskurate hue tumhare peeche chalunga."
+          }
+        ]
       }
     ],
     "intro": "Ek din ki baat hai… ek ladki thi, {name}, aur ek ladka jo usse bahut, bahut pyaar karta tha.",
-    "endTitle": "{name} & Main — ek chhoti si kahani",
-    "outro": "Aur phir… wo hamesha saath rahe. Ye kahani tumne likhi hai — ab hum ise sach karenge. 💛",
+    "endTitle": "{name} & Main — Hamari Kahani 💛",
+    "outro": "Ye kahani sirf ek sapna nahi hai — ye aane wale kal ka waada hai. Har subah, har shaam, aur har janam me… sirf tum. 💛",
     "nextButton": "Ab kuch sawaal… 💬"
   },
   "questions": {
