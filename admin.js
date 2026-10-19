@@ -80,6 +80,22 @@
       ]
     },
     {
+      id: 'catchHearts', title: '💕 Dil Pakdo', scene: 'playground',
+      desc: 'Playground ka 5th khilona. Har pakde dil/taare/gift pe ek line aati hai. 5 ke baad sunehra dil aata hai — usme tumhari voice note.',
+      fields: [
+        { k: 'catchHearts.intro', label: 'Intro', type: 'textarea' },
+        { k: 'catchHearts.voiceUrl', label: 'Secret voice note (sunehre dil ke andar)', type: 'voice', help: 'Phone ki Voice Memos / recorder app se record karke .m4a ya .mp3 upload karo — iPhone aur Android dono pe chalta hai.' },
+        { k: 'catchHearts.compliments', label: '💗 Dil pe — tareefein', type: 'lines' },
+        { k: 'catchHearts.memories', label: '⭐ Taare pe — yaadein', type: 'lines' },
+        { k: 'catchHearts.confessions', label: '🎁 Gift pe — funny confessions', type: 'lines' },
+        { k: 'catchHearts.kisses', label: '💋 Kiss tokens', type: 'lines' },
+        { k: 'catchHearts.goldenTitle', label: 'Sunehra dil — heading', type: 'text' },
+        { k: 'catchHearts.goldenText', label: 'Sunehra dil — voice note ke saath line', type: 'textarea' },
+        { k: 'catchHearts.goldenFallback', label: 'Sunehra dil — agar voice note na ho to ye message', type: 'textarea' },
+        { k: 'catchHearts.doneToast', label: 'Khatam hone pe toast', type: 'text' }
+      ]
+    },
+    {
       id: 'ride', title: '🏍️ Bike ride', scene: 'ride',
       desc: 'Har milestone pe bike rukti hai aur ek kahani dikhti hai. Last wala = pahad.',
       fields: [
@@ -119,6 +135,38 @@
         { k: 'court.gavelButton', label: 'Hathoda button', type: 'text' },
         { k: 'court.verdictTitle', label: 'Faisla heading', type: 'text' },
         { k: 'court.verdictText', label: 'Faisla', type: 'textarea' }
+      ]
+    },
+    {
+      id: 'dream', title: '🌙 Sapno ki duniya', scene: 'dream',
+      desc: 'Wo aankhen band karti hai aur gubbare me sapno ki duniya me udti hai: 🌿 jugnu pakadna → 🪷 jheel ki dhun bajana → 🔮 aainon se chaand ki roshni gulab tak le jaana → 🌕 teeno roshniyan dekar chaand khilana. Khel wahi rahenge, lines yahan badlo.',
+      fields: [
+        { k: 'dream.title', label: 'Heading', type: 'text' },
+        { k: 'dream.subtitle', label: 'Subheading', type: 'textarea' },
+        { k: 'dream.intro', label: 'Shuru ki line (aankhen band karne se pehle)', type: 'textarea' },
+        { k: 'dream.closeEyes', label: '"Aankhen band karo" button', type: 'text' },
+        { k: 'dream.board', label: 'Aankhen khulne ke baad (gubbara intezaar kar raha hai)', type: 'textarea' },
+        { k: 'dream.boardButton', label: '"Gubbare me baitho" button', type: 'text' },
+        { k: 'dream.upButton', label: '"Aur upar" button', type: 'text' },
+        { k: 'dream.travel', label: 'Udte waqt ki lines (har safar pe ek — 4 lines)', type: 'lines' },
+        { k: 'dream.fireflies.name', label: '🌿 Jugnuon ka bagh — naam', type: 'text' },
+        { k: 'dream.fireflies.howTo', label: '🌿 Kaise khelna hai', type: 'textarea' },
+        { k: 'dream.fireflies.whispers', label: '🌿 Har baar jugnu pakadne pe ek chhoti tareef', type: 'lines' },
+        { k: 'dream.fireflies.heart', label: '🌿 Jugnu dil banate hain tab', type: 'text' },
+        { k: 'dream.fireflies.done', label: '🌿 Khatam hone pe', type: 'textarea' },
+        { k: 'dream.lake.name', label: '🪷 Sur ki jheel — naam', type: 'text' },
+        { k: 'dream.lake.howTo', label: '🪷 Kaise khelna hai', type: 'textarea' },
+        { k: 'dream.lake.done', label: '🪷 Khatam hone pe', type: 'textarea' },
+        { k: 'dream.mirrors.name', label: '🔮 Aainon ka mahal — naam', type: 'text' },
+        { k: 'dream.mirrors.howTo', label: '🔮 Kaise khelna hai', type: 'textarea' },
+        { k: 'dream.mirrors.level2', label: '🔮 Doosra (mushkil) level', type: 'textarea' },
+        { k: 'dream.mirrors.done', label: '🔮 Khatam hone pe', type: 'textarea' },
+        { k: 'dream.moon.name', label: '🌕 Chaand — naam', type: 'text' },
+        { k: 'dream.moon.howTo', label: '🌕 Kaise karna hai', type: 'textarea' },
+        { k: 'dream.moon.bloomed', label: '🌕 Chaand khilne pe', type: 'text' },
+        { k: 'dream.moon.finalTitle', label: '🌕 Aakhri heading', type: 'text' },
+        { k: 'dream.moon.finalText', label: '🌕 Aakhri message', type: 'textarea' },
+        { k: 'dream.moon.wakeButton', label: '🌕 "Aankhen kholo" button', type: 'text' }
       ]
     },
     {
@@ -171,6 +219,30 @@
         { k: 'cake.micButton', label: 'Mic button', type: 'text' },
         { k: 'cake.wishText', label: 'Wish screen', type: 'text' },
         { k: 'cake.wishDone', label: 'Wish ke baad', type: 'textarea' }
+      ]
+    },
+    {
+      id: 'story', title: '📖 Hamari kahani', scene: 'story',
+      desc: 'Teen chapter, har chapter me 2 choices. Uski choices ki lines milke ek kahani banti hai (illustrations choice ke id se aati hain: cafe, sunset, mountains, sea, movie, nothing).',
+      fields: [
+        { k: 'story.title', label: 'Heading', type: 'text' },
+        { k: 'story.subtitle', label: 'Subheading', type: 'textarea' },
+        {
+          k: 'story.stages', label: 'Chapters', type: 'list', itemName: 'Chapter', fixed: true,
+          fields: [
+            { k: 'q', label: 'Sawaal', type: 'text' },
+            {
+              k: 'options', label: 'Choices', type: 'list', itemName: 'Choice', fixed: true,
+              fields: [{ k: 'label', label: 'Button', type: 'text' }, { k: 'line', label: 'Kahani me line', type: 'textarea' }],
+              blank: { id: 'sunset', label: '', line: '' }
+            }
+          ],
+          blank: { q: '', options: [] }
+        },
+        { k: 'story.intro', label: 'Kahani ki shuruaat', type: 'textarea', help: '{name} = uska naam' },
+        { k: 'story.endTitle', label: 'Kahani ka title', type: 'text' },
+        { k: 'story.outro', label: 'Kahani ka end', type: 'textarea' },
+        { k: 'story.nextButton', label: 'Aage ka button', type: 'text' }
       ]
     },
     {
@@ -363,7 +435,10 @@
         input = renderPhoto(id, value, onChange, ctx);
         break;
       case 'music':
-        input = renderMusic(id, value, onChange);
+        input = renderAudio(id, value, onChange, { kind: 'music', slot: 'song', placeholder: 'Khaali = built-in music-box', uploadLabel: '🎵 Gaana upload karo', clearLabel: 'Built-in music use karo' });
+        break;
+      case 'voice':
+        input = renderAudio(id, value, onChange, { kind: 'voice', slot: 'secret-voice', placeholder: 'Khaali = likha hua secret message dikhega', uploadLabel: '🎙️ Voice note upload karo', clearLabel: 'Voice note hatao' });
         break;
       default:
         input = el('input', { id, type: 'text' });
@@ -410,30 +485,39 @@
     return el('div', { class: 'photo-row' }, [img, el('div', { class: 'photo-actions' }, [label, path])]);
   }
 
-  function renderMusic(id, value, onChange) {
-    const path = el('input', { id, type: 'text', placeholder: 'Khaali = built-in music-box' });
+  // Audio upload field — background song ('music') or her secret voice note ('voice')
+  function renderAudio(id, value, onChange, opts) {
+    const path = el('input', { id, type: 'text', placeholder: opts.placeholder });
     path.value = value || '';
-    path.addEventListener('input', () => onChange(path.value.trim()));
+    const player = el('audio', { controls: '', preload: 'none', class: value ? '' : 'hidden', style: 'width:100%;margin-top:6px' });
+    if (value) player.src = value;
+    path.addEventListener('input', () => {
+      onChange(path.value.trim());
+      player.src = path.value.trim();
+      player.classList.toggle('hidden', !path.value.trim());
+    });
     const file = el('input', { type: 'file', accept: 'audio/*' });
-    const label = el('label', { class: 'btn ghost small upload-label' }, [document.createTextNode('🎵 Gaana upload karo'), file]);
+    const label = el('label', { class: 'btn ghost small upload-label' }, [document.createTextNode(opts.uploadLabel), file]);
     file.addEventListener('change', async () => {
       const f = file.files[0];
       if (!f) return;
       if (!serverOnline) { alert('Upload ke liye studio server chalana padega (python3 admin_server.py).'); return; }
       try {
-        setStatus('Gaana upload ho raha hai…');
+        setStatus('Upload ho raha hai…');
         const ext = (f.name.match(/\.[a-z0-9]+$/i) || ['.mp3'])[0].toLowerCase();
-        const saved = await upload('music', 'song', `song${ext}`, await fileToBase64(f));
+        const saved = await upload(opts.kind, opts.slot, `${opts.slot}${ext}`, await fileToBase64(f));
         path.value = saved;
         onChange(saved);
-        setStatus('Gaana upload ho gaya — ab Save dabao', 'dirty');
+        player.src = `${saved}?t=${Date.now()}`;
+        player.classList.remove('hidden');
+        setStatus('Upload ho gaya — ab Save dabao', 'dirty');
       } catch (e) {
         setStatus(e.message, 'err');
       }
       file.value = '';
     });
-    const clear = el('button', { type: 'button', class: 'btn ghost small', text: 'Built-in music use karo', onclick: () => { path.value = ''; onChange(''); } });
-    return el('div', { class: 'photo-actions' }, [path, el('div', {}, [label, document.createTextNode(' '), clear])]);
+    const clear = el('button', { type: 'button', class: 'btn ghost small', text: opts.clearLabel, onclick: () => { path.value = ''; onChange(''); player.classList.add('hidden'); } });
+    return el('div', { class: 'photo-actions' }, [path, el('div', {}, [label, document.createTextNode(' '), clear]), player]);
   }
 
   // `arr` lets lists nest (e.g. options inside each question)
@@ -450,9 +534,11 @@
     function redraw() {
       list.innerHTML = '';
       arr.forEach((item, i) => {
+        // fixed lists (map places, story chapters) are tied to artwork: edit text only
+        const title = item.name ? `${f.itemName} ${i + 1} — ${item.name}` : `${f.itemName} ${i + 1}`;
         const head = el('div', { class: 'list-item-head' }, [
-          el('strong', { text: `${f.itemName} ${i + 1}` }),
-          el('div', { class: 'tools' }, [
+          el('strong', { text: title }),
+          f.fixed ? null : el('div', { class: 'tools' }, [
             el('button', { type: 'button', class: 'btn ghost small', text: '↑', title: 'Upar', onclick: () => move(i, -1) }),
             el('button', { type: 'button', class: 'btn ghost small', text: '↓', title: 'Neeche', onclick: () => move(i, 1) }),
             el('button', { type: 'button', class: 'btn danger small', text: 'Hatao', onclick: () => remove(i) })
@@ -469,10 +555,12 @@
         });
         list.appendChild(itemEl);
       });
-      list.appendChild(el('button', {
-        type: 'button', class: 'btn ghost small', text: `+ ${f.itemName} jodo`,
-        onclick: () => { arr.push(JSON.parse(JSON.stringify(f.blank))); markDirty(); redraw(); }
-      }));
+      if (!f.fixed) {
+        list.appendChild(el('button', {
+          type: 'button', class: 'btn ghost small', text: `+ ${f.itemName} jodo`,
+          onclick: () => { arr.push(JSON.parse(JSON.stringify(f.blank))); markDirty(); redraw(); }
+        }));
+      }
     }
     function move(i, d) {
       const j = i + d;

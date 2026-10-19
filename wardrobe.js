@@ -10,7 +10,8 @@
  *   - Separate Bottoms: Slim Jeans 👖, Flared Palazzo 🌸, Pleated Midi Skirt 💃, Comfort Joggers 👟, Silk Churidar ✨.
  * - Dynamic Fabric Color Grading: Real-time 3D color grade tinting with feathered mask.
  * - Dynamic Fabric Patterns: Lucknowi Chikankari ✨, Polka dots ⚪, Romantic floral 🌸, Pinstripes, Gingham checks.
- * - Live Interactive Accessories: Royal Diamond Tiara 👑, Golden Shades 🕶️, Ruby Bindi 🔴, Jhumka Shimmer ✨, Jasmine Blossom 🌸, Choodiyan ✨, Minaudière Clutch 👛, Sheer Dupatta 🧣.
+ * - Live Interactive Accessories: Royal Diamond Tiara 👑, Golden Shades 🕶️, Ruby Bindi 🔴, Golden Jhumka ✨, Jasmine Blossom 🌸 —
+ *   anchored to her eyes in each render (FACE_ANCHORS), so they sit right on every outfit.
  * - Thematic Backdrops: Mela 🎡, Fountain ⛲, Mountain view ⛰️, Beach 🏖️, Cafe ☕, Studio ✨.
  * - HD Polaroid photo export with "Approved by Tumhara ✅" seal.
  * ==============================================================================
@@ -69,12 +70,9 @@ window.Wardrobe = (function () {
     extras: [
       { id: 'tiara', label: 'Tiara 👑' },
       { id: 'shades', label: 'Shades 🕶️' },
-      { id: 'jhumka', label: 'Jhumka ✨' },
+      { id: 'jhumka', label: 'Golden Jhumka ✨' },
       { id: 'bindi', label: 'Ruby Bindi 🔴' },
-      { id: 'flower', label: 'Phool 🌸' },
-      { id: 'bangles', label: 'Choodiyan ✨' },
-      { id: 'bag', label: 'Clutch 👛' },
-      { id: 'dupatta', label: 'Dupatta 🧣' }
+      { id: 'flower', label: 'Phool 🌸' }
     ],
     colors: [
       '#e9a48c', '#f3c4b0', '#e8507f', '#ff9fbf', '#c81d3a', '#7a1f2b', '#f27a3a', '#ffcf5a',
@@ -307,140 +305,97 @@ window.Wardrobe = (function () {
   }
 
   // ---------------------------------------------------------------- Interactive Accessories
-  function renderAccessories(extras, prefix) {
+  // Accessories are drawn once against the standard render (eyes measured at
+  // (208.2, 81.4) and (239.9, 80.9) in this 450×600 frame) and then moved,
+  // rotated and scaled onto each image's own eye positions — so shades sit on
+  // her eyes and the bindi on her forehead in every outfit.
+  // Renders with a different framing get their own entry in FACE_ANCHORS.
+  const STD_EYES = { l: [208.2, 81.4], r: [239.9, 80.9] };
+  const FACE_ANCHORS = {
+    'assets/wardrobe/dress-nightsuit.jpg': { l: [208.7, 91.5], r: [242.0, 83.6] }
+  };
+
+  function faceTransform(file) {
+    const a = FACE_ANCHORS[file] || STD_EYES;
+    const mid0 = [(STD_EYES.l[0] + STD_EYES.r[0]) / 2, (STD_EYES.l[1] + STD_EYES.r[1]) / 2];
+    const mid = [(a.l[0] + a.r[0]) / 2, (a.l[1] + a.r[1]) / 2];
+    const d0 = Math.hypot(STD_EYES.r[0] - STD_EYES.l[0], STD_EYES.r[1] - STD_EYES.l[1]);
+    const d = Math.hypot(a.r[0] - a.l[0], a.r[1] - a.l[1]);
+    const ang0 = Math.atan2(STD_EYES.r[1] - STD_EYES.l[1], STD_EYES.r[0] - STD_EYES.l[0]);
+    const ang = Math.atan2(a.r[1] - a.l[1], a.r[0] - a.l[0]);
+    const deg = ((ang - ang0) * 180) / Math.PI;
+    return `translate(${mid[0].toFixed(2)} ${mid[1].toFixed(2)}) rotate(${deg.toFixed(2)}) scale(${(d / d0).toFixed(4)}) translate(${(-mid0[0]).toFixed(2)} ${(-mid0[1]).toFixed(2)})`;
+  }
+
+  function goldJhumka(x, y, prefix) {
+    let beads = '';
+    for (let i = -4; i <= 4; i += 2) beads += `<circle cx="${x + i}" cy="${y + 15.4}" r=".75" fill="#fff6d6"/>`;
+    return `<g filter="url(#${prefix}goldGlow)">
+        <circle cx="${x}" cy="${y}" r="2.1" fill="url(#${prefix}goldGrad)"/>
+        <path d="M${x} ${y + 2} L${x} ${y + 4}" stroke="#b8860b" stroke-width=".6"/>
+        <path d="M${x - 5} ${y + 13} Q${x} ${y + 3.6} ${x + 5} ${y + 13} L${x + 5.6} ${y + 14.6} L${x - 5.6} ${y + 14.6} Z" fill="url(#${prefix}goldGrad)"/>
+        <path d="M${x - 3.6} ${y + 11} Q${x} ${y + 7} ${x + 3.6} ${y + 11}" fill="none" stroke="#b8860b" stroke-width=".45" stroke-dasharray=".8 1.1"/>
+        ${beads}
+      </g>`;
+  }
+
+  function renderAccessories(extras, prefix, file) {
     const ext = extras instanceof Set ? extras : new Set(extras || []);
     let out = '';
 
-    // 1. Tiara (👑 Royal Diamond Princess Tiara)
     if (ext.has('tiara')) {
       out += `
         <g class="overlay-tiara" filter="url(#${prefix}dropShadow)">
-          <!-- Base delicate curved headband -->
-          <path d="M192,72 Q225,54 258,72" fill="none" stroke="url(#${prefix}goldGrad)" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M194,71 Q225,56 256,71" fill="none" stroke="#ffffff" stroke-width="0.8" opacity="0.6"/>
-          <!-- Ornate filigree arches -->
-          <path d="M196,71 Q206,58 214,66 Q225,48 236,66 Q244,58 254,71" fill="none" stroke="url(#${prefix}goldGrad)" stroke-width="1.8"/>
-          <!-- Central royal diamond crest -->
-          <polygon points="225,44 229,54 225,64 221,54" fill="#ffffff" filter="url(#${prefix}sparkleGlow)"/>
-          <polygon points="214,54 217,61 214,68 211,61" fill="#ffffff" opacity="0.9"/>
-          <polygon points="236,54 239,61 236,68 233,61" fill="#ffffff" opacity="0.9"/>
-          <polygon points="204,61 206,66 204,71 202,66" fill="#ffd700"/>
-          <polygon points="246,61 248,66 246,71 244,66" fill="#ffd700"/>
-          <!-- Shimmering star glint on apex -->
-          <circle cx="225" cy="44" r="2.8" fill="#ffffff" filter="url(#${prefix}sparkleGlow)"/>
-          <path d="M225,40 L225,48 M221,44 L229,44" stroke="#ffffff" stroke-width="1.2" opacity="0.95"/>
-        </g>
-      `;
+          <path d="M199 57 Q224 45 249 57" fill="none" stroke="url(#${prefix}goldGrad)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M201 56 Q224 46.4 247 56" fill="none" stroke="#fff" stroke-width=".6" opacity=".6"/>
+          <path d="M203 55 Q210 46 215 51.5 Q224 36 233 51.5 Q238 46 245 55" fill="none" stroke="url(#${prefix}goldGrad)" stroke-width="1.5"/>
+          <polygon points="224,35.5 227,43 224,50 221,43" fill="#ffffff" filter="url(#${prefix}sparkleGlow)"/>
+          <polygon points="214.5,45 216.6,50 214.5,55 212.4,50" fill="#ffffff" opacity=".9"/>
+          <polygon points="233.5,45 235.6,50 233.5,55 231.4,50" fill="#ffffff" opacity=".9"/>
+          <circle cx="206" cy="53.6" r="1.3" fill="#ff7aa8"/><circle cx="242" cy="53.6" r="1.3" fill="#ff7aa8"/>
+          <path d="M224 31.5 L224 39.5 M220 35.5 L228 35.5" stroke="#fff" stroke-width=".9" opacity=".95"/>
+        </g>`;
     }
 
-    // 2. Sunglasses (🕶️ Shades)
-    if (ext.has('shades')) {
-      out += `
-        <g class="overlay-shades" filter="url(#${prefix}dropShadow)">
-          <!-- Left Frame -->
-          <rect x="182" y="94" width="38" height="25" rx="8" fill="url(#${prefix}lensGrad)" stroke="url(#${prefix}goldGrad)" stroke-width="1.8"/>
-          <!-- Right Frame -->
-          <rect x="230" y="94" width="38" height="25" rx="8" fill="url(#${prefix}lensGrad)" stroke="url(#${prefix}goldGrad)" stroke-width="1.8"/>
-          <!-- Golden Bridge -->
-          <path d="M220,101 Q225,98 230,101" fill="none" stroke="url(#${prefix}goldGrad)" stroke-width="2.2" stroke-linecap="round"/>
-          <!-- Specular Glass Light Reflections -->
-          <path d="M186,98 L206,98 L192,115 L186,115 Z" fill="#ffffff" opacity="0.28"/>
-          <path d="M234,98 L254,98 L240,115 L234,115 Z" fill="#ffffff" opacity="0.28"/>
-          <circle cx="216" cy="99" r="1.2" fill="#fff" opacity="0.7"/>
-          <circle cx="264" cy="99" r="1.2" fill="#fff" opacity="0.7"/>
-        </g>
-      `;
-    }
-
-    // 3. Flower (🌸 Jasmine / Lotus Blossom behind ear)
     if (ext.has('flower')) {
       out += `
-        <g class="overlay-flower" transform="translate(164, 88)" filter="url(#${prefix}dropShadow)">
-          <g filter="url(#${prefix}soft)" opacity="0.3"><circle cx="0" cy="0" r="10" fill="#f48fb1"/></g>
-          <path d="M0,0 Q-8,-6 -6,-12 Q-1,-11 0,0" fill="#ffcdd2"/>
-          <path d="M0,0 Q-12,-2 -13,5 Q-7,6 0,0" fill="#f8bbd0"/>
-          <path d="M0,0 Q-8,10 -3,13 Q1,8 0,0" fill="#ffcdd2"/>
-          <path d="M0,0 Q6,9 10,6 Q7,0 0,0" fill="#f8bbd0"/>
-          <path d="M0,0 Q8,-7 4,-12 Q-1,-8 0,0" fill="#ffcdd2"/>
-          <circle cx="0" cy="0" r="3" fill="#ffe082"/>
-          <circle cx="0" cy="0" r="1.5" fill="#ffd54f"/>
-        </g>
-      `;
+        <g class="overlay-flower" transform="translate(256 63)" filter="url(#${prefix}dropShadow)">
+          <path d="M0,0 Q-6,-5 -4.6,-9.6 Q-.8,-8.6 0,0" fill="#ffcdd2"/>
+          <path d="M0,0 Q-9.6,-1.6 -10.4,4 Q-5.6,4.8 0,0" fill="#f8bbd0"/>
+          <path d="M0,0 Q-6.4,8 -2.4,10.4 Q.8,6.4 0,0" fill="#ffcdd2"/>
+          <path d="M0,0 Q4.8,7.2 8,4.8 Q5.6,0 0,0" fill="#f8bbd0"/>
+          <path d="M0,0 Q6.4,-5.6 3.2,-9.6 Q-.8,-6.4 0,0" fill="#ffcdd2"/>
+          <circle cx="0" cy="0" r="2.4" fill="#ffe082"/><circle cx="0" cy="0" r="1.1" fill="#ffd54f"/>
+        </g>`;
     }
 
-    // 4. Bindi (🔴 Glistening Ruby Bindi)
     if (ext.has('bindi')) {
       out += `
         <g class="overlay-bindi" filter="url(#${prefix}sparkleGlow)">
-          <circle cx="225" cy="86" r="3.2" fill="#880e4f"/>
-          <circle cx="225" cy="86" r="2.4" fill="#c2185b"/>
-          <circle cx="225" cy="86" r="1.2" fill="#ff4081"/>
-          <circle cx="224.2" cy="85.2" r="0.6" fill="#ffffff"/>
-        </g>
-      `;
+          <circle cx="221.3" cy="71.8" r="2.3" fill="#880e4f"/>
+          <circle cx="221.3" cy="71.8" r="1.7" fill="#c2185b"/>
+          <circle cx="221.3" cy="71.8" r=".85" fill="#ff4081"/>
+          <circle cx="220.8" cy="71.2" r=".4" fill="#ffffff"/>
+        </g>`;
     }
 
-    // 5. Jhumka Sparkle (✨ Delicate Golden Dangler Glints)
     if (ext.has('jhumka')) {
-      out += `
-        <g class="overlay-jhumka">
-          <g transform="translate(176, 142)" filter="url(#${prefix}goldGlow)">
-            <circle cx="0" cy="0" r="2.8" fill="url(#${prefix}goldGrad)"/>
-            <path d="M-4,3 Q0,2 4,3 L3,8 Q0,9 -3,8 Z" fill="url(#${prefix}goldGrad)"/>
-            <circle cx="-2.5" cy="10" r="1" fill="#ffffff"/>
-            <circle cx="0" cy="10.5" r="1.2" fill="#ffffff"/>
-            <circle cx="2.5" cy="10" r="1" fill="#ffffff"/>
-          </g>
-          <g transform="translate(274, 142)" filter="url(#${prefix}goldGlow)">
-            <circle cx="0" cy="0" r="2.8" fill="url(#${prefix}goldGrad)"/>
-            <path d="M-4,3 Q0,2 4,3 L3,8 Q0,9 -3,8 Z" fill="url(#${prefix}goldGrad)"/>
-            <circle cx="-2.5" cy="10" r="1" fill="#ffffff"/>
-            <circle cx="0" cy="10.5" r="1.2" fill="#ffffff"/>
-            <circle cx="2.5" cy="10" r="1" fill="#ffffff"/>
-          </g>
-        </g>
-      `;
+      out += `<g class="overlay-jhumka">${goldJhumka(253.6, 99.6, prefix)}${goldJhumka(197.2, 102.6, prefix)}</g>`;
     }
 
-    // 6. Bangles (✨ Stacked Golden Choodiyan)
-    if (ext.has('bangles')) {
+    if (ext.has('shades')) {
       out += `
-        <g class="overlay-bangles" filter="url(#${prefix}goldGlow)">
-          <ellipse cx="173" cy="342" rx="7" ry="3.5" fill="none" stroke="url(#${prefix}goldGrad)" stroke-width="2"/>
-          <ellipse cx="174" cy="345" rx="7" ry="3.5" fill="none" stroke="#c2185b" stroke-width="1.6"/>
-          <ellipse cx="175" cy="348" rx="7" ry="3.5" fill="none" stroke="url(#${prefix}goldGrad)" stroke-width="2"/>
-          <ellipse cx="277" cy="342" rx="7" ry="3.5" fill="none" stroke="url(#${prefix}goldGrad)" stroke-width="2"/>
-          <ellipse cx="276" cy="345" rx="7" ry="3.5" fill="none" stroke="#c2185b" stroke-width="1.6"/>
-          <ellipse cx="275" cy="348" rx="7" ry="3.5" fill="none" stroke="url(#${prefix}goldGrad)" stroke-width="2"/>
-        </g>
-      `;
+        <g class="overlay-shades" filter="url(#${prefix}dropShadow)">
+          <path d="M196.6 77.2 L191.4 76.2 M251.5 76.6 L256.6 75.6" stroke="url(#${prefix}goldGrad)" stroke-width="1.3" stroke-linecap="round"/>
+          <rect x="196.7" y="74.1" width="23" height="15" rx="5.5" fill="url(#${prefix}lensGrad)" stroke="url(#${prefix}goldGrad)" stroke-width="1.1"/>
+          <rect x="228.4" y="73.6" width="23" height="15" rx="5.5" fill="url(#${prefix}lensGrad)" stroke="url(#${prefix}goldGrad)" stroke-width="1.1"/>
+          <path d="M219.7 78.4 Q224 75.9 228.4 77.9" fill="none" stroke="url(#${prefix}goldGrad)" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M199.5 76.4 L208.5 76.4 L202 87 L199.5 87 Z" fill="#fff" opacity=".22"/>
+          <path d="M231.2 75.9 L240.2 75.9 L233.7 86.5 L231.2 86.5 Z" fill="#fff" opacity=".22"/>
+        </g>`;
     }
 
-    // 7. Clutch (👛 Minaudière Bag)
-    if (ext.has('bag')) {
-      out += `
-        <g class="overlay-clutch" transform="translate(254, 336)" filter="url(#${prefix}dropShadow)">
-          <rect x="0" y="0" width="46" height="30" rx="7" fill="#2b1a38" stroke="url(#${prefix}goldGrad)" stroke-width="2"/>
-          <path d="M0,2 L23,18 L46,2" fill="none" stroke="url(#${prefix}goldGrad)" stroke-width="1.6"/>
-          <circle cx="23" cy="18" r="3.5" fill="#ffffff" filter="url(#${prefix}sparkleGlow)"/>
-          <circle cx="23" cy="18" r="1.8" fill="#ffd700"/>
-        </g>
-      `;
-    }
-
-    // 8. Dupatta (🧣 Floating Shimmering Dupatta)
-    if (ext.has('dupatta')) {
-      out += `
-        <g class="overlay-dupatta" opacity="0.82" filter="url(#${prefix}dropShadow)">
-          <path d="M148,212 Q136,295 156,380 Q168,425 156,480 L142,476 Q150,425 142,380 Q124,295 138,212 Z" fill="#ffe082"/>
-          <path d="M148,212 Q136,295 156,380 Q168,425 156,480" fill="none" stroke="url(#${prefix}goldGrad)" stroke-width="2.5"/>
-          <path d="M138,212 Q225,236 292,216" fill="none" stroke="url(#${prefix}goldGrad)" stroke-width="4.5" opacity="0.75"/>
-          <path d="M138,212 Q225,236 292,216" fill="none" stroke="#fff8e1" stroke-width="1.5" opacity="0.85"/>
-        </g>
-      `;
-    }
-
-    return out;
+    return out ? `<g transform="${faceTransform(file)}">${out}</g>` : '';
   }
 
   // ---------------------------------------------------------------- Main SVG Renderer
@@ -477,7 +432,7 @@ window.Wardrobe = (function () {
 
       <!-- 6. Interactive Accessories -->
       <g class="doll-3d-accessories">
-        ${renderAccessories(st.extras, prefix)}
+        ${renderAccessories(st.extras, prefix, outfitUrl)}
       </g>
 
       <!-- 7. Ambient Magic Floating Sparkles -->
@@ -493,44 +448,63 @@ window.Wardrobe = (function () {
   }
 
   // ---------------------------------------------------------------- High-Res Polaroid Export
+  const blobToDataUrl = (blob) => new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(blob);
+  });
+
+  // Rasterise exactly what she sees: the render plus colour tint, pattern and
+  // accessories. The outfit image is inlined first, because an SVG drawn as an
+  // image can't load external files.
+  async function snapshotSvg(svgEl, outfitUrl) {
+    const clone = svgEl.cloneNode(true);
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    clone.setAttribute('width', '900');
+    clone.setAttribute('height', '1200');
+    clone.querySelectorAll('.doll-3d-sparkles').forEach((n) => n.remove());
+    const imgEl = clone.querySelector('image');
+    const src = outfitUrl || (imgEl && imgEl.getAttribute('href'));
+    if (imgEl && src && !src.startsWith('data:')) {
+      const blob = await fetch(src).then((r) => r.blob());
+      imgEl.setAttribute('href', await blobToDataUrl(blob));
+    }
+    const img = new Image();
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(clone));
+    await img.decode();
+    return img;
+  }
+
   async function toPng(svgEl, caption, sub, outfitUrl) {
-    const W = 720, H = 1320;
+    // Photo window keeps the render's own 3:4 shape (no stretching)
+    const W = 720, PW = 620, PH = Math.round(PW * 600 / 450), H = 50 + PH + 190;
     const c = document.createElement('canvas');
     c.width = W; c.height = H;
     const ctx = c.getContext('2d');
 
-    // 1. Warm Polaroid Paper Background
     ctx.fillStyle = '#fffdf7';
     ctx.fillRect(0, 0, W, H);
-
-    // 2. Polaroid Outer Soft Shadow
     ctx.fillStyle = 'rgba(230, 222, 212, 0.45)';
     ctx.fillRect(40, 40, W - 80, H - 80);
 
-    // 3. Main Photo Window (Clip rounded rectangle)
     ctx.save();
     ctx.beginPath();
-    if (ctx.roundRect) {
-      ctx.roundRect(50, 50, 620, 1100, 24);
-    } else {
-      ctx.rect(50, 50, 620, 1100);
-    }
+    if (ctx.roundRect) ctx.roundRect(50, 50, PW, PH, 24); else ctx.rect(50, 50, PW, PH);
     ctx.clip();
-
-    // 4. Draw 3D Character Outfit Image
-    const imgSrc = outfitUrl || svgEl.querySelector('image')?.getAttribute('href') || 'assets/wardrobe/dress-anarkali.jpg';
-    const img = new Image();
-    img.src = imgSrc;
     try {
-      await img.decode();
-      ctx.drawImage(img, 50, 50, 620, 1100);
-    } catch (err) {}
+      ctx.drawImage(await snapshotSvg(svgEl, outfitUrl), 50, 50, PW, PH);
+    } catch (err) {
+      // Fallback: the plain render, still at the right proportions
+      const img = new Image();
+      img.src = outfitUrl || svgEl.querySelector('image')?.getAttribute('href') || 'assets/wardrobe/dress-anarkali.jpg';
+      try { await img.decode(); ctx.drawImage(img, 50, 50, PW, PH); } catch (e) { /* leave paper */ }
+    }
 
-    // 5. If "Approved" Stamp is visible, stamp it onto the photo
     const stampEl = document.getElementById('wardrobe-stamp');
     if (stampEl && !stampEl.classList.contains('hidden')) {
       ctx.save();
-      ctx.translate(W - 170, 160);
+      ctx.translate(W - 170, 140);
       ctx.rotate(-0.16);
       ctx.strokeStyle = '#2f7d4f';
       ctx.lineWidth = 5.5;
@@ -545,22 +519,27 @@ window.Wardrobe = (function () {
     }
     ctx.restore();
 
-    // 6. Romantic Handwritten Caption
     try {
       await document.fonts.load('700 54px Caveat');
       await document.fonts.load('500 24px "Baloo 2"');
-    } catch (e) {}
-
+    } catch (e) { /* fonts optional */ }
     ctx.fillStyle = '#e8507f';
     ctx.textAlign = 'center';
     ctx.font = '700 54px Caveat, cursive';
-    ctx.fillText(caption || 'Billu ka look 💛', W / 2, 1228);
-
+    ctx.fillText(caption || 'Billu ka look 💛', W / 2, 50 + PH + 92);
     ctx.fillStyle = '#7a6a8a';
     ctx.font = '500 24px "Baloo 2", system-ui, sans-serif';
-    ctx.fillText(sub || '21 Oct · Happy Birthday', W / 2, 1272);
+    ctx.fillText(sub || '21 Oct · Happy Birthday', W / 2, 50 + PH + 136);
 
     return new Promise((resolve) => c.toBlob(resolve, 'image/png'));
+  }
+
+  // Load every outfit render up front so switching outfits is instant (no blank flash)
+  let preloaded = false;
+  function preload() {
+    if (preloaded) return;
+    preloaded = true;
+    [...Object.values(DRESS_IMAGES), ...LOOKS.map((l) => l.file)].forEach((src) => { const i = new Image(); i.src = src; });
   }
 
   function defaultState() {
@@ -606,6 +585,7 @@ window.Wardrobe = (function () {
     defaultState,
     randomize,
     get3DOutfit,
+    preload,
     CONTROLS,
     hasTop,
     hasBottom,

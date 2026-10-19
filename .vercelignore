@@ -11,3 +11,19 @@ package.json
 .logs
 assets/reference
 GEMINI_PROMPTS.md
+# Unused template images and Gemini's test renders (nothing on the site uses them)
+assets/cake.jpg
+assets/girlfriend_portrait.jpg
+assets/hero_couple.jpg
+assets/mascot.jpg
+assets/memory_date.jpg
+assets/memory_sunset.jpg
+assets/sticker_cupid_heart.svg
+assets/sticker_love_badge.svg
+assets/photos/*.svg
+assets/wardrobe/chetna-3d-head.png
+assets/wardrobe/chetna-head-test.png
+assets/wardrobe/chetna-head.jpg
+assets/wardrobe/debug-landmarks.jpg
+assets/wardrobe/slice-*.png
+assets/wardrobe/test-*.png

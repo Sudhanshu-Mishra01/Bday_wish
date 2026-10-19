@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=8.0">
+  <link rel="stylesheet" href="style.css?v=10.0">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
 <body>
@@ -137,9 +137,12 @@
           <button type="button" class="toy" data-toy="wardrobe">
             <span class="toy-icon">👗</span><span class="toy-name">Apne Mann Ke Kapde</span><span class="toy-check">✓</span>
           </button>
+          <button type="button" class="toy toy-wide" data-toy="hearts">
+            <span class="toy-icon">💕</span><span class="toy-name">Dil Pakdo</span><span class="toy-check">✓</span>
+          </button>
         </div>
 
-        <p class="hint center-text" id="pg-progress">0 / 4 khilone khele</p>
+        <p class="hint center-text" id="pg-progress">0 / 5 khilone khele</p>
         <div class="center-text">
           <button type="button" class="btn btn-primary hidden" id="btn-pg-next">Ab ghumne chalein? 🏍️</button>
         </div>
@@ -188,6 +191,29 @@
         </div>
       </div>
 
+      <div class="sheet" id="toy-hearts" role="dialog" aria-modal="true" aria-label="Dil Pakdo">
+        <div class="sheet-inner">
+          <button type="button" class="sheet-close" aria-label="Band karo">✕</button>
+          <h3 id="hearts-title">Dil Pakdo 💕</h3>
+          <p class="hint" id="hearts-intro"></p>
+          <div class="hearts-field" id="hearts-field"></div>
+          <div class="catch-reward hidden" id="catch-reward" aria-live="polite">
+            <span class="catch-icon" id="catch-icon"></span>
+            <div>
+              <p class="catch-kind" id="catch-kind"></p>
+              <p class="catch-text" id="catch-text"></p>
+            </div>
+          </div>
+          <p class="catch-count" id="catch-count"></p>
+          <div class="golden-note hidden" id="golden-note">
+            <p class="golden-title" id="golden-title"></p>
+            <p class="golden-text" id="golden-text"></p>
+            <button type="button" class="btn btn-glow hidden" id="btn-voice">▶ Suno 🎧</button>
+            <audio id="voice-note" preload="none"></audio>
+          </div>
+        </div>
+      </div>
+
       <div class="sheet" id="toy-wardrobe" role="dialog" aria-modal="true" aria-label="Apne Mann Ke Kapde">
         <div class="sheet-inner wardrobe-sheet">
           <button type="button" class="sheet-close" aria-label="Band karo">✕</button>
@@ -233,6 +259,17 @@
         <div class="road"><div class="road-dash" id="road-dash"></div></div>
         <div class="ride-night"></div>
         <img class="bike-art hidden" id="bike-art" alt="">
+        <!-- Headlight beam for the bike artwork (fades out as the sun rises) -->
+        <svg class="bike-art bike-beam hidden" id="bike-beam" viewBox="0 0 1376 768" aria-hidden="true">
+          <defs>
+            <linearGradient id="artBeam" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#fff3cf" stop-opacity=".7"/>
+              <stop offset=".35" stop-color="#ffe8a3" stop-opacity=".28"/>
+              <stop offset="1" stop-color="#fff3cf" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M1060 345 L2700 90 L2700 700 Z" fill="url(#artBeam)"/>
+        </svg>
         <canvas class="bike-art hidden" id="bike-canvas" width="1376" height="768" aria-hidden="true"></canvas>
         <!-- Cinematic silhouette: him riding, her side-saddle behind him (Royal Enfield Classic 350) -->
         <svg class="bike" id="bike" viewBox="0 0 260 160">
@@ -467,7 +504,65 @@
           <div class="gavel" aria-hidden="true">🔨</div>
           <h3 id="verdict-title"></h3>
           <p id="verdict-text"></p>
-          <button type="button" class="btn btn-primary" id="btn-court-next">Yaadein dekhein? 📸</button>
+          <button type="button" class="btn btn-primary" id="btn-court-next">Chalo, sapne me chalein 🌙</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 5b. DREAM — "Chalo, sapne me milte hain"             -->
+    <!-- ===================================================== -->
+    <section class="scene scene-dream" data-scene="dream" aria-labelledby="dream-title">
+      <div class="dream-sky" aria-hidden="true">
+        <div class="dsky" data-l="0"></div>
+        <div class="dsky" data-l="1"></div>
+        <div class="dsky" data-l="2"></div>
+        <div class="dsky" data-l="3"></div>
+        <div class="dsky" data-l="4"></div>
+        <div class="aurora"></div>
+        <div class="dream-moon"></div>
+        <div class="cloud-layer back" id="cloud-back"></div>
+        <div class="cloud-layer front" id="cloud-front"></div>
+        <div class="dream-motes" id="dream-motes"></div>
+      </div>
+
+      <div class="dream-ui">
+        <header class="scene-head dream-head">
+          <h2 class="title" id="dream-title"></h2>
+          <p class="lead" id="dream-sub"></p>
+          <div class="dream-orbs" id="dream-orbs" aria-label="Sapne ki roshniyan">
+            <span class="orb" data-i="0"><i></i><b></b></span>
+            <span class="orb" data-i="1"><i></i><b></b></span>
+            <span class="orb" data-i="2"><i></i><b></b></span>
+          </div>
+        </header>
+
+        <div class="dream-stage" id="dream-stage">
+          <div class="dream-world" id="dream-world">
+            <svg id="dream-svg" viewBox="0 0 360 480" role="img" aria-label="Sapno ki duniya"></svg>
+            <canvas id="dream-canvas" aria-label="Jugnu pakdo: ungli se unke charon taraf gola banao"></canvas>
+            <div class="dream-words" id="dream-words" aria-hidden="true"></div>
+          </div>
+          <div class="dream-balloon" id="dream-balloon"></div>
+          <p class="dream-place" id="dream-place" aria-live="polite"></p>
+        </div>
+
+        <div class="dream-foot">
+          <p class="dream-note" id="dream-note" aria-live="polite"></p>
+          <div class="dream-actions">
+            <button type="button" class="btn btn-ghost hidden" id="btn-dream-aux"></button>
+            <button type="button" class="btn btn-primary hidden" id="btn-dream-go"></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="dream-final hidden" id="dream-final" role="dialog" aria-modal="true" aria-labelledby="dream-final-title">
+        <div class="dream-final-inner">
+          <p class="dream-kicker">🌙 ✨ 🌙</p>
+          <h2 class="dream-final-title" id="dream-final-title"></h2>
+          <p class="dream-final-text" id="dream-final-text"></p>
+          <p class="dream-sign" id="dream-sign"></p>
+          <button type="button" class="btn btn-primary" id="btn-dream-next"></button>
         </div>
       </div>
     </section>
@@ -580,8 +675,35 @@
         <div class="card reveal-card hidden" id="cake-done">
           <h3>🎉 Happy Birthday! 🎉</h3>
           <p id="wish-done"></p>
-          <button type="button" class="btn btn-primary" id="btn-cake-next">Chitthi se pehle… kuch baatein 💬</button>
+          <button type="button" class="btn btn-primary" id="btn-cake-next">Chalo, ek kahani banayein 📖</button>
         </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 8a. STORY — build your own love story                  -->
+    <!-- ===================================================== -->
+    <section class="scene" data-scene="story" aria-labelledby="story-title">
+      <div class="scene-inner">
+        <header class="scene-head">
+          <h2 class="title" id="story-title"></h2>
+          <p class="lead" id="story-sub"></p>
+        </header>
+        <div class="storybook" id="storybook">
+          <p class="chapter" id="story-chapter"></p>
+          <h3 class="story-q" id="story-q"></h3>
+          <div class="story-choices" id="story-choices"></div>
+        </div>
+        <article class="story-ending hidden" id="story-ending">
+          <p class="chapter">✨ The End… ya shuruaat? ✨</p>
+          <h3 class="story-end-title" id="story-end-title"></h3>
+          <div id="story-pages"></div>
+          <p class="story-outro" id="story-outro"></p>
+          <div class="center-text story-actions">
+            <button type="button" class="btn btn-ghost" id="btn-story-save">📥 Kahani save karo</button>
+            <button type="button" class="btn btn-primary" id="btn-story-next"></button>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -664,8 +786,8 @@
 
   <audio id="music" loop preload="none"></audio>
 
-  <script src="config.js?v=5.0"></script>
-  <script src="wardrobe.js?v=8.1"></script>
-  <script src="script.js?v=8.1"></script>
+  <script src="config.js?v=10.0"></script>
+  <script src="wardrobe.js?v=9.0"></script>
+  <script src="script.js?v=10.0"></script>
 </body>
 </html>

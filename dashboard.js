@@ -16,16 +16,19 @@
     playground: '🎠 Playground',
     ride: '🏍️ Bike ride',
     court: '🧑‍⚖️ Adalat',
+    dream: '🌙 Sapno ki duniya',
     memories: '📸 Yaadein',
     stars: '✨ Taaron wala dil',
     poem: '✍️ Poem',
     cake: '🎂 Cake',
+    story: '📖 Hamari kahani',
     questions: '💬 Dil ki baatein',
     letter: '💌 Chitthi',
     goodnight: '🌙 Goodnight'
   };
   const SCENE_ORDER = Object.keys(SCENES);
-  const TOYS = { balloons: '🎈 Balloons', tareef: '💐 Tareef Machine', lantern: '🏮 Wish Lantern', wardrobe: '👗 Wardrobe' };
+  const TOYS = { balloons: '🎈 Balloons', tareef: '💐 Tareef Machine', lantern: '🏮 Wish Lantern', wardrobe: '👗 Wardrobe', hearts: '💕 Dil Pakdo' };
+  const DREAM = { eyes_closed: 'Aankhen band kin — sapna shuru 😌', fireflies: '🌿 Jugnu jar me bhar diye', lake: '🪷 Jheel ki dhun baja di', mirrors: '🔮 Chaand ki roshni gulab tak pahuncha di' };
 
   let key = '';
   try { key = localStorage.getItem('bday_dash_key') || ''; } catch (e) { /* private mode */ }
@@ -73,6 +76,13 @@
       case 'letter_saved': return '📥 Chitthi save ki';
       case 'coupon': return `🎟️ Coupon claim kiya: ${d.icon || ''} ${d.title}`;
       case 'finished': return '🌙 Lights band ki — poora dekh liya 💛';
+      case 'golden_heart': return `💛 Sunehra dil pakda (${d.caught || ''} dil pakdne ke baad)`;
+      case 'voice_played': return '🎧 Tumhari voice note suni';
+      case 'dream_step': return `🌙 Sapne me: ${DREAM[d.step] || d.step}`;
+      case 'dream_done': return '🌕 Sapna poora — chaand khil gaya, jhoole pe tum dono';
+      case 'story_choice': return `📖 ${d.q} → "${d.choice}"`;
+      case 'story_done': return '📖 Apni kahani poori ki';
+      case 'story_saved': return '📥 Kahani save ki';
       default: return e.type;
     }
   }
@@ -133,6 +143,7 @@
 
     renderStats(list);
     renderAnswers(list.filter((e) => e.type === 'answer'), devices.size > 1);
+    renderSimple('story', list.filter((e) => e.type === 'story_choice'), (d) => `${d.q} → ${d.choice}`, 'Abhi tak kahani nahi banayi.');
     renderSimple('wishes', list.filter((e) => e.type === 'lantern'), (d) => d.wish, 'Abhi tak koi lantern nahi udaaya.');
     renderSimple('poem', list.filter((e) => e.type === 'poem_reply'), (d) => d.text, 'Abhi tak kuch nahi likha.');
     renderLooks(list.filter((e) => e.type === 'look'));

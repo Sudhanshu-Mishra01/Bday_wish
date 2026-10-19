@@ -9,20 +9,22 @@ A one-night, no-one-is-watching birthday experience for Chetna (Mishrayin / Bill
 | 0 | Countdown | Before midnight she only sees a teasing countdown and a gift box she can shake |
 | 1 | Shhh… | Whispers in the dark → she switches on the fairy lights → "Happy Birthday, Chetna" |
 | 2 | Aaj ka rule | Smashes the **"LOG KYA KAHENGE?"** board |
-| 3 | Bachpan playground | Balloon pop, Tareef Machine, Wish Lantern (she writes 3 wishes, each lantern floats up and becomes a star), Apne Mann Ke Kapde (a realistic illustrated version of her, modelled on her photo, starting in her peach chikankari anarkali at a mela; 6 dresses, 7 tops, 5 bottoms, prints incl. chikankari, hair, shoes, jewellery, 6 backgrounds incl. fountain plaza and mountain view — she can save the look as a photo) |
-| 4 | Bike ride | Holds a button to ride through the mountains at night — a silhouette of you two on the bike, headlight on — and your story appears at each milestone until the sun rises |
+| 3 | Bachpan playground | Five toys: Balloon pop, Tareef Machine, Wish Lantern (she writes 3 wishes, each lantern floats up and becomes a star), **Apne Mann Ke Kapde** (realistic renders of her made with Gemini: 7 dresses + 4 top-and-bottom looks, 17 colours, 6 prints incl. chikankari, tiara / shades / jhumka / bindi / flower, 6 backgrounds incl. fountain and pahad — she can save the look as a photo) and **Dil Pakdo** (she taps floating hearts, stars and gifts for compliments, memories, confessions and kiss tokens; no timer, no score; after 5 a rare golden heart floats up and plays your secret voice note) |
+| 4 | Bike ride | Holds a button to ride through the mountains at night — you two on the bike, headlight on — and your story appears at each milestone until the sun rises |
 | 5 | Adalat | *Mishrayin vs. "Tumhe meri kadar nahi"* — the exhibits are your real memories |
-| 6 | Yaadein | Polaroids that flip to show a note |
-| 7 | Taaron wala dil | She taps glowing stars in order; they join into a heart and spell out a line for her |
-| 8 | Poem | Your poem, line by line; then she writes a line back for you |
-| 9 | Cake | "2" and "4" candles — blow into the mic or tap, then a 10-second wish |
-| 10 | Dil ki baatein | A chat: you ask about your moments together, she answers, you react (the "Nahi" button runs away) |
-| 11 | Chitthi + coupons | Letter with promises and shayari (saveable as an image), then claimable coupons |
-| 12 | Goodnight | "Lights band karo" — lights switch off, moon, goodnight |
+| 6 | Sapno ki duniya | *"Chalo, sapne me milte hain"* — she closes her eyes and wakes in a dream: a hot-air balloon for two floats up past three sky-islands, each a different little game — 🌿 lasso fireflies into a jar (they end up drawing a heart), 🪷 a moonlit lake hums a tune and she plays it back on glowing lotuses, 🔮 she turns crystal mirrors to guide moonlight to a sleeping rose (2 puzzles, hint after a while). Each island gives her a light; she holds to give all three to the moon, it blooms like a flower, and you two are on a crescent-moon swing. Then *"Ab aankhen kholo…"* |
+| 7 | Yaadein | Polaroids that flip to show a note |
+| 8 | Taaron wala dil | She taps glowing stars in order; they join into a heart and spell out a line for her |
+| 9 | Poem | Your poem, line by line; then she writes a line back for you |
+| 10 | Cake | "2" and "4" candles — blow into the mic or tap, then a 10-second wish |
+| 11 | Hamari kahani | Build-your-own love story: 3 choices (baarish wala café / sunset walk, pahad / samandar, movie night / kuch nahi bas saath) become an illustrated ending she can save |
+| 12 | Dil ki baatein | A chat: you ask about your moments together, she answers, you react (the "Nahi" button runs away) |
+| 13 | Chitthi + coupons | Letter with promises and shayari (saveable as an image), then claimable coupons |
+| 14 | Goodnight | "Lights band karo" — lights switch off, moon, goodnight |
 
 Her progress is remembered on her phone, so if she closes the tab she can continue where she left off.
 
-Everything she writes or picks — chat answers, lantern wishes, her poem line, the looks she designs, coupons she claims — plus how far she has got, is logged to **your dashboard** (below). Nothing asks her to send anything.
+Everything she writes or picks — chat answers, lantern wishes, her poem line, the looks she designs, her love-story choices, how far she got in the dream, whether she heard your voice note, coupons she claims — plus how far she has got, is logged to **your dashboard** (below). Nothing asks her to send anything.
 
 ## Edit texts and photos (the Studio)
 
@@ -32,10 +34,14 @@ python3 admin_server.py
 
 - Studio: http://localhost:5173/admin.html — edit every text, upload photos and an optional song, then press **Save** (or ⌘S). It rewrites `config.js` and keeps the previous version in `.backups/`.
 - Site preview: http://localhost:5173/?preview (skips the countdown).
-- Jump to a scene: `?preview&scene=ride` (scenes: hello, rule, playground, ride, court, memories, stars, poem, cake, questions, letter, goodnight).
+- Jump to a scene: `?preview&scene=ride` (scenes: hello, rule, playground, ride, court, dream, memories, stars, poem, cake, story, questions, letter, goodnight).
 - To see exactly what she'll see before midnight, open http://localhost:5173/ without `?preview`.
 
 Photos are resized in the browser before upload and saved as `assets/photos/memory-N.jpg`. You can also drop files there yourself and type the path in the Studio, or edit `config.js` directly.
+
+### Your secret voice note (golden heart)
+
+Record a short voice note on your phone (Voice Memos → share → save as `.m4a`, or any `.mp3`). In the Studio open **💕 Dil Pakdo → Secret voice note**, upload it, listen to the preview, and press **Save**. It's stored as `assets/voice/secret-voice.<ext>`. Until you upload one, the golden heart shows a written note instead (`goldenFallback`), so nothing breaks.
 
 ## Your dashboard (her activity)
 
@@ -45,7 +51,9 @@ Photos are resized in the browser before upload and saved as `assets/photos/memo
 
 ## Her reference photo & Gemini
 
-`assets/reference/chetna-reference.jpg` is the photo the dress-up character is modelled on. It's excluded from Vercel uploads; don't push it to a public repo. Ready prompts for Gemini (improve the bike couple, generate a bike artwork, refine the character) are in [GEMINI_PROMPTS.md](GEMINI_PROMPTS.md). A generated bike image can be switched on from the Studio (🏍️ Bike ride → artwork path).
+`assets/reference/chetna-reference.jpg` is the photo the dress-up character is modelled on. It's excluded from Vercel uploads; don't push it to a public repo. Gemini's test renders and the old template images are also kept out of uploads via `.vercelignore` (they're still in the folder, nothing was deleted).
+
+The dress-up uses one full-body image per outfit (`assets/wardrobe/`). A top + bottom pair only shows if that exact combination has an image, so picking a bottom never swaps her top. Section 4 of [GEMINI_PROMPTS.md](GEMINI_PROMPTS.md) lists the 16 missing combinations with a ready prompt; for each new `look-<top>-<bottom>.jpg`, add one line to `LOOKS` in `wardrobe.js` and it appears automatically. If a new render has her head in a different spot or tilt, add its eye positions to `FACE_ANCHORS` in `wardrobe.js` so the bindi, shades, jhumkas, tiara and flower stay on her face.
 
 ## Put it online (Vercel)
 
@@ -63,7 +71,8 @@ The Studio only works on your computer: on the live site `admin.*` redirects to 
 
 ## Before you send the link
 
-- [ ] Replace the 6 placeholder photos (Studio → 📸 Photos & yaadein)
+- [ ] Check the 6 memory photos (Studio → 📸 Photos & yaadein); swap in real ones if you like
+- [ ] Record and upload your secret voice note (Studio → 💕 Dil Pakdo)
 - [ ] Do the Vercel setup above and confirm a test entry shows on `/dashboard`, then clear test entries
 - [ ] Read every text once in your own voice and adjust anything that isn't quite *you*
 - [ ] Open the live link on a phone with `?preview`, play it end to end with sound on

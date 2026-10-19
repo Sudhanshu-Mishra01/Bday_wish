@@ -33,6 +33,7 @@ MAX_BODY = 40 * 1024 * 1024
 UPLOAD_KINDS = {
     "photo": (ROOT / "assets" / "photos", {".jpg", ".jpeg", ".png", ".webp", ".gif"}),
     "music": (ROOT / "assets" / "music", {".mp3", ".m4a", ".aac", ".ogg", ".wav"}),
+    "voice": (ROOT / "assets" / "voice", {".mp3", ".m4a", ".aac", ".ogg", ".wav", ".webm"}),
 }
 SLOT_RE = re.compile(r"^[a-z0-9-]{1,40}$")
 

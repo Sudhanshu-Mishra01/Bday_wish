@@ -111,6 +111,39 @@ window.SURPRISE_CONFIG = {
     "wardrobeCaption": "Billu ka birthday look 💛",
     "wardrobeResult": "Kitni pyaari lag rahi ho 😍 Ye look mujh tak pahunch gaya — aur main \"wow\" bol chuka hoon."
   },
+  "catchHearts": {
+    "title": "Dil Pakdo 💕",
+    "intro": "Dil, taare aur chhote gifts udd rahe hain. Jo pasand aaye, tap karke pakdo — koi jaldi nahi, koi score nahi. Bas maze karo 😌",
+    "compliments": [
+      "Tumhari smile se zyada pyaari cheez maine aaj tak nahi dekhi 💗",
+      "Tum samajhdaar bhi ho aur sundar bhi — unfair hai ye 😌",
+      "Tumhari aankhon me ek alag hi chamak hai ✨",
+      "Tum jab hansti ho, mera din ban jaata hai 🌸",
+      "Tum meri sabse pyaari aadat ho 🫶"
+    ],
+    "confessions": [
+      "Confession: tumhari voice notes main 3-4 baar sunta hoon 🙈",
+      "Confession: tumhare 'hmm' ka bhi main matlab samajhne ki koshish karta hoon 😅",
+      "Confession: tumhari photos dekh ke main akele muskurata hoon. Log ajeeb dekhte hain 🤭",
+      "Confession: jab tum gussa hoti ho, mujhe darr kam aur pyaar zyada aata hai 😤💛"
+    ],
+    "memories": [
+      "Yaad hai jab baatein karte karte subah ho gayi thi? 🌅",
+      "Tumhara pehla 'haan' — wo din main kabhi nahi bhoolunga 💛",
+      "Tumhara gift khol ke wo chehra… ab bhi aankhon me hai 🎁",
+      "Pasina wala din — care kya hoti hai, us din samjha 💧"
+    ],
+    "kisses": [
+      "Kiss token mila! 💋 Kabhi bhi redeem karo",
+      "Ek aur kiss token 💋 — expiry date: kabhi nahi",
+      "Forehead kiss token 😚 — sabse special wala"
+    ],
+    "goldenTitle": "Sunehra dil mila! 💛",
+    "goldenText": "Ye sabse rare dil tha. Iske andar meri awaaz chhupi hai — headphones laga ke suno 🎧",
+    "goldenFallback": "Ye sabse rare dil tha. Iske andar ek baat chhupi hai: tum meri zindagi ka sabse khoobsurat hissa ho. Hamesha. 💛",
+    "voiceUrl": "",
+    "doneToast": "Saare dil tumhare hi the. Hamesha se 💕"
+  },
   "ride": {
     "title": "Chalo, ghumne chalein 🏍️",
     "subtitle": "Bike tayaar hai, pahad door nahi. Button daba ke rakho aur ride karo!",
@@ -199,6 +232,75 @@ window.SURPRISE_CONFIG = {
     "gavelButton": "Hathoda maaro 🔨",
     "verdictTitle": "FAISLA",
     "verdictText": "Aarop jhootha paaya gaya. Kadar: 100% (aur roz badh rahi hai). Saza: Mishrayin ko aaj poore din pyaar sehna padega. Koi appeal nahi 😌"
+  },
+  "dream": {
+    "title": "Chalo, sapne me milte hain 🌙",
+    "subtitle": "Tumhe hamesha neend aati hai na? Toh aaj neend me hi milte hain… ek aisi duniya me jo sirf hum dono ki hai.",
+    "intro": "Shhh… ek kaam karo. Aankhen band karo, aur mera haath pakad lo. 🤍",
+    "closeEyes": "Aankhen band karo 😌",
+    "board": "Sapno ki duniya me swagat hai ✨ Ye gubbara kab se tumhara intezaar kar raha hai — sirf do logon ke liye. Us pe tap karo 🎈",
+    "boardButton": "Gubbare me baitho 🎈",
+    "upButton": "Aur upar chalein 🎈",
+    "travel": [
+      "Neeche mat dekhna… bas mera haath pakde rehna 🤍",
+      "Badal itne paas hain ki chhoo lo ☁️ Yahan na koi alarm hai, na koi 'log kya kahenge'.",
+      "Thoda aur upar… dekho, chaand bhi humein dekh ke muskura raha hai 🌙",
+      "Bas aakhri safar… chaand tak 🌕"
+    ],
+    "fireflies": {
+      "name": "🌿 Jugnuon ka Bagh",
+      "howTo": "Ungli se jugnuon ke charon taraf gola banao — unhe jar me bharna hai ✨",
+      "goal": 12,
+      "count": "{n} / {goal} jugnu jar me ✨",
+      "miss": "Pura gola banao, unke charon taraf 🌀",
+      "empty": "Khaali gola 🙈 Ek baar aur!",
+      "tooBig": "Itna bada gola? Jugnu sharma ke bhaag gaye 🙈 Chhote gole banao.",
+      "whispers": [
+        "tumhari hansi ✨",
+        "tumhari aankhein 🌙",
+        "tumhara 'bas 5 minute aur' 😴",
+        "tumhara gussa bhi 😤💛",
+        "tumhari baatein 💬",
+        "tumhari poetry ✍️",
+        "tumhara naach 💃",
+        "tumhara naam 💫"
+      ],
+      "heart": "Dekho… saare jugnu tumhare liye ek dil bana rahe hain 💛",
+      "done": "Pata hai ye jugnu yahan kyun aaye the? Roshni dene nahi… tumse roshni maangne. ✨",
+      "orb": "Roshni"
+    },
+    "lake": {
+      "name": "🪷 Sur ki Jheel",
+      "howTo": "Ye jheel ek dhun gungunati hai. Pehle suno… phir wahi kamal usi order me tap karo 🎶",
+      "listen": "Shhh… suno 🎧",
+      "yourTurn": "Ab tumhari baari 💫 (dhun {n} / 3)",
+      "nice": "Waah, sur pakad liya! Ab thodi lambi dhun… 💫",
+      "retry": "Koi baat nahi, phir se suno 🎶",
+      "replay": "Dobara suno 🎧",
+      "bloom": "Poori jheel khil gayi… tumhari dhun pe 🪷",
+      "done": "Is jheel ki sabse pyaari dhun pata hai kaunsi hai? Tumhari awaaz — jab tum dheere se 'suno na…' bolti ho. 🎶",
+      "orb": "Sur"
+    },
+    "mirrors": {
+      "name": "🔮 Aainon ka Mahal",
+      "howTo": "Aainon pe tap karke ghumao — chaand ki roshni ko so rahe gulab tak pahunchao 🌹",
+      "nice": "Gulab khil gaya! 🌹 Par mahal me ek aur gulab so raha hai…",
+      "level2": "Ab thoda mushkil 😏 Roshni pehle chaand-moti 💎 se guzre, phir gulab tak pahunche 🌹",
+      "needGem": "Gulab bol raha hai: pehle chaand-moti 💎 ko jagao, phir aana 😌",
+      "hint": "Ek hint? 🔮",
+      "done": "Raasta kitna bhi ghumaavdaar ho, meri har roshni ghoom-phir ke tum tak hi pahunchti hai. 🌹",
+      "orb": "Chaandni"
+    },
+    "moon": {
+      "name": "🌕 Chaand ka Jhoola",
+      "howTo": "Teeno roshniyan chaand ko de do — neeche wala button dabake rakho 💛",
+      "hold": "Dabake rakho 💛",
+      "holding": "Bas… thoda aur… chaand khil raha hai 🌙",
+      "bloomed": "Chaand khil gaya… aur jhoole pe dekho, kaun baitha hai 🤍",
+      "finalTitle": "Is sapne me bhi, har sapne me bhi — tum.",
+      "finalText": "Duniya ke saare sapne ek taraf, aur wo sapna ek taraf jisme tum mere kandhe pe sar rakh ke so jaati ho. Jab bhi neend aaye, yaad rakhna — chaand pe ek jhoola hai, aur us pe tumhari jagah hamesha rahegi… mere bagal me. 🤍",
+      "wakeButton": "Ab aankhen kholo… 🌅"
+    }
   },
   "memories": {
     "title": "Hamari Yaadein 📸",
@@ -289,6 +391,61 @@ window.SURPRISE_CONFIG = {
     "micButton": "🎤 Phoonk se bujhao",
     "wishText": "Aankhein band karo… aur wish maango 🤫",
     "wishDone": "Wish save ho gayi ✅ Poori karne me main poori jaan laga dunga."
+  },
+  "story": {
+    "title": "Hamari Kahani 📖",
+    "subtitle": "Is kahani ka har mod tum chunogi. Aur phir… hum ise sach karenge.",
+    "stages": [
+      {
+        "q": "Hamari perfect date?",
+        "options": [
+          {
+            "id": "cafe",
+            "label": "Baarish wala café ☔☕",
+            "line": "Baarish ho rahi hogi, ek chhota sa café, khidki ke paas wali table. Tum garam coffee ka cup dono haathon se pakad ke baarish dekh rahi hogi — aur main tumhe."
+          },
+          {
+            "id": "sunset",
+            "label": "Sunset walk 🌅",
+            "line": "Shaam dhal rahi hogi, aasmaan narangi ho jaayega, aur hum dheere dheere chalte hue tumhare pasand ke gaane gungunaayenge — tumhara haath mere haath me."
+          }
+        ]
+      },
+      {
+        "q": "Hamara agla adventure?",
+        "options": [
+          {
+            "id": "mountains",
+            "label": "Pahad ⛰️",
+            "line": "Phir ek subah bike nikalegi pahadon ki taraf — thandi hawa, garam maggi, aur tumhare har 'ruko, photo lo na' pe main khushi se rukunga."
+          },
+          {
+            "id": "sea",
+            "label": "Samundar 🌊",
+            "line": "Phir hum samundar jaayenge — tum lehron ke saath bhaagogi, chappal haath me, aur main peeche se tumhari sabse sundar photo kheenchunga."
+          }
+        ]
+      },
+      {
+        "q": "Cuddle mood kya hai?",
+        "options": [
+          {
+            "id": "movie",
+            "label": "Movie night 🍿",
+            "line": "Aur raat ko — kambal, popcorn, tumhari pasand ki film, aur aadhi film tak tum mere kandhe pe so chuki hogi. Main film nahi, tumhe dekhunga."
+          },
+          {
+            "id": "nothing",
+            "label": "Kuch nahi, bas saath 🛋️",
+            "line": "Aur raat ko — kuch nahi karenge. Bas saath lete rahenge, taare ginte hue, bekaar ki baatein karte hue. Mere liye wahi sabse best plan hai."
+          }
+        ]
+      }
+    ],
+    "intro": "Ek din ki baat hai… ek ladki thi, {name}, aur ek ladka jo usse bahut, bahut pyaar karta tha.",
+    "endTitle": "{name} & Main — ek chhoti si kahani",
+    "outro": "Aur phir… wo hamesha saath rahe. Ye kahani tumne likhi hai — ab hum ise sach karenge. 💛",
+    "nextButton": "Ab kuch sawaal… 💬"
   },
   "questions": {
     "title": "Dil Ki Baatein 💬",
