@@ -1302,8 +1302,8 @@ body.lights-off .scene[data-scene="goodnight"] .moon { box-shadow: 0 0 60px 20px
 
 .dream-foot { width: min(560px, 100%); display: grid; gap: 10px; justify-items: center; text-align: center; padding-top: 6px; }
 .dream-note {
-  margin: 0; min-height: 3.1em; max-width: 36ch; font-size: 1.04rem; line-height: 1.45; color: #fff8fc;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  margin: 0; min-height: 3.1em; max-width: 48ch; font-size: 1.04rem; line-height: 1.48; color: #fff8fc;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6); white-space: pre-line;
 }
 .dream-note.in { animation: noteIn 0.6s var(--ease-out); }
 @keyframes noteIn { from { opacity: 0; transform: translateY(6px); } }
@@ -1383,15 +1383,22 @@ body.lights-off .scene[data-scene="goodnight"] .moon { box-shadow: 0 0 60px 20px
 
 /* Closing card, and the eyelids that close/open around the dream */
 .dream-final {
-  position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 24px;
-  background: radial-gradient(circle at 50% 38%, rgba(40, 20, 70, 0.3), rgba(10, 6, 25, 0.86) 70%);
-  animation: fadeIn 1.4s ease both;
+  position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 24px 16px;
+  background: radial-gradient(circle at 50% 38%, rgba(40, 20, 70, 0.45), rgba(10, 6, 25, 0.94) 75%);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  animation: fadeIn 1.4s ease both; overflow-y: auto;
 }
-.dream-final-inner { max-width: 430px; display: grid; gap: 14px; justify-items: center; text-align: center; animation: popIn 1s var(--ease-spring) 0.3s both; }
-.dream-kicker { margin: 0; letter-spacing: 0.3em; }
-.dream-final-title { margin: 0; font-family: var(--hand); font-size: clamp(2rem, 8vw, 2.6rem); line-height: 1.1; color: #fff4f8; text-shadow: 0 0 24px rgba(255, 143, 177, 0.6); }
-.dream-final-text { margin: 0; color: var(--muted); font-size: 1.08rem; }
-.dream-sign { margin: 0 0 6px; font-family: var(--hand); font-size: 1.5rem; color: var(--gold); }
+.dream-final-inner {
+  max-width: 520px; width: 100%; display: grid; gap: 14px; justify-items: center; text-align: center;
+  background: rgba(30, 18, 50, 0.92); border: 1.5px solid rgba(255, 215, 0, 0.4);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 143, 177, 0.25);
+  border-radius: 24px; padding: 28px 22px;
+  animation: popIn 1s var(--ease-spring) 0.3s both; margin: auto;
+}
+.dream-kicker { margin: 0; letter-spacing: 0.35em; font-size: 1.3rem; }
+.dream-final-title { margin: 0; font-family: var(--hand); font-size: clamp(2rem, 7vw, 2.6rem); line-height: 1.15; color: #fff4f8; text-shadow: 0 0 24px rgba(255, 143, 177, 0.6); }
+.dream-final-text { margin: 0; color: #f5eefb; font-size: 1.04rem; line-height: 1.68; white-space: pre-line; text-align: left; }
+.dream-sign { margin: 0 0 4px; font-family: var(--hand); font-size: 1.55rem; color: var(--gold); }
 .dream-lids { position: fixed; inset: 0; z-index: 95; pointer-events: none; }
 .dream-lids.closed { pointer-events: auto; }
 .dream-lids .lid { position: absolute; left: -10%; right: -10%; height: 56%; transition: transform 1.05s cubic-bezier(0.6, 0, 0.3, 1); }

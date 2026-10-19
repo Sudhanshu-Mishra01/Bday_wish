@@ -266,8 +266,8 @@ window.SURPRISE_CONFIG = {
         "tumhara naach 💃",
         "tumhara naam 💫"
       ],
-      "heart": "Dekho… saare jugnu tumhare liye ek dil bana rahe hain 💛",
-      "done": "Pata hai ye jugnu yahan kyun aaye the? Roshni dene nahi… tumse roshni maangne. ✨",
+      "heart": "Tere aane se meri zindagi me noor aaya hai,\nHar jugnu tere chehre ki chamak ka deewaana paaya hai... ✨💛\n\nDekho, saare jugnu milkar aasmaan me hamare pyaar ka dil bana rahe hain 💛",
+      "done": "Pata hai ye jugnu yahan kyun aaye the? Roshni dene nahi… tumhare noor se roshni maangne. ✨",
       "orb": "Roshni"
     },
     "lake": {
@@ -278,18 +278,18 @@ window.SURPRISE_CONFIG = {
       "nice": "Waah, sur pakad liya! Ab thodi lambi dhun… 💫",
       "retry": "Koi baat nahi, phir se suno 🎶",
       "replay": "Dobara suno 🎧",
-      "bloom": "Poori jheel khil gayi… tumhari dhun pe 🪷",
-      "done": "Is jheel ki sabse pyaari dhun pata hai kaunsi hai? Tumhari awaaz — jab tum dheere se 'suno na…' bolti ho. 🎶",
+      "bloom": "Poori jheel khil gayi… aur har lehar ek hi dhun gunguna rahi hai: \"I Love You, Meri Billu\" 🎶💛",
+      "done": "Duniya ka sabse khoobsurat sangeet pata hai kaunsa hai? Jab tum muskurati ho aur dheere se 'suno na…' bolti ho. 🪷🎶",
       "orb": "Sur"
     },
     "mirrors": {
       "name": "🔮 Aainon ka Mahal",
-      "howTo": "Aainon pe tap karke ghumao — chaand ki roshni ko so rahe gulab tak pahunchao 🌹",
-      "nice": "Gulab khil gaya! 🌹 Par mahal me ek aur gulab so raha hai…",
-      "level2": "Ab thoda mushkil 😏 Roshni pehle chaand-moti 💎 se guzre, phir gulab tak pahunche 🌹",
+      "howTo": "Aainon pe tap karke ghumao — aaina bhi tumhari chamak dekh kar sharma gaya hai ✨",
+      "nice": "Gulab khil gaya! 🌹 Par aaine fusfusa rahe hain: 'Hamari roshni toh kuch nahi, asli chamak toh Chetna ki aankhon me hai...' ✨",
+      "level2": "Ab roshni ko chaand-moti 💎 se guzaro — dekhte hain heera zyada chamakta hai ya tum 😏💎",
       "needGem": "Gulab bol raha hai: pehle chaand-moti 💎 ko jagao, phir aana 😌",
       "hint": "Ek hint? 🔮",
-      "done": "Raasta kitna bhi ghumaavdaar ho, meri har roshni ghoom-phir ke tum tak hi pahunchti hai. 🌹",
+      "done": "Aainon me kya dhoondhein roshni, jab tumhara noor hi mera chaand hai... Is mahal ke saare aaine aur heere bhi tumhari muskaan ki chamak ke aage haar gaye. 🔮✨🌹",
       "orb": "Chaandni"
     },
     "starlight": {
@@ -311,9 +311,9 @@ window.SURPRISE_CONFIG = {
       "howTo": "Chaaron roshniyan chaand ko de do — neeche wala button dabake rakho 💛",
       "hold": "Dabake rakho 💛",
       "holding": "Bas… thoda aur… chaand khil raha hai 🌙",
-      "bloomed": "Chaand khil gaya… aur jhoole pe dekho, kaun baitha hai 🤍",
-      "finalTitle": "Is sapne me bhi, har sapne me bhi — tum.",
-      "finalText": "Duniya ke saare sapne ek taraf, aur wo sapna ek taraf jisme tum mere kandhe pe sar rakh ke so jaati ho. Jab bhi neend aaye, yaad rakhna — chaand pe ek jhoola hai, aur us pe tumhari jagah hamesha rahegi… mere bagal me. 🤍",
+      "bloomed": "Chaand khil gaya… aur jhoole pe dekho, hum dono baithe hain 🤍",
+      "finalTitle": "Chaand Ka Jhoola… Aur Sirf Tum 🌙🤍",
+      "finalText": "Zara aankhein band karke socho... Raat ke 2 baje hain. Poori duniya gehri neend me so rahi hai, aur hum dono aasmaan ke beecho-beech is chaand ke jhoole par baithe hain.\n\nThandi-thandi sarsarati hawa chal rahi hai, tumhare baal dheere-dheere udkar mere chehre ko chhu rahe hain. Tumne thand se bachne ke liye dono haathon se mera haath thaam rakha hai, aur sar bade sukoon se mere kandhe pe tika diya hai.\n\nNeeche saari duniya ki battiyan jugnuon jaisi jhilmila rahi hain, par hamari apni ek alag duniya hai — jahan na koi jaldi hai, na koi 'log kya kahenge'. Bas main dheere se jhoola jhulata hoon, aur tum aadhi neend me muskurate hue kehti ho — 'suno na, yahan hamesha ke liye ruk jayein?'\n\nAur main tumhara maatha choom ke kehta hoon: 'Jab tak meri saansein hain, mera har aasmaan sirf tumhara hai.' 🌙🤍✨",
       "wakeButton": "Ab aankhen kholo… 🌅"
     }
   },

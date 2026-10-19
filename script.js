@@ -273,7 +273,30 @@
       wilt: () => tone(392, { type: 'triangle', dur: 0.35, vol: 0.06, slideTo: 300 }),
       tink: () => { tone(2349.3, { dur: 0.18, vol: 0.05 }); tone(3136, { dur: 0.12, vol: 0.03, when: 0.03 }); },
       // Soft closing phrase for goodnight
-      lullaby: () => [783.99, 659.25, 523.25, 587.33, 659.25, 523.25, 392].forEach((f, i) => box(f, i * 0.62, 0.1))
+      lullaby: () => [783.99, 659.25, 523.25, 587.33, 659.25, 523.25, 392].forEach((f, i) => box(f, i * 0.62, 0.1)),
+      // Tender romantic "I Love You" music-box & warm pad melody
+      loveTheme: () => {
+        if (!ensure()) return;
+        [261.63, 329.63, 392, 523.25].forEach((f, i) => tone(f, { type: 'sine', dur: 5.6, vol: 0.04, attack: 0.8, when: i * 0.05 }));
+        const seq = [
+          [392.00, 0.00, 0.12],
+          [523.25, 0.42, 0.14],
+          [659.25, 0.88, 0.15],
+          [783.99, 1.45, 0.16],
+          [880.00, 2.05, 0.16],
+          [783.99, 2.65, 0.15],
+          [659.25, 3.20, 0.13],
+          [698.46, 3.65, 0.13],
+          [659.25, 4.05, 0.13],
+          [587.33, 4.50, 0.12],
+          [523.25, 4.95, 0.16]
+        ];
+        seq.forEach(([freq, when, vol]) => {
+          box(freq, when, vol);
+          box(freq / 2, when + 0.015, vol * 0.45);
+          tone(freq * 1.5, { type: 'sine', dur: 0.4, vol: vol * 0.15, when: when + 0.01 });
+        });
+      }
     };
   })();
 
@@ -2381,8 +2404,11 @@
           f.t = now + (f.state === 'jar' ? 300 + i * 18 : 0);
           f.state = 'heart';
         });
+        Sound.sparkle();
+        setTimeout(Sound.chime, 300);
+        heartsFrom(stage, ['💛', '✨', '💖', '💫'], 8);
         say(F.heart || '💛');
-        await wait(3400);
+        await wait(5500);
         const t = performance.now();
         flies.forEach((f) => { f.x0 = f.x; f.y0 = f.y; f.t = t; f.state = 'gather'; });
         await wait(850);
@@ -2498,14 +2524,14 @@
         await wait(500);
         lotuses.forEach((l, k) => setTimeout(() => l.classList.add('bloom'), k * 130));
         say(L.bloom || '🎶');
-        // the whole tune once more, with a soft lower voice
-        for (let k = 0; k < MEL.length; k++) {
+        Sound.loveTheme();
+        heartsFrom(stage, ['🎶', '💛', '🪷', '✨', '💖'], 12);
+        for (let k = 0; k < 6; k++) {
           if (!alive) return;
-          light(MEL[k], 380);
-          Sound.soft(NOTES[MEL[k]] / 2);
-          await wait(440);
+          light(k % 4, 600);
+          await wait(850);
         }
-        await wait(500);
+        await wait(400);
         Sound.startAmbient();
         if (alive) finishIsland(1, 180, 290);
       }
@@ -2676,7 +2702,9 @@
         whisper('🌹', rx, ry - 34);
         if (lv.n === 0) {
           say(M.nice);
-          await wait(1800);
+          whisper('✨ Noor', rx - 24, ry - 34);
+          whisper('💖 Chamak', rx + 24, ry - 34);
+          await wait(2800);
           if (!alive) return;
           board.classList.add('swap');
           await wait(500);
@@ -2684,7 +2712,9 @@
           say(M.level2);
           board.classList.remove('swap');
         } else {
-          await wait(1400);
+          whisper('👑 Sabse Chamakti Hui', rx, ry - 34);
+          heartsFrom(stage, ['🔮', '✨', '💎', '🌹', '💛'], 10);
+          await wait(1800);
           if (alive) finishIsland(2, rx, ry);
         }
       }
