@@ -323,39 +323,39 @@ window.SURPRISE_CONFIG = {
     "items": [
       {
         "photo": "assets/photos/memory-1.jpg",
-        "title": "Birthday girl 👑",
-        "date": "21 Oct",
-        "caption": "Is muskaan pe toh poori duniya qurbaan hai... Har saal tumhari umar badhegi, par mera pyaar har lamhe me dugna hoga. Happy Birthday meri jaan 🎂💛"
+        "title": "College Wali Pehli Mulaqaat 🎓🏫",
+        "date": "Pehli Nazar ✨",
+        "caption": "Tumhare college ke bahar pehli baar tumhe saamne se dekhna... Dil itni tezi se dhadak raha tha jaise koi exam ho! White suit me tum itni masoom aur khoobsurat lag rahi thi ki meri nazar hi nahi hat rahi thi. Wahi pal tha jab dil ne kaha — bas, yahi hai wo. 🤍"
       },
       {
         "photo": "assets/photos/memory-2.jpg",
-        "title": "Jab baatein shuru hui 💬",
-        "date": "Pehli Mulaqaat",
-        "caption": "Pata nahi tha ki ek anjaan sa 'Hello' aage chal kar meri har subah ki pehli dua aur har raat ka aakhri sukoon ban jaayega... 📱✨"
+        "title": "Har Baat Pe Gussa & Naak Phulana 😤🧸",
+        "date": "Cute Nakhre & Drama",
+        "caption": "Chhoti-chhoti baat pe muh banana, naak phula ke gussa ho jaana aur bolna 'jao baat mat karo!'... Sach bataun? Tum gusse me aur bhi zyada cute lagti ho. Tumhare saare nakhre, saare taunt, aur ye pyaara sa gussa — lifetime ke liye accepted hai meri Billu! 🙈💛"
       },
       {
         "photo": "assets/photos/memory-3.jpg",
-        "title": "Gift wala reaction 🎁",
-        "date": "Favourite Expression",
-        "caption": "Tumhari aankhon ki wo masoom chamak jab tum surprise hoti ho... Aane wale 50 saalon me bhi aise hi tumhare chehre pe khushiyan laane ka waada hai 🎁✨"
+        "title": "Accept Karne Ke Baad Pehli Mulaqaat 💍💛",
+        "date": "Official \"Hum\" 🤝",
+        "caption": "Wo din jab hum dono ne bina kisi darr ke ek doosre ka haath thaama aur hamesha ke liye apna maan liya. Us din wali mulaqaat me ek alag hi sukoon tha — ankhon me ek pakka waada aur dil me chain ki ab hum ek hain, hamesha ke liye. ✨"
       },
       {
         "photo": "assets/photos/memory-4.jpg",
-        "title": "Pyaari wali Billu 🧸",
-        "date": "Cute Moments",
-        "caption": "Jab tum naak phula ke gussa hoti ho na, sach me itni pyaari lagti ho ki gusse me bhi gale lagane ka mann karta hai. Lifetime ke liye tumhare saare taunts accepted 🙈💛"
+        "title": "Khwaab Jo Bohot Jald Sach Honge 🏡👰",
+        "date": "Our Future Imagination",
+        "caption": "Dhol-taashe, mandap, saat phere aur tum officially meri dulhan — 'Mrs. Mishrayin'. Hamara apna chhota sa pyara sa ghar, subah ki pehli chai aur raat ki befikar baatein. Ye sirf imagination nahi hai, bohot jald hamari haqeeqat banne wali hai! 💍✨"
       },
       {
         "photo": "assets/photos/memory-5.jpg",
-        "title": "Hum dono ka 'HAAN' 💍",
-        "date": "The Promise",
-        "caption": "Wo din jab do dilon ne hamesha ke liye ek dusre ko chun liya. Ab agla kadam dhol, mandap, saat phere aur tum officially 'Mrs. Mishrayin' 👰🤵💍"
+        "title": "Pahadon Me Taaron Ke Neeche ⛰️✨",
+        "date": "Stars & Silence 🌌",
+        "caption": "Kisi din hum dono pahadon ki thandi hawa me honge, bike side me khadi hogi, aur raat ko aasmaan ke hazaron taaron ke neeche ek hi blanket me lipte baithe honge... Tumhara sar mere kandhe pe aur mera haath tumhare haath me. Bas hum dono aur sukoon. 🏍️🏔️"
       },
       {
         "photo": "assets/photos/memory-6.jpg",
-        "title": "Agla stop: Pahad & Hum ⛰️",
-        "date": "Future Journey",
-        "caption": "Thandi hawa, pahadon ka rasta, bike pe mera haath aur tumhara sar mere kandhe pe... Bas hum dono, hawaein aur sukoon 🏍️🏔️"
+        "title": "Hamesha Ka Saath & Birthday Girl 👑🎂",
+        "date": "21 October & 50 Saal Baad",
+        "caption": "Aaj tumhare 24th birthday se lekar agle 50 saal baad tak — jab hum dono ke baal safed ho chuke honge — tab bhi main tumhe bilkul isi tarah chahunga. Har saal tumhara birthday aur bhi khaas hoga. Happy Birthday meri jaan, meri sabse pyaari Billu! 💛✨"
       }
     ]
   },
