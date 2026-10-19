@@ -1943,13 +1943,19 @@
     const orbs = [...document.querySelectorAll('#dream-orbs .orb')];
     const part = (k) => D[k] || {};
     const ORB_COLORS = ['#ffd27a', '#c9b2ff', '#a8e8ff', '#ff9ec6'];
-    let level = Math.min(store.get('dream_lv', 0), 4); // islands finished so far
+    $('dream-final').classList.add('hidden');
+    svg.setAttribute('class', '');
+    scene.classList.remove('dreaming', 'holding');
+    let level = 0;
     let stop = null; // ends the current island's loops and listeners
     let lidsEl = null;
 
     $('dream-title').textContent = D.title || '';
     $('dream-sub').textContent = D.subtitle || '';
-    orbs.forEach((o, i) => { o.querySelector('b').textContent = part(DREAM_STEPS[i]).orb || ''; });
+    orbs.forEach((o, i) => {
+      o.classList.remove('lit', 'given');
+      o.querySelector('b').textContent = part(DREAM_STEPS[i]).orb || '';
+    });
     balloon.innerHTML = balloonArt();
 
     // ---------- helpers ----------
@@ -2319,8 +2325,18 @@
         const poly = trail;
         trail = null;
         const end = poly[poly.length - 1];
-        if (trailLen > 110 && Math.hypot(end[0] - poly[0][0], end[1] - poly[0][1]) < 70) capture(poly);
-        else if (trailLen > 30) say(F.miss);
+        if (trailLen > 110 && Math.hypot(end[0] - poly[0][0], end[1] - poly[0][1]) < 70) {
+          capture(poly);
+        } else if (trailLen <= 35) {
+          // Direct tap on/near a firefly
+          const [tx, ty] = poly[0];
+          const nearby = flies.filter((f) => f.state === 'free' && Math.hypot(f.x - tx, f.y - ty) < 42);
+          if (nearby.length) {
+            capture(Array.from({ length: 12 }, (_, k) => [tx + 32 * Math.cos((k / 12) * Math.PI * 2), ty + 32 * Math.sin((k / 12) * Math.PI * 2)]));
+          }
+        } else if (trailLen > 35) {
+          say(F.miss);
+        }
       };
       // Keyboard: Enter catches the cluster nearest the middle
       const key = (e) => {
@@ -2883,21 +2899,23 @@
 
     const ISLANDS = [fireflies, lake, mirrors, starlight, moon];
 
-    // ---------- start, or carry on where she left off ----------
-    orbs.forEach((o, i) => o.classList.toggle('lit', i < level));
-    if (store.get('dream_done', false)) {
-      scene.classList.add('dreaming');
-      setSky(5);
-      setPhase('moon');
-      $('dream-sub').textContent = part('moon').name || '';
-      moon(true);
-    } else if (level > 0) {
+    // Always start at intro unless explicitly requested via ?island=
+    const islandParam = params.get('island');
+    let startIsland = -1;
+    if (islandParam !== null) {
+      startIsland = isNaN(Number(islandParam)) ? DREAM_STEPS.indexOf(islandParam) : Number(islandParam);
+    }
+    if (startIsland >= 0 && startIsland < ISLANDS.length) {
+      level = startIsland;
+      orbs.forEach((o, i) => o.classList.toggle('lit', i < level));
       scene.classList.add('dreaming');
       setSky(level + 1);
       setPhase(level === 4 ? 'moon' : 'play');
       $('dream-sub').textContent = part(DREAM_STEPS[level]).name || '';
       ISLANDS[level]();
     } else {
+      level = 0;
+      orbs.forEach((o) => o.classList.remove('lit', 'given'));
       intro();
     }
   };
