@@ -248,8 +248,8 @@ window.SURPRISE_CONFIG = {
       {
         "tag": "Saboot A",
         "icon": "🤞",
-        "title": "Chhodne ka khayal tak nahi",
-        "text": "Itne waqt me ek baar bhi tumhe chhodne ki baat nahi ki… aur sach kahun? Kabhi socha tak nahi 🙅‍♂️💛 Ladai ho, gussa ho, ya tumhara 'jao baat mat karo' 😤 — main wahin rehta hoon, tumhare paas. Kyunki tum meri aadat nahi, meri zaroorat ho 🫶✨"
+        "title": "Tumse door jaane ka khayal tak nahi",
+        "text": "Itne waqt me ek baar bhi tumse door jaane ki baat nahi ki… aur sach kahun? Kabhi socha tak nahi 🙅‍♂️💛 Ladai ho, gussa ho, ya tumhara 'jao baat mat karo' 😤 — main wahin rehta hoon, tumhare paas. Kyunki tum meri aadat nahi, meri zaroorat ho 🫶✨"
       },
       {
         "tag": "Saboot B",
