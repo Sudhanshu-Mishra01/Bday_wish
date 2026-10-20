@@ -365,8 +365,8 @@ window.SURPRISE_CONFIG = {
       {
         "photo": "assets/photos/memory-1.jpg",
         "title": "College Wali Pehli Mulaqaat 🎓🏫",
-        "date": "Pehli Nazar ✨",
-        "caption": "Tumhare college ke bahar pehli baar tumhe saamne se dekhna... Dil itni tezi se dhadak raha tha jaise koi exam ho! White suit me tum itni masoom aur khoobsurat lag rahi thi ki meri nazar hi nahi hat rahi thi. Wahi pal tha jab dil ne kaha — bas, yahi hai wo. 🤍"
+        "date": "Jab dhyan hi nahi gaya 🙈",
+        "caption": "Ye wahi classroom hai jahan main tumhe training de raha tha… aur sach bolun? Tab dhyan hi nahi gaya, socha bhi nahi tha ki white suit wali ye seedhi-saadi ladki ek din meri poori duniya ban jaayegi. Aaj ye photo dekhta hoon toh nazar hi nahi hatti — kitna kuch miss kar raha tha main! 🙈🤍"
       },
       {
         "photo": "assets/photos/memory-2.jpg",
