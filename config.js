@@ -247,27 +247,27 @@ window.SURPRISE_CONFIG = {
     "exhibits": [
       {
         "tag": "Saboot A",
-        "icon": "💧",
-        "title": "Pasina wala din",
-        "text": "Jab tumne bina kuch kahe mera pasina pocha. Us ek second me samajh aaya ki care kaise dikhti hai. Wo din kabhi nahi bhoolunga."
+        "icon": "🤞",
+        "title": "Chhodne ka khayal tak nahi",
+        "text": "Itne waqt me ek baar bhi tumhe chhodne ki baat nahi ki… aur sach kahun? Kabhi socha tak nahi 🙅‍♂️💛 Ladai ho, gussa ho, ya tumhara 'jao baat mat karo' 😤 — main wahin rehta hoon, tumhare paas. Kyunki tum meri aadat nahi, meri zaroorat ho 🫶✨"
       },
       {
         "tag": "Saboot B",
-        "icon": "🎁",
-        "title": "Gift wala chehra",
-        "text": "Mere gifts pe tumhara reaction. Wo aankhon ki chamak dekhne ke liye main roz gift de sakta hoon."
+        "icon": "🥺",
+        "title": "Har pal tumhari yaad",
+        "text": "Kaam ke beech, raaste me, chai peete hue, sone se pehle… har pal bas tumhe miss karta rehta hoon 🙈💭 Phone pe tumhara naam dikhte hi jo smile aa jaati hai na 📱💗 — wahi sabse bada saboot hai ki tum mere liye kitni khaas ho 🥰"
       },
       {
         "tag": "Saboot C",
         "icon": "🧸",
-        "title": "Cute baatein",
-        "text": "Tumhari har cute baat mere dimaag me saved hai. Backup ke saath."
+        "title": "Tumhari cute baatein",
+        "text": "Tumhari har cute baat, har 'suno na…', har bachchon wali zid — sab mere dil me save hai, wo bhi backup ke saath 💾🧸 Jab kabhi mann udaas hota hai, bas wahi baatein yaad kar leta hoon… aur sab theek ho jaata hai 🌸💕"
       },
       {
         "tag": "Saboot D",
         "icon": "💻",
         "title": "Ye website",
-        "text": "Raat raat jaag ke, sirf tumhare liye banayi. Ab bolo — kadar hai ya nahi? 😤"
+        "text": "Raat-raat jaag ke, chai pe chai pee ke ☕🌙 har ek line sirf tumhare liye likhi hai. Har khel, har button, har chhota sa surprise — sab isliye ki aaj tum thoda aur muskurao 😊💖 Ab bolo, judge sahiba — kadar hai ya nahi? 😤👉👈"
       }
     ],
     "gavelButton": "Hathoda maaro 🔨",
