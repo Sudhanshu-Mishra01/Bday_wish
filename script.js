@@ -24,23 +24,37 @@
     .replaceAll('{petName}', C.petName)
     .replaceAll('{age}', C.age);
 
+  // Testing (?preview) keeps its own progress, so ticks from a test run never show up in the real visit
+  const PREFIX = isPreview ? 'chetna_bday_pv_' : 'chetna_bday_';
   const store = {
     get(key, fallback) {
       try {
-        const v = localStorage.getItem('chetna_bday_' + key);
+        const v = localStorage.getItem(PREFIX + key);
         return v === null ? fallback : JSON.parse(v);
       } catch (e) { return fallback; }
     },
     set(key, value) {
-      try { localStorage.setItem('chetna_bday_' + key, JSON.stringify(value)); } catch (e) { /* private mode */ }
+      try { localStorage.setItem(PREFIX + key, JSON.stringify(value)); } catch (e) { /* private mode */ }
     },
     clear() {
       try {
         // Keep the unsent activity queue, so a replay never loses what she did
-        Object.keys(localStorage).filter((k) => k.startsWith('chetna_bday_') && k !== 'chetna_bday_logq').forEach((k) => localStorage.removeItem(k));
+        Object.keys(localStorage).filter((k) => k.startsWith(PREFIX) && k !== PREFIX + 'logq').forEach((k) => localStorage.removeItem(k));
       } catch (e) { /* ignore */ }
     }
   };
+
+  // ?reset wipes all saved progress on this device (real and ?preview), e.g. after testing.
+  // Unsent activity and the device id stay.
+  if (params.has('reset')) {
+    try {
+      Object.keys(localStorage)
+        .filter((k) => k.startsWith('chetna_bday_') && !/(logq|device)$/.test(k))
+        .forEach((k) => localStorage.removeItem(k));
+    } catch (e) { /* ignore */ }
+    params.delete('reset');
+    history.replaceState(null, '', location.pathname + (params.toString() ? `?${params}` : '') + location.hash);
+  }
 
   // ==============================================================================
   // 📬 ACTIVITY LOG — her answers, wishes, looks and journey go to /api/log,
