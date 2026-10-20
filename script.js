@@ -711,6 +711,8 @@
   // ==============================================================================
   enterFns.playground = () => {
     const P = C.playground;
+    // Dress photos start downloading quietly while she plays the other toys
+    setTimeout(() => window.Wardrobe?.preload(), 1200);
     $('pg-title').textContent = P.title;
     $('pg-sub').textContent = P.subtitle;
     $('tareef-intro').textContent = P.tareefIntro;

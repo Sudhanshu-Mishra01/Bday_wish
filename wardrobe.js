@@ -621,10 +621,22 @@ window.Wardrobe = (function () {
 
   // Load every outfit render up front so switching outfits is instant (no blank flash)
   let preloaded = false;
-  function preload() {
+  // Warm the cache in the background: the dress she'll see first, then the rest
+  // one at a time (all at once makes the first one wait on a slow connection).
+  function preload(first = 'anarkali') {
     if (preloaded) return;
     preloaded = true;
-    [...Object.values(DRESS_IMAGES), ...Object.values(DRESS_IMAGES).map(maskFor), ...LOOKS.map((l) => l.file)].forEach((src) => { const i = new Image(); i.src = src; });
+    const ids = [first, ...Object.keys(DRESS_IMAGES).filter((id) => id !== first)];
+    const queue = ids.flatMap((id) => [DRESS_IMAGES[id], maskFor(DRESS_IMAGES[id])]);
+    const next = () => {
+      const src = queue.shift();
+      if (!src) return;
+      const img = new Image();
+      img.onload = img.onerror = next;
+      img.src = src;
+    };
+    next();
+    next();
   }
 
   function defaultState() {

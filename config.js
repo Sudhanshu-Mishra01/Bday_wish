@@ -189,7 +189,7 @@ window.SURPRISE_CONFIG = {
     "title": "Chalo, ghumne chalein 🏍️",
     "subtitle": "Bike tayaar hai, pahad door nahi. Button daba ke rakho aur ride karo!",
     "holdLabel": "Daba ke rakho — race do 🏍️",
-    "bikeImage": "assets/ride/couple-bike.png",
+    "bikeImage": "assets/ride/couple-bike.webp",
     "milestones": [
       {
         "sign": "🏫 College",
