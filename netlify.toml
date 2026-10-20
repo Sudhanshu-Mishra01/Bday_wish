@@ -1,6 +1,11 @@
 [build]
   publish = "."
 
+# Activity log for the dashboard: /api/log and /api/logs run as Netlify Functions,
+# storing events in Netlify Blobs. Set ADMIN_KEY under Site configuration → Environment variables.
+[functions]
+  directory = "netlify/functions"
+
 # Clean admin & dashboard routes for monitoring
 [[redirects]]
   from = "/admin"
@@ -20,6 +25,25 @@
 
 [[redirects]]
   from = "/.backups/*"
+  to = "/"
+  status = 302
+  force = true
+
+# Netlify ignores .vercelignore: keep her reference photo and the private notes off the live site
+[[redirects]]
+  from = "/assets/reference/*"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/.logs/*"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/GEMINI_PROMPTS.md"
   to = "/"
   status = 302
   force = true

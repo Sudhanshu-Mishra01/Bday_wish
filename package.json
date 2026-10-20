@@ -5,5 +5,8 @@
   "description": "A midnight birthday surprise for Chetna.",
   "scripts": {
     "start": "python3 admin_server.py"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^11.1.5"
   }
 }

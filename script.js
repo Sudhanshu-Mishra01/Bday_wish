@@ -1180,6 +1180,7 @@
       bubble.style.animation = '';
     };
 
+    /* 360° view switched off: it only flipped the flat photo, which looked odd.
     const twirlModel = () => {
       const dollEl = $('doll');
       if (!dollEl) return;
@@ -1257,13 +1258,14 @@
       stageEl.addEventListener('pointerup', endDrag);
       stageEl.addEventListener('pointercancel', endDrag);
     }
+    */
 
     $('btn-wd-random').addEventListener('click', () => {
       const pickedDress = W.randomize(look);
       Sound.sparkle();
       drawDoll();
       renderOptions();
-      twirlModel();
+      // twirlModel(); — 360° view is switched off
       showCompliment(pickedDress || look.dress);
     });
 
@@ -1291,6 +1293,96 @@
         toast('Photo ban nahi paayi 😅 Screenshot le lo!');
       }
     });
+
+    // ---- AI try-on: "see how you'd look in it" → the AI scans her… and crashes from
+    // too much cuteness. The dress then goes on Mishra ji's list (logged to the dashboard).
+    const AI = P.aiTry || {};
+    $('btn-wd-ai').textContent = AI.button || '✨ Dekhna hai is dress me tum kaisi lagogi?';
+    $('ai-brand').innerHTML = '';
+    $('ai-brand').append(`🪄 ${AI.brand || 'Billu-AI Studio'} `, Object.assign(document.createElement('span'), { textContent: 'v2.4' }));
+    let aiBusy = false;
+
+    async function aiTryOn() {
+      if (aiBusy) return;
+      aiBusy = true;
+      const dressLabel = (W.OPTIONS.dresses.find((d) => d.id === look.dress) || {}).label || 'dress';
+      const overlay = $('ai-try');
+      const card = $('ai-card');
+      const stages = ['ai-run', 'ai-crash', 'ai-msg', 'ai-order'];
+      const showStage = (id) => stages.forEach((s) => $(s).classList.toggle('hidden', s !== id));
+      const bar = $('ai-bar');
+      const pct = $('ai-pct');
+      const logEl = $('ai-log');
+      const line = (t) => { logEl.textContent += `${t}\n`; logEl.scrollTop = logEl.scrollHeight; };
+      const setPct = (n) => { bar.style.width = `${Math.min(100, n)}%`; pct.textContent = `${Math.round(n)}%`; };
+
+      $('ai-img').src = W.get3DOutfit(look);
+      logEl.textContent = '';
+      card.className = 'ai-card';
+      setPct(0);
+      showStage('ai-run');
+      overlay.classList.remove('hidden');
+      Sound.ensure();
+      Log.send('ai_try', { dress: dressLabel });
+
+      // 1. Scanning, step by step (~6s)
+      const steps = AI.steps || [];
+      const targets = [18, 36, 54, 72, 93];
+      for (let i = 0; i < steps.length; i++) {
+        $('ai-step').textContent = steps[i];
+        line(`> ${steps[i]}`);
+        Sound.note([523.25, 587.33, 659.25, 783.99, 880][i % 5]);
+        const from = i ? targets[i - 1] : 0;
+        for (let k = 1; k <= 8; k++) { setPct(from + ((targets[i] || 95) - from) * (k / 8)); await wait(150); }
+        if (i === steps.length - 2) card.classList.add('warn');
+      }
+      // 2. It starts to break: stuck at 99%, errors pour in (~2.5s)
+      card.classList.add('glitch');
+      Sound.crash();
+      setPct(99);
+      for (const e of AI.errors || []) {
+        line(`!! ${e}`);
+        Sound.click();
+        pct.textContent = ['99%', '9̷9̶%', '???', '99%', 'ERR'][Math.floor(Math.random() * 5)];
+        await wait(380);
+      }
+      // 3. Crash (~1.8s)
+      card.classList.add('dead');
+      $('ai-crash-title').textContent = AI.crash || 'SERVER CRASH 💥';
+      showStage('ai-crash');
+      Sound.crash();
+      await wait(1900);
+      // 4. The real message
+      card.className = 'ai-card calm';
+      $('ai-msg-title').textContent = fill(AI.msgTitle);
+      $('ai-msg-text').textContent = fill(AI.msgText);
+      $('btn-ai-next').textContent = AI.msgButton || 'Ab kya? 🥺';
+      showStage('ai-msg');
+      Sound.chime();
+      $('btn-ai-next').onclick = () => {
+        $('ai-order-title').textContent = fill(AI.orderTitle);
+        $('ai-order-text').textContent = fill(String(AI.orderText || '').replace('{dress}', dressLabel));
+        const track = $('ai-track');
+        track.innerHTML = '';
+        (AI.track || []).forEach((t, i) => {
+          const li = document.createElement('li');
+          li.textContent = t;
+          li.style.animationDelay = `${0.25 + i * 0.45}s`;
+          track.appendChild(li);
+        });
+        $('btn-ai-done').textContent = AI.doneButton || 'Theek hai 🥰';
+        showStage('ai-order');
+        Sound.fanfare();
+        hearts(window.innerWidth / 2, window.innerHeight * 0.4, ['📦', '💛', '🎁', '✨'], 8);
+        // This is the "list" Mishra ji gets: it shows up on the dashboard
+        Log.send('dress_wish', { dress: dressLabel, look: { ...look, extras: [...look.extras] } });
+      };
+      $('btn-ai-done').onclick = () => {
+        overlay.classList.add('hidden');
+        aiBusy = false;
+      };
+    }
+    $('btn-wd-ai').addEventListener('click', aiTryOn);
 
     renderTabs();
     renderOptions();
@@ -2471,7 +2563,7 @@
           const [tx, ty] = poly[0];
           const nearby = flies.filter((f) => f.state === 'free' && Math.hypot(f.x - tx, f.y - ty) < 42);
           if (nearby.length) {
-            capture(Array.from({ length: 12 }, (_, k) => [tx + 32 * Math.cos((k / 12) * Math.PI * 2), ty + 32 * Math.sin((k / 12) * Math.PI * 2)]));
+            capture(Array.from({ length: 12 }, (_, k) => [tx + 44 * Math.cos((k / 12) * Math.PI * 2), ty + 44 * Math.sin((k / 12) * Math.PI * 2)]));
           }
         } else if (trailLen > 35) {
           say(F.miss);
@@ -3275,7 +3367,8 @@
     }
 
     function choose(o, b) {
-      if (b.classList.contains('picked')) return;
+      // One pick per chapter: a quick second tap must not skip the next chapter
+      if (b.classList.contains('picked') || b.parentElement.querySelector('.picked')) return;
       b.classList.add('picked');
       Sound.chime();
       heartsFrom(b, ['💛', '✨', '📖'], 6);

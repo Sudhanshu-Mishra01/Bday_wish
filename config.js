@@ -48,7 +48,7 @@ window.SURPRISE_CONFIG = {
       "Aakhri chot! Apne haq, apni khushi aur azaadi ke naam! Zor se! 💥👑"
     ],
     "brokenTitle": "Azaad ho gayi meri Billu! 👑✨",
-    "brokenBody": "Meri sabse pyaari Billu... 💛\n\nEk baat hamesha ke liye apne dil me basa lo na? Tumhara dil itna narm aur saaf hai ki tum har lamha sabko khush rakhne ke chakkar me khud ko bhool jaati ho. Par meri jaan, is duniya ka ek ajeeb sa dastoor hai — insaan chahe apna sab kuch kurbaan kar de, chahe apni saari zindagi doosron ke naam kar ke chala jaaye... log fir bhi kuch na kuch kahenge hi. Zamaane ki baatein kabhi khatam nahi hoti.\n\nIsliye please, har jagah doosron ki marzi ke aage apni khwahishein dabana chhod do. Tumhe sabse pehle apne baare me, apni khushi aur apne sukoon ke baare me sochna hai. Zindagi tumhari hai, aur isme khul kar muskuraane ka sabse pehla haq bhi sirf tumhara hai.\n\nJab tak main hoon, tumhe kisi zamaane ke taano se darrne ki zaroorat nahi. Main hamesha tumhari dhaal ban ke khada rahunga. Tum bas be-fikr hokar apni azaad zindagi jiyo, apne sapne poore karo aur dil khol kar haso...\n\nKyunki jab tum apne liye muskuraati ho na, meri poori kainaat roshan ho jaati hai ✨\n\nBas ek waada karo: Aaj ke baad khud ko kabhi doosre number pe nahi rakhogi? 🤙💛",
+    "brokenBody": "Log toh kuch na kuch kahenge hi, meri jaan — wo unka kaam hai 😌\n\nTumhara kaam bas itna hai: apne liye jeena, dil khol ke hasna aur apne sapne poore karna. Zamaane ke taano ke aage main khada hoon 💛\n\nBas ek waada: aaj ke baad khud ko kabhi doosre number pe nahi rakhogi? 🤙",
     "promiseButton": "Pinky promise, hamesha ke liye 🤙💛"
   },
   "playground": {
@@ -106,7 +106,7 @@ window.SURPRISE_CONFIG = {
     ],
     "lanternEmpty": "Pehle ek wish likho ✍️",
     "lanternDone": "Tumhara aasmaan ab tumhari wishes se chamak raha hai ✨",
-    "wardrobeIntro": "Apni sabse pyaari dress chuno, ya '🎲 Surprise Me' dabao — main toh har roop pe fida hoon! 💖 (Model ko swipe karke ya 'Ghoom ke dikhao 💃' se 360° ghumaao!)",
+    "wardrobeIntro": "Apni sabse pyaari dress chuno, jagah badlo, ya '🎲 Surprise Me' dabao — main toh har roop pe fida hoon! 💖",
     "wardrobeStamp": "Approved by Tumhara ✅ \"Wow\" guaranteed",
     "wardrobeCaption": "Billu ka birthday look 💛",
     "wardrobeResult": "Kitni pyaari lag rahi ho meri jaan! 😍 Ye look mujh tak pahunch gaya — aur mera dil phir se haar gaya.",
@@ -118,6 +118,38 @@ window.SURPRISE_CONFIG = {
       "sundress": "Daisy sundress me kitni fresh, cute aur masoom lag rahi ho... Just like a morning sunflower! 🌼💛",
       "casual": "Ye swag! Smart, stylish aur meri sabse pyaari Chetna — simple me bhi sabse killer! 👟🕶️",
       "nightsuit": "Awww! Nightsuit me 5 saal ki cute Billu lag rahi ho, bas hug karne ka man kar raha hai! 🧸💤"
+    },
+    "aiTry": {
+      "button": "✨ Dekhna hai is dress me tum asli me kaisi lagogi?",
+      "brand": "Billu-AI Studio",
+      "steps": [
+        "Chehra scan ho raha hai… 📸",
+        "Dress ki fitting ho rahi hai… 👗",
+        "Lighting set ho rahi hai… 💡",
+        "Muskaan detect hui ✅ Cuteness naap rahe hain… 🥰",
+        "Cuteness: 98%… 140%… 380%… ⚠️"
+      ],
+      "errors": [
+        "WARNING: cuteness limit cross ho gayi",
+        "ERR_TOO_CUTE_TO_RENDER",
+        "GPU temperature: 112°C 🔥",
+        "Kernel panic: billu_cuteness.exe ne saari memory le li",
+        "Retry… retry… FAILED",
+        "Server ne haath khade kar diye 🙏"
+      ],
+      "crash": "SERVER CRASH 💥",
+      "msgTitle": "Oops… AI haar gaya 🙈",
+      "msgText": "Duniya ka sabse smart AI lagaya tha… par tumhari cuteness copy karna uske bas ki baat nahi thi. Dekho, tumhari khoobsurati ne AI tak ke server crash kar diye 😌💥",
+      "msgButton": "Ab kya hoga? 🥺",
+      "orderTitle": "Don't worry 💛",
+      "orderText": "Aapki {dress} Mishra ji ko bhej di gayi hai 📦 Unki list update ho gayi hai — jaldi hi wo aapke paas hogi 🎁",
+      "track": [
+        "Dress chuni gayi ✅",
+        "Mishra ji ko notify kiya gaya 📲",
+        "Unki shopping list update ho gayi ✅",
+        "Delivery: bahut jald 🎁"
+      ],
+      "doneButton": "Theek hai, wait karungi 🥰"
     }
   },
   "catchHearts": {

@@ -55,25 +55,23 @@ Record a short voice note on your phone (Voice Memos → share → save as `.m4a
 
 The dress-up uses one full-body image per outfit (`assets/wardrobe/`). A top + bottom pair only shows if that exact combination has an image, so picking a bottom never swaps her top. Section 4 of [GEMINI_PROMPTS.md](GEMINI_PROMPTS.md) lists the 16 missing combinations with a ready prompt; for each new `look-<top>-<bottom>.jpg`, add one line to `LOOKS` in `wardrobe.js` and it appears automatically. If a new render has her head in a different spot or tilt, add its eye positions to `FACE_ANCHORS` in `wardrobe.js` so the bindi, shades, jhumkas, tiara and flower stay on her face.
 
-## Put it online (Vercel)
+## Put it online (Netlify)
 
-The live site needs Vercel, because the activity log runs on two small Vercel functions (`api/log.js`, `api/logs.js`). One-time setup:
+The site deploys from GitHub to Netlify. The activity log runs as two Netlify Functions (`netlify/functions/log.mjs`, `logs.mjs`) and stores events in Netlify Blobs, which every Netlify site has built in, so there's no database to set up. One-time setup:
 
-1. `npx vercel` from this folder (log in, accept the defaults) to create the project.
-2. Vercel dashboard → your project → **Storage** → **Upstash for Redis** (free) → connect it to the project. This adds the database URL/token automatically.
-3. **Settings → Environment Variables** → add `ADMIN_KEY` = any secret phrase only you know (this is your dashboard password).
-4. `npx vercel --prod` to deploy with storage + key in place.
-5. Open `/dashboard`, enter the key, then open the site with `?preview`, do something, and check it appears (then clear the test entries).
+1. Netlify → your site → **Site configuration → Environment variables** → add `ADMIN_KEY` = any secret phrase only you know (this is your dashboard password).
+2. **Deploys → Trigger deploy** (env vars only reach the functions after a new deploy). Every `git push` to `main` also deploys.
+3. Open `https://<your-site>.netlify.app/dashboard`, enter the key, then open the site with `?preview`, do something, check it appears, and press "Test entries hatao".
 
-The Studio only works on your computer: on the live site `admin.*` redirects to the home page, and `.vercelignore` keeps it out of uploads. After editing texts/photos, run `npx vercel --prod` again.
+`netlify.toml` keeps her reference photo (`/assets/reference/`), `.logs`, `.backups` and the Gemini notes off the live site, because Netlify ignores `.vercelignore`.
 
-(Netlify Drop would serve the pages, but not the log functions — so nothing would reach your dashboard. Use Vercel.)
+Vercel still works too (`api/log.js`, `api/logs.js` + Upstash for Redis + `ADMIN_KEY`), if you ever switch.
 
 ## Before you send the link
 
 - [ ] Check the 6 memory photos (Studio → 📸 Photos & yaadein); swap in real ones if you like
 - [ ] Record and upload your secret voice note (Studio → 💕 Dil Pakdo)
-- [ ] Do the Vercel setup above and confirm a test entry shows on `/dashboard`, then clear test entries
+- [ ] Set `ADMIN_KEY` on Netlify, redeploy, and confirm a test entry shows on `/dashboard`, then clear test entries
 - [ ] Read every text once in your own voice and adjust anything that isn't quite *you*
 - [ ] Open the live link on a phone with `?preview`, play it end to end with sound on
 - [ ] Send her the plain link (no `?preview`), e.g. at 11:59 PM, or earlier so she sees the countdown

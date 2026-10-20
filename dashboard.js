@@ -1,7 +1,7 @@
 /**
  * Dashboard — reads the activity log (/api/logs) and shows what she did:
  * her answers, wishes, poem line, wardrobe looks, coupons and the full journey.
- * Locally (admin_server.py) no key is needed; on Vercel it asks for ADMIN_KEY once.
+ * Locally (admin_server.py) no key is needed; on Netlify/Vercel it asks for ADMIN_KEY once.
  */
 (function () {
   'use strict';
@@ -78,6 +78,8 @@
       case 'finished': return '🌙 Lights band ki — poora dekh liya 💛';
       case 'golden_heart': return `💛 Sunehra dil pakda (${d.caught || ''} dil pakdne ke baad)`;
       case 'voice_played': return '🎧 Tumhari voice note suni';
+      case 'ai_try': return `🪄 AI try-on dabaya: "${d.dress || ''}"`;
+      case 'dress_wish': return `🎁 Ye dress chahiye: "${d.dress || ''}" — list me add karo, Mishra ji!`;
       case 'dream_step': return `🌙 Sapne me: ${DREAM[d.step] || d.step}`;
       case 'dream_done': return '🌕 Sapna poora — chaand khil gaya, jhoole pe tum dono';
       case 'story_choice': return `📖 ${d.q} → "${d.choice}"`;
@@ -94,7 +96,7 @@
       const res = await fetch('/api/logs', { headers: key ? { 'x-admin-key': key } : {}, cache: 'no-store' });
       if (res.status === 401) return askKey(key ? 'Ye key galat hai. Phir se daalo:' : null);
       if (res.status === 404 || res.status === 405) {
-        return showNotice('Log ka backend nahi mila. Computer pe <code>python3 admin_server.py</code> se kholo, ya live site pe Vercel + Upstash setup karo (README dekho).');
+        return showNotice('Log ka backend nahi mila. Computer pe <code>python3 admin_server.py</code> se kholo, ya live site pe Netlify me ADMIN_KEY set karke dobara deploy karo (README dekho).');
       }
       const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json.error || `Error ${res.status}`);

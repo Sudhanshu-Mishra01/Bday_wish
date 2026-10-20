@@ -27,3 +27,5 @@ assets/wardrobe/chetna-head.jpg
 assets/wardrobe/debug-landmarks.jpg
 assets/wardrobe/slice-*.png
 assets/wardrobe/test-*.png
+node_modules
+netlify

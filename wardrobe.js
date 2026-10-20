@@ -79,12 +79,12 @@ window.Wardrobe = (function () {
       '#8a9a5b', '#7fd6c2', '#3fa7a0', '#9b8cff', '#5b3fa0', '#3b5fa8', '#1f2a44', '#f5efe6', '#2b2b2b'
     ],
     scenes: [
+      { id: 'studio', label: 'Fairy lights ✨' },
       { id: 'mela', label: 'Mela 🎡' },
       { id: 'fountain', label: 'Fountain ⛲' },
       { id: 'pahad', label: 'Mountain view ⛰️' },
       { id: 'beach', label: 'Beach 🏖️' },
-      { id: 'cafe', label: 'Cafe ☕' },
-      { id: 'studio', label: 'Studio ✨' }
+      { id: 'cafe', label: 'Cafe ☕' }
     ]
   };
 
@@ -397,18 +397,119 @@ window.Wardrobe = (function () {
     return out ? `<g transform="${faceTransform(file)}">${out}</g>` : '';
   }
 
+  // ---------------------------------------------------------------- Places (Jagah)
+  // The renders come with their own fairy-light background baked in, so each dress
+  // also has a subject mask (assets/wardrobe/mask/, made with macOS "lift subject").
+  // For every place except Studio she is cut out and stands in front of a softly
+  // defocused backdrop, like a portrait-mode photo. Studio keeps the original render.
+  const maskFor = (file) => (/\/dress-[a-z]+\.jpg$/.test(file) ? file.replace('/wardrobe/', '/wardrobe/mask/').replace(/\.jpg$/, '.png') : null);
+
+  const bokeh = (spots) => spots.map(([x, y, r, c, o]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${c}" opacity="${o}"/>`).join('');
+
+  function sceneBackdrop(id, prefix) {
+    const P = prefix;
+    let art = '';
+    switch (id) {
+      case 'mela': {
+        const wheel = Array.from({ length: 16 }, (_, k) => {
+          const a = (k / 16) * Math.PI * 2;
+          const x = 110 + Math.cos(a) * 140, y = 220 + Math.sin(a) * 140;
+          return `<line x1="110" y1="220" x2="${x.toFixed(0)}" y2="${y.toFixed(0)}" stroke="#ffd27a" stroke-width="2" opacity=".35"/><circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="9" fill="${['#ff8fb1', '#ffd27a', '#7fd6c2', '#b9a6ff'][k % 4]}"/>`;
+        }).join('');
+        art = `<rect width="450" height="600" fill="url(#${P}bgMela)"/>
+          <g opacity=".9">${wheel}<circle cx="110" cy="220" r="140" fill="none" stroke="#ffd27a" stroke-width="4" opacity=".5"/></g>
+          <path d="M0 70 Q 225 150 450 60" fill="none" stroke="#3a2a4a" stroke-width="2"/>
+          ${bokeh(Array.from({ length: 12 }, (_, k) => [20 + k * 38, 70 + Math.sin(k / 11 * Math.PI) * 42 + 8, 7, ['#ffd27a', '#ff8fb1', '#fff1c1'][k % 3], 0.95]))}
+          <path d="M250 470 L310 400 L370 470 Z M330 470 L400 395 L470 470 Z" fill="#c8325e" opacity=".75"/>
+          <path d="M262 470 L310 412 L358 470 Z" fill="#ffe3c0" opacity=".5"/>
+          <rect y="455" width="450" height="145" fill="url(#${P}bgGround)"/>
+          ${bokeh([[380, 150, 26, '#ff8fb1', 0.35], [420, 260, 18, '#ffd27a', 0.4], [300, 120, 14, '#7fd6c2', 0.35], [40, 430, 22, '#ffd27a', 0.3], [410, 420, 30, '#ff8fb1', 0.25]])}`;
+        break;
+      }
+      case 'fountain':
+        art = `<rect width="450" height="600" fill="url(#${P}bgDusk)"/>
+          <path d="M0 400 L0 250 L40 250 L40 210 L70 190 L100 210 L100 260 L150 260 L150 300 L300 300 L300 240 L330 220 L360 240 L360 200 L400 170 L440 200 L450 200 L450 400 Z" fill="#3b3a5e" opacity=".85"/>
+          ${bokeh([[60, 270, 4, '#ffd98a', 0.9], [85, 240, 4, '#ffd98a', 0.9], [125, 285, 4, '#ffd98a', 0.8], [320, 260, 4, '#ffd98a', 0.9], [345, 290, 4, '#ffd98a', 0.8], [410, 230, 4, '#ffd98a', 0.9], [420, 280, 4, '#ffd98a', 0.85]])}
+          <rect x="52" y="250" width="5" height="200" fill="#2a2840"/><circle cx="54" cy="248" r="22" fill="#ffd98a" opacity=".55"/><circle cx="54" cy="248" r="8" fill="#fff4d0"/>
+          <rect x="400" y="235" width="5" height="215" fill="#2a2840"/><circle cx="402" cy="233" r="22" fill="#ffd98a" opacity=".55"/><circle cx="402" cy="233" r="8" fill="#fff4d0"/>
+          <rect y="430" width="450" height="170" fill="url(#${P}bgPlaza)"/>
+          <ellipse cx="330" cy="440" rx="110" ry="22" fill="#5d6a8e"/><ellipse cx="330" cy="436" rx="100" ry="16" fill="#9fc4e8" opacity=".8"/>
+          <path d="M330 436 C 300 360 260 360 240 430 M330 436 C 360 360 400 360 420 430 M330 436 L330 330" stroke="#eaf6ff" stroke-width="6" fill="none" opacity=".85" stroke-linecap="round"/>
+          <circle cx="330" cy="330" r="30" fill="#eaf6ff" opacity=".35"/>`;
+        break;
+      case 'pahad':
+        art = `<rect width="450" height="600" fill="url(#${P}bgDawn)"/>
+          <circle cx="335" cy="250" r="70" fill="#fff1c9" opacity=".55"/><circle cx="335" cy="250" r="30" fill="#fff8e4"/>
+          <path d="M0 330 L60 240 L120 290 L190 200 L260 280 L330 210 L400 270 L450 230 L450 400 L0 400 Z" fill="#9aa9cf" opacity=".9"/>
+          <path d="M0 380 L80 290 L150 340 L230 270 L300 350 L380 300 L450 340 L450 450 L0 450 Z" fill="#6f84aa"/>
+          <path d="M0 440 L90 370 L170 420 L260 360 L350 420 L450 380 L450 500 L0 500 Z" fill="#46637a"/>
+          ${[[20, 470, 1], [55, 480, 0.8], [395, 470, 1], [430, 485, 0.75]].map(([x, y, s]) => `<path d="M${x} ${y} l${-18 * s} ${-10 * s} l${10 * s} 0 l${-14 * s} ${-26 * s} l${9 * s} 0 l${-10 * s} ${-28 * s} l${-10 * s} ${28 * s} l${9 * s} 0 l${-14 * s} ${26 * s} l${10 * s} 0 l${-18 * s} ${10 * s} Z" fill="#2c4a3e" transform="translate(${18 * s} 0)"/>`).join('')}
+          <rect y="470" width="450" height="130" fill="url(#${P}bgMeadow)"/>`;
+        break;
+      case 'beach':
+        art = `<rect width="450" height="600" fill="url(#${P}bgSunset)"/>
+          <circle cx="300" cy="352" r="90" fill="#ffd9a0" opacity=".45"/><circle cx="300" cy="352" r="38" fill="#fff1c9"/>
+          <rect y="360" width="450" height="110" fill="url(#${P}bgSea)"/>
+          ${[0, 1, 2, 3, 4, 5].map((k) => `<rect x="${280 - k * 3}" y="${370 + k * 15}" width="${40 + k * 6}" height="4" rx="2" fill="#ffe6b8" opacity="${0.8 - k * 0.1}"/>`).join('')}
+          <path d="M0 455 Q 110 445 225 458 T 450 452 L450 470 L0 470 Z" fill="#fff" opacity=".35"/>
+          <rect y="465" width="450" height="135" fill="url(#${P}bgSand)"/>
+          <path d="M28 470 C 30 400 40 330 60 280" stroke="#3a2a35" stroke-width="7" fill="none"/>
+          <path d="M60 280 C 20 270 0 290 -10 310 M60 280 C 90 260 120 270 135 295 M60 280 C 40 250 10 245 -5 255 M60 280 C 80 250 110 240 130 250" stroke="#3a2a35" stroke-width="9" fill="none" stroke-linecap="round"/>`;
+        break;
+      case 'cafe':
+        art = `<rect width="450" height="600" fill="url(#${P}bgCafe)"/>
+          <rect x="40" y="70" width="370" height="300" rx="8" fill="#22314f"/>
+          ${bokeh([[90, 150, 14, '#ffd27a', 0.6], [150, 230, 10, '#7fd6c2', 0.5], [230, 130, 16, '#ff8fb1', 0.45], [300, 210, 12, '#ffd27a', 0.6], [360, 140, 18, '#fff1c1', 0.4], [120, 320, 12, '#ffd27a', 0.45], [330, 310, 14, '#b9a6ff', 0.45], [260, 280, 9, '#fff1c1', 0.6]])}
+          <path d="M40 220 H410 M225 70 V370" stroke="#3b2418" stroke-width="10"/>
+          <rect x="40" y="70" width="370" height="300" rx="8" fill="none" stroke="#3b2418" stroke-width="14"/>
+          ${[70, 150, 300, 380].map((x, k) => `<line x1="${x}" y1="0" x2="${x}" y2="${60 + (k % 2) * 30}" stroke="#2a1a14" stroke-width="2"/><circle cx="${x}" cy="${72 + (k % 2) * 30}" r="26" fill="#ffd27a" opacity=".4"/><circle cx="${x}" cy="${72 + (k % 2) * 30}" r="10" fill="#fff1c1"/>`).join('')}
+          <path d="M0 330 C 30 300 20 260 45 240 C 50 280 70 300 60 340 Z M450 320 C 420 290 430 250 405 230 C 400 270 380 300 392 335 Z" fill="#2f5a3a"/>
+          <rect y="460" width="450" height="140" fill="url(#${P}bgWood)"/>`;
+        break;
+      default:
+        return '';
+    }
+    return `<g class="doll-backdrop">
+      <defs>
+        <filter id="${P}bgBlur" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="5"/></filter>
+        <linearGradient id="${P}bgMela" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#15123a"/><stop offset=".6" stop-color="#3a2370"/><stop offset="1" stop-color="#7a3d6e"/></linearGradient>
+        <linearGradient id="${P}bgGround" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a2a3e"/><stop offset="1" stop-color="#1f1426"/></linearGradient>
+        <linearGradient id="${P}bgDusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26346a"/><stop offset=".55" stop-color="#7a7fb8"/><stop offset="1" stop-color="#f3b9a2"/></linearGradient>
+        <linearGradient id="${P}bgPlaza" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8e8496"/><stop offset="1" stop-color="#4c4258"/></linearGradient>
+        <linearGradient id="${P}bgDawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fa9e0"/><stop offset=".5" stop-color="#f6cdb6"/><stop offset=".7" stop-color="#ffd9a0"/></linearGradient>
+        <linearGradient id="${P}bgMeadow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c9c5a"/><stop offset="1" stop-color="#3d5a30"/></linearGradient>
+        <linearGradient id="${P}bgSunset" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a6fb0"/><stop offset=".5" stop-color="#f0907e"/><stop offset=".62" stop-color="#ffc27a"/></linearGradient>
+        <linearGradient id="${P}bgSea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a77b0"/><stop offset="1" stop-color="#3a5590"/></linearGradient>
+        <linearGradient id="${P}bgSand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ecd0a8"/><stop offset="1" stop-color="#c9a37a"/></linearGradient>
+        <linearGradient id="${P}bgCafe" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a3628"/><stop offset="1" stop-color="#7a4a34"/></linearGradient>
+        <linearGradient id="${P}bgWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a5a3a"/><stop offset="1" stop-color="#4a2e1e"/></linearGradient>
+      </defs>
+      <g filter="url(#${P}bgBlur)">${art}</g>
+      <rect width="450" height="600" fill="url(#${P}bgVignette)"/>
+      <radialGradient id="${P}bgVignette" cx=".5" cy=".45" r=".75"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></radialGradient>
+    </g>`;
+  }
+
   // ---------------------------------------------------------------- Main SVG Renderer
   function render(st, prefix = 'w-') {
     const outfitUrl = get3DOutfit(st);
+    // Any place but Studio: cut her out and put the place behind her
+    const cutout = st.scene && st.scene !== 'studio' ? maskFor(outfitUrl) : null;
 
     return `
       ${renderDefs(st, prefix)}
 
       <!-- 1. Authentic, Complete 3D Pixar Stylized Character of Chetna -->
       <g class="doll-3d-character" clip-path="url(#${prefix}charClip)">
+        ${cutout ? `${sceneBackdrop(st.scene, prefix)}
+        <mask id="${prefix}cutMask" maskUnits="userSpaceOnUse" x="0" y="0" width="450" height="600">
+          <image class="doll-mask" href="${cutout}" x="0" y="0" width="450" height="600" preserveAspectRatio="xMidYMid slice" />
+        </mask>
+        <ellipse cx="225" cy="586" rx="120" ry="12" fill="#000000" opacity=".45" filter="url(#${prefix}soft)"/>
+        <image id="${prefix}charImg" href="${outfitUrl}" x="0" y="0" width="450" height="600" preserveAspectRatio="xMidYMid slice" mask="url(#${prefix}cutMask)" />` : `
         <image id="${prefix}charImg" href="${outfitUrl}" x="0" y="0" width="450" height="600" preserveAspectRatio="xMidYMid slice" />
         <!-- Contact Floor Drop Shadow -->
-        <ellipse cx="225" cy="584" rx="140" ry="14" fill="#000000" opacity=".55" filter="url(#${prefix}soft)"/>
+        <ellipse cx="225" cy="584" rx="140" ry="14" fill="#000000" opacity=".55" filter="url(#${prefix}soft)"/>`}
       </g>
 
       <!-- 2. Scene Atmosphere Tone Filter -->
@@ -448,9 +549,9 @@ window.Wardrobe = (function () {
     clone.setAttribute('width', '900');
     clone.setAttribute('height', '1200');
     clone.querySelectorAll('.doll-3d-sparkles').forEach((n) => n.remove());
-    const imgEl = clone.querySelector('image');
-    const src = outfitUrl || (imgEl && imgEl.getAttribute('href'));
-    if (imgEl && src && !src.startsWith('data:')) {
+    for (const imgEl of clone.querySelectorAll('image')) {
+      const src = imgEl.id && imgEl.id.endsWith('charImg') && outfitUrl ? outfitUrl : imgEl.getAttribute('href');
+      if (!src || src.startsWith('data:')) continue;
       const blob = await fetch(src).then((r) => r.blob());
       imgEl.setAttribute('href', await blobToDataUrl(blob));
     }
@@ -523,7 +624,7 @@ window.Wardrobe = (function () {
   function preload() {
     if (preloaded) return;
     preloaded = true;
-    [...Object.values(DRESS_IMAGES), ...LOOKS.map((l) => l.file)].forEach((src) => { const i = new Image(); i.src = src; });
+    [...Object.values(DRESS_IMAGES), ...Object.values(DRESS_IMAGES).map(maskFor), ...LOOKS.map((l) => l.file)].forEach((src) => { const i = new Image(); i.src = src; });
   }
 
   function defaultState() {
@@ -538,7 +639,7 @@ window.Wardrobe = (function () {
       hairColor: OPTIONS.hairColors[0],
       shoes: 'juttis',
       extras: new Set([]), // Clean, photorealistic 3D Pixar character by default
-      scene: 'mela'
+      scene: 'studio' // the render's own fairy-light backdrop; other places cut her out
     };
   }
 

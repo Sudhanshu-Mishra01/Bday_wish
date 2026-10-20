@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=10.0">
+  <link rel="stylesheet" href="style.css?v=12.0">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
 <body>
@@ -222,30 +222,69 @@
           <p class="hint" id="wardrobe-intro"></p>
           <div class="wardrobe">
             <div class="doll-stage" id="doll-stage">
-              <div class="wd-360-badge" aria-hidden="true"><span>🔄 360° Rotate</span></div>
+              <!-- 360° view switched off: <div class="wd-360-badge" aria-hidden="true"><span>🔄 360° Rotate</span></div> -->
               <svg class="doll" id="doll" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 600" role="img" aria-label="Billu ka 3D outfit"></svg>
               <div class="stamp hidden" id="wardrobe-stamp"></div>
               <div class="wd-compliment-bubble" id="wd-compliment-bubble" aria-live="polite">
                 <span class="wd-bubble-text" id="wd-bubble-text"></span>
               </div>
             </div>
+            <!-- 360° view switched off
             <div class="wd-turn-hint">
               <span>👆 Model ko swipe karke ya "Ghoom ke dikhao 💃" se 360° ghuma sakti ho</span>
             </div>
+            -->
             <div class="wd-tabs" id="wd-tabs" role="tablist"></div>
             <div class="wd-options" id="wd-options"></div>
             <div class="wd-actions">
-              <button type="button" class="btn btn-ghost" id="btn-wd-twirl">💃 Ghoom ke dikhao</button>
+              <!-- <button type="button" class="btn btn-ghost" id="btn-wd-twirl">💃 Ghoom ke dikhao</button> -->
               <button type="button" class="btn btn-secondary" id="btn-wd-random">🎲 Surprise Me! ✨</button>
               <button type="button" class="btn btn-primary" id="btn-wardrobe-done">Ye pehnungi! 💖</button>
             </div>
             <div class="wd-result hidden" id="wd-result">
               <img id="wd-photo" alt="Billu ka look">
               <p id="wd-result-text"></p>
+              <button type="button" class="btn btn-primary wd-ai-btn" id="btn-wd-ai"></button>
               <div class="wd-actions">
                 <button type="button" class="btn btn-glow" id="btn-wd-save">Photo save karo 📸</button>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI try-on: the "AI" scans her in the dress… and crashes from too much cuteness -->
+      <div class="ai-try hidden" id="ai-try" role="dialog" aria-modal="true" aria-labelledby="ai-brand">
+        <div class="ai-card" id="ai-card">
+          <div class="ai-stage" id="ai-run">
+            <p class="ai-brand" id="ai-brand"></p>
+            <div class="ai-scan" id="ai-scan">
+              <img id="ai-img" alt="">
+              <i class="ai-line"></i>
+              <span class="ai-dot" style="--x:47%;--y:16%"></span><span class="ai-dot" style="--x:55%;--y:16%"></span>
+              <span class="ai-dot" style="--x:51%;--y:20%"></span><span class="ai-dot" style="--x:51%;--y:23%"></span>
+            </div>
+            <p class="ai-step" id="ai-step" aria-live="polite"></p>
+            <div class="ai-bar"><i id="ai-bar"></i></div>
+            <p class="ai-pct" id="ai-pct">0%</p>
+            <pre class="ai-log" id="ai-log"></pre>
+          </div>
+          <div class="ai-stage ai-crash hidden" id="ai-crash">
+            <p class="ai-crash-title" id="ai-crash-title"></p>
+            <p class="ai-crash-sub">connection lost<span class="ai-cursor">_</span></p>
+          </div>
+          <div class="ai-stage ai-msg hidden" id="ai-msg">
+            <p class="ai-emoji">🤖💥</p>
+            <h3 id="ai-msg-title"></h3>
+            <p id="ai-msg-text"></p>
+            <button type="button" class="btn btn-primary" id="btn-ai-next"></button>
+          </div>
+          <div class="ai-stage ai-msg hidden" id="ai-order">
+            <p class="ai-emoji">📦💛</p>
+            <h3 id="ai-order-title"></h3>
+            <p id="ai-order-text"></p>
+            <ol class="ai-track" id="ai-track"></ol>
+            <button type="button" class="btn btn-glow" id="btn-ai-done"></button>
           </div>
         </div>
       </div>
@@ -797,8 +836,8 @@
 
   <audio id="music" loop preload="none"></audio>
 
-  <script src="config.js?v=11.0"></script>
-  <script src="wardrobe.js?v=9.0"></script>
-  <script src="script.js?v=11.0"></script>
+  <script src="config.js?v=12.0"></script>
+  <script src="wardrobe.js?v=12.0"></script>
+  <script src="script.js?v=12.0"></script>
 </body>
 </html>
