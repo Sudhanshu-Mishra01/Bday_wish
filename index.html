@@ -221,15 +221,23 @@
           <h3>Apne Mann Ke Kapde 👗</h3>
           <p class="hint" id="wardrobe-intro"></p>
           <div class="wardrobe">
-            <div class="doll-stage">
+            <div class="doll-stage" id="doll-stage">
+              <div class="wd-360-badge" aria-hidden="true"><span>🔄 360° Rotate</span></div>
               <svg class="doll" id="doll" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 600" role="img" aria-label="Billu ka 3D outfit"></svg>
               <div class="stamp hidden" id="wardrobe-stamp"></div>
+              <div class="wd-compliment-bubble" id="wd-compliment-bubble" aria-live="polite">
+                <span class="wd-bubble-text" id="wd-bubble-text"></span>
+              </div>
+            </div>
+            <div class="wd-turn-hint">
+              <span>👆 Model ko swipe karke ya "Ghoom ke dikhao 💃" se 360° ghuma sakti ho</span>
             </div>
             <div class="wd-tabs" id="wd-tabs" role="tablist"></div>
             <div class="wd-options" id="wd-options"></div>
             <div class="wd-actions">
-              <button type="button" class="btn btn-ghost" id="btn-wd-random">🎲 Surprise me</button>
-              <button type="button" class="btn btn-primary" id="btn-wardrobe-done">Ye pehnungi! ✨</button>
+              <button type="button" class="btn btn-ghost" id="btn-wd-twirl">💃 Ghoom ke dikhao</button>
+              <button type="button" class="btn btn-secondary" id="btn-wd-random">🎲 Surprise Me! ✨</button>
+              <button type="button" class="btn btn-primary" id="btn-wardrobe-done">Ye pehnungi! 💖</button>
             </div>
             <div class="wd-result hidden" id="wd-result">
               <img id="wd-photo" alt="Billu ka look">

@@ -720,6 +720,7 @@
     const TOYS = ['balloons', 'tareef', 'lantern', 'wardrobe', 'hearts'];
     const done = new Set(store.get('toys', []).filter((t) => TOYS.includes(t)));
     let openSheet = null;
+    let onWardrobeOpen = null;
 
     function refresh() {
       document.querySelectorAll('.toy').forEach((t) => t.classList.toggle('done', done.has(t.dataset.toy)));
@@ -748,7 +749,10 @@
       sheet.classList.add('open');
       Sound.chime();
       if (toy === 'balloons') startBalloons();
-      if (toy === 'wardrobe') window.Wardrobe.preload();
+      if (toy === 'wardrobe') {
+        window.Wardrobe.preload();
+        if (typeof onWardrobeOpen === 'function') onWardrobeOpen();
+      }
       if (toy === 'hearts') startHearts();
     }
     function close() {
@@ -1092,7 +1096,10 @@
       const add = (n) => box.appendChild(n);
       switch (activeTab) {
         case 'dresses':
-          add(row('', O.dresses.map((d) => chip(d.label, look.dress === d.id, () => { look.dress = d.id; }))));
+          add(row('', O.dresses.map((d) => chip(d.label, look.dress === d.id, () => {
+            look.dress = d.id;
+            showCompliment(d.id);
+          }))));
           break;
         case 'tops':
           // Only tops that have a real image. Picking one keeps the bottom if that
@@ -1150,10 +1157,114 @@
       }
     }
 
-    $('btn-wd-random').addEventListener('click', () => {
-      W.randomize(look);
+    // Wardrobe compliments per curated dress
+    const DRESS_COMPLIMENTS = P.wardrobeCompliments || {
+      anarkali: "Uff! Anarkali me toh poori Shehzadi lag rahi ho... Dil tham ke baithna padega mujhe! 🌸👑",
+      saree: "Saree me tumhari saadgi aur husn ka koi muqabla nahi... Meri nazar utaarne ka man kar raha hai! 🥻✨",
+      lehenga: "Lavender lehenga me bilkul dulhan wali feeling aa rahi hai... Sach me kisi din meri dulhan banogi! 💜💍",
+      gown: "Royal Midnight Gown me red-carpet queen lag rahi ho! Aise dekhogi toh main behosh ho jaunga! 🖤👑",
+      sundress: "Daisy sundress me kitni fresh, cute aur masoom lag rahi ho... Just like a morning sunflower! 🌼💛",
+      casual: "Ye swag! Smart, stylish aur meri sabse cute Chetna — simple me bhi sabse killer! 👟🕶️",
+      nightsuit: "Awww! Nightsuit me 5 saal ki cute Billu lag rahi ho, bas hug karne ka man kar raha hai! 🧸💤"
+    };
+
+    const showCompliment = (dressId) => {
+      const bubble = $('wd-compliment-bubble');
+      const textEl = $('wd-bubble-text');
+      if (!bubble || !textEl) return;
+      const msg = DRESS_COMPLIMENTS[dressId] || 'Kitni pyaari lag rahi ho meri jaan! 😍';
+      textEl.textContent = msg;
+      bubble.classList.remove('hidden');
+      bubble.style.animation = 'none';
+      void bubble.offsetWidth;
+      bubble.style.animation = '';
+    };
+
+    const twirlModel = () => {
+      const dollEl = $('doll');
+      if (!dollEl) return;
+      dollEl.style.transform = '';
+      dollEl.classList.remove('twirling');
+      void dollEl.offsetWidth;
+      dollEl.classList.add('twirling');
       Sound.sparkle();
-      drawDoll(); renderOptions();
+      hearts(window.innerWidth / 2, window.innerHeight / 2, ['✨', '💫', '💃', '💖'], 7);
+      setTimeout(() => {
+        dollEl.classList.remove('twirling');
+      }, 1400);
+    };
+
+    $('btn-wd-twirl')?.addEventListener('click', () => {
+      twirlModel();
+      if (look.dress) showCompliment(look.dress);
+    });
+
+    // Interactive 360° swipe/drag on the stage
+    const stageEl = $('doll-stage');
+    let isDragging = false;
+    let startX = 0;
+    let currentRotation = 0;
+    let baseRotation = 0;
+
+    if (stageEl) {
+      stageEl.addEventListener('pointerdown', (e) => {
+        if (e.target.closest('button') || e.target.closest('#wd-compliment-bubble')) return;
+        isDragging = true;
+        startX = e.clientX;
+        baseRotation = currentRotation;
+        stageEl.classList.add('dragging');
+        const dollEl = $('doll');
+        if (dollEl) {
+          dollEl.classList.remove('twirling');
+          dollEl.style.transition = 'none';
+        }
+        try { stageEl.setPointerCapture(e.pointerId); } catch (_) {}
+      });
+
+      stageEl.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - startX;
+        currentRotation = (baseRotation + deltaX * 0.75) % 360;
+        const dollEl = $('doll');
+        if (dollEl) {
+          dollEl.style.transform = `perspective(1200px) rotateY(${currentRotation}deg)`;
+        }
+      });
+
+      const endDrag = (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        stageEl.classList.remove('dragging');
+        const dollEl = $('doll');
+        if (dollEl) {
+          dollEl.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+          setTimeout(() => {
+            if (!isDragging && dollEl) {
+              dollEl.style.transform = 'perspective(1200px) rotateY(0deg)';
+              currentRotation = 0;
+              setTimeout(() => {
+                if (!isDragging && dollEl) {
+                  dollEl.style.transition = '';
+                  dollEl.style.transform = '';
+                }
+              }, 650);
+            }
+          }, 800);
+        }
+        try { stageEl.releasePointerCapture(e.pointerId); } catch (_) {}
+      };
+
+      stageEl.addEventListener('pointerup', endDrag);
+      stageEl.addEventListener('pointercancel', endDrag);
+    }
+
+    $('btn-wd-random').addEventListener('click', () => {
+      const pickedDress = W.randomize(look);
+      Sound.sparkle();
+      drawDoll();
+      renderOptions();
+      twirlModel();
+      showCompliment(pickedDress || look.dress);
     });
 
     $('btn-wardrobe-done').addEventListener('click', async (e) => {
@@ -1172,7 +1283,8 @@
         lookUrl = URL.createObjectURL(blob);
         $('wd-photo').src = lookUrl;
         $('btn-wd-save').onclick = () => saveImage(blob, 'billu-ka-look.png', 'Look save ho gaya 📸');
-        $('wd-result-text').textContent = P.wardrobeResult || '';
+        const dressCompliment = DRESS_COMPLIMENTS[look.dress];
+        $('wd-result-text').textContent = dressCompliment ? `${dressCompliment} 📸` : (P.wardrobeResult || '');
         $('wd-result').classList.remove('hidden');
         $('wd-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       } catch (err) {
@@ -1183,6 +1295,10 @@
     renderTabs();
     renderOptions();
     drawDoll();
+    showCompliment(look.dress);
+    onWardrobeOpen = () => {
+      showCompliment(look.dress);
+    };
 
     $('btn-pg-next').addEventListener('click', () => { Sound.chime(); show('ride'); });
     refresh();

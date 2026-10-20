@@ -564,6 +564,13 @@ body.dark-room #sky { opacity: 0.35; }
   display: grid; place-items: center;
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 16px 36px rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.15);
+  perspective: 1200px;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+.doll-stage.dragging {
+  cursor: grabbing;
 }
 .doll-stage::before {
   content: ""; position: absolute; inset: 0; pointer-events: none;
@@ -580,6 +587,8 @@ body.dark-room #sky { opacity: 0.35; }
   transition: opacity 0.25s ease;
   animation: dollBreathe 5s ease-in-out infinite;
   transform-origin: center bottom;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 @keyframes dollBreathe {
   0%, 100% { transform: translateY(0px) scale(1, 1); }
@@ -593,6 +602,51 @@ body.dark-room #sky { opacity: 0.35; }
   0% { transform: scale(0.96) translateY(6px); opacity: 0.85; filter: drop-shadow(0 0 24px rgba(255, 215, 122, 0.75)); }
   50% { transform: scale(1.02) translateY(-4px); opacity: 1; filter: drop-shadow(0 0 35px rgba(255, 105, 180, 0.65)); }
   100% { transform: scale(1) translateY(0); opacity: 1; filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.58)); }
+}
+.doll.twirling {
+  animation: dollTwirl 1.35s cubic-bezier(0.22, 1, 0.36, 1) both !important;
+}
+@keyframes dollTwirl {
+  0% { transform: perspective(1200px) rotateY(0deg) scale(1); filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.58)); }
+  45% { transform: perspective(1200px) rotateY(180deg) scale(0.94); filter: drop-shadow(0 25px 45px rgba(255, 215, 122, 0.8)); }
+  100% { transform: perspective(1200px) rotateY(360deg) scale(1); filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.58)); }
+}
+
+.wd-360-badge {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(18, 10, 24, 0.72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 215, 122, 0.35);
+  border-radius: 999px; padding: 4px 10px;
+  font-size: 0.78rem; font-weight: 700; color: #ffd700;
+  pointer-events: none; z-index: 5;
+  display: flex; align-items: center; gap: 4px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.wd-turn-hint {
+  text-align: center; font-size: 0.84rem; color: var(--muted); margin: -4px 0 4px;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+.wd-compliment-bubble {
+  position: absolute; bottom: 12px; left: 12px; right: 12px;
+  background: rgba(22, 12, 28, 0.92);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 215, 122, 0.55);
+  border-radius: 16px; padding: 9px 14px;
+  color: #fff9ea; font-size: 0.95rem; font-weight: 600;
+  line-height: 1.35; text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 25px rgba(232, 80, 127, 0.3);
+  pointer-events: none; z-index: 6;
+  transition: opacity 0.3s ease, transform 0.3s var(--ease-spring);
+  animation: bubblePop 0.4s var(--ease-spring) both;
+}
+.wd-compliment-bubble.hidden {
+  display: none;
+}
+@keyframes bubblePop {
+  0% { transform: translateY(12px) scale(0.94); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 /* Wardrobe Sparkle & Fabric Sheen Animations */
@@ -1235,11 +1289,14 @@ body.lights-off .scene[data-scene="goodnight"] .moon { box-shadow: 0 0 60px 20px
 .orb.lit i { border: 0; background: radial-gradient(circle at 38% 38%, #fff, var(--oc) 55%, transparent 76%); box-shadow: 0 0 14px 4px var(--oc); animation: orbPop 0.7s var(--ease-spring); }
 .orb.given i { opacity: 0.35; box-shadow: none; }
 @keyframes orbPop { from { transform: scale(2.2); } to { transform: scale(1); } }
-.star-point { cursor: pointer; transition: transform 0.35s var(--ease-spring); }
-.star-point:hover, .star-point:focus-visible { transform: scale(1.22); outline: none; }
+/* The star's <g> is positioned by its transform attribute, so only its children may scale */
+.star-point { cursor: pointer; outline: none; }
+.star-point > * { transform-box: fill-box; transform-origin: center; transition: transform 0.35s var(--ease-spring), opacity 0.5s ease; }
+.star-point:hover > *, .star-point:focus-visible > * { transform: scale(1.22); }
 .star-point.lit { pointer-events: none; }
 .star-point.lit path { fill: #ffd27a; filter: drop-shadow(0 0 12px #ffd27a); }
-.star-point.lit circle { fill: #fff; }
+.star-point.lit circle:first-child { opacity: 0.85; }
+.star-point.lit circle:last-child { fill: #fff; }
 .orb-fly {
   position: fixed; z-index: 80; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; pointer-events: none;
   background: radial-gradient(circle at 40% 40%, #fff, var(--oc) 50%, transparent 72%);

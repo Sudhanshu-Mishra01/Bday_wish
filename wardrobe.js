@@ -110,9 +110,8 @@ window.Wardrobe = (function () {
     { top: 'shirt', bottom: 'jeans', file: 'assets/wardrobe/look-shirt-jeans.jpg' }
   ];
 
-  // Tabs shown in the dress-up sheet. Hair and shoes are left out because the
-  // renders don't vary by them yet — add 'hair' / 'shoes' back once images do.
-  const CONTROLS = ['dresses', 'tops', 'bottoms', 'colors', 'pattern', 'extras', 'scene'];
+  // Show curated signature dresses, live face-anchored accessories, and romantic scenes
+  const CONTROLS = ['dresses', 'extras', 'scene'];
 
   const findLook = (top, bottom) => LOOKS.find((l) => l.top === top && l.bottom === bottom);
   const hasTop = (top) => LOOKS.some((l) => l.top === top);
@@ -412,22 +411,7 @@ window.Wardrobe = (function () {
         <ellipse cx="225" cy="584" rx="140" ry="14" fill="#000000" opacity=".55" filter="url(#${prefix}soft)"/>
       </g>
 
-      <!-- 2. Dynamic Garment Color Tint Overlay (Soft Feathered Mask to prevent box artifacts) -->
-      ${st.main && st.main !== '#e9a48c' && st.main !== 'original' ? `
-        <rect x="60" y="190" width="330" height="390" fill="${st.main}" opacity=".30" mask="url(#${prefix}garmentMask)" style="mix-blend-mode: color; pointer-events: none;"/>
-      ` : ''}
-
-      <!-- 3. Dynamic Garment Pattern Overlay (Chikankari, Polka, Floral, Stripes, Checks) -->
-      ${st.pattern && st.pattern !== 'plain' ? `
-        <rect x="60" y="190" width="330" height="390" fill="url(#${prefix}pat-${st.pattern})" opacity=".32" mask="url(#${prefix}garmentMask)" style="mix-blend-mode: overlay; pointer-events: none;"/>
-      ` : ''}
-
-      <!-- 4. Subtle Cinematic Fabric Sheen Gleam -->
-      <g class="doll-fabric-sheen" mask="url(#${prefix}garmentMask)" style="mix-blend-mode: overlay; pointer-events: none;">
-        <rect x="-120" y="200" width="100" height="420" fill="url(#${prefix}sheenGrad)" transform="rotate(-25 225 350)" class="sheen-sweep"/>
-      </g>
-
-      <!-- 5. Scene Atmosphere Tone Filter -->
+      <!-- 2. Scene Atmosphere Tone Filter -->
       ${renderSceneAtmosphere(st.scene, prefix)}
 
       <!-- 6. Interactive Accessories -->
@@ -560,22 +544,14 @@ window.Wardrobe = (function () {
 
   function randomize(st) {
     const pick = (a) => a[Math.floor(Math.random() * a.length)];
-    if (Math.random() < 0.5) {
-      st.dress = pick(OPTIONS.dresses.filter((d) => DRESS_IMAGES[d.id])).id;
-    } else {
-      const l = pick(LOOKS);
-      st.dress = null;
-      st.top = l.top;
-      st.bottom = l.bottom;
-    }
-    st.main = Math.random() < 0.6 ? null : pick(OPTIONS.colors);
-    do { st.second = pick(OPTIONS.colors); } while (st.second === st.main);
-    st.pattern = Math.random() < 0.7 ? 'plain' : pick(OPTIONS.patterns).id;
-    st.shoes = pick(OPTIONS.shoes).id;
+    const availableDresses = OPTIONS.dresses.filter((d) => DRESS_IMAGES[d.id]);
+    st.dress = pick(availableDresses).id;
+    st.main = null;
+    st.pattern = 'plain';
     st.scene = pick(OPTIONS.scenes).id;
-    // 25% chance to add 1 cute accessory
     st.extras = new Set();
-    if (Math.random() < 0.3) st.extras.add(pick(OPTIONS.extras).id);
+    if (Math.random() < 0.45) st.extras.add(pick(OPTIONS.extras).id);
+    return st.dress;
   }
 
   return {

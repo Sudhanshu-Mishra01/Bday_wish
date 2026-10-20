@@ -1,30 +1,16 @@
 [build]
   publish = "."
 
-# The studio (admin.*) is for local editing only — never serve it on the live site.
+# Clean admin & dashboard routes for monitoring
 [[redirects]]
   from = "/admin"
-  to = "/"
-  status = 302
-  force = true
+  to = "/admin.html"
+  status = 200
 
 [[redirects]]
-  from = "/admin.html"
-  to = "/"
-  status = 302
-  force = true
-
-[[redirects]]
-  from = "/admin.js"
-  to = "/"
-  status = 302
-  force = true
-
-[[redirects]]
-  from = "/admin.css"
-  to = "/"
-  status = 302
-  force = true
+  from = "/dashboard"
+  to = "/dashboard.html"
+  status = 200
 
 [[redirects]]
   from = "/admin_server.py"

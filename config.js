@@ -41,14 +41,14 @@ window.SURPRISE_CONFIG = {
     "board": "LOG KYA KAHENGE?",
     "instruction": "Is board ko tod do. Tap, tap, tap! 👊",
     "hitLines": [
-      "Duniya ki baatein bahar chhod do ✨",
-      "Tum kisi ki umeedon ke liye nahi, apni khushi ke liye bani ho 🦋",
-      "Tumhare pankh bohot mazboot hain, bas udna shuru karo 🕊️",
-      "Jab tum apne haq se jeeti ho, tab duniya sabse khoobsurat lagti hai 💫",
-      "Aakhri chot! Apni azaadi ke naam! Zor se! 💥👑"
+      "Har waqt sirf doosron ki khushi sochna chhod do, meri jaan... 🌸",
+      "Is bheed me tumhara apna wajood, tumhari apni khushi sabse pehle hai 🦋",
+      "Duniya ki aadat hai bolna — koi jaan bhi de de, tab bhi log baatein banayenge ✨",
+      "Isliye zamaane ke liye nahi, bas apne sukoon aur muskaan ke liye jeena seekho 💫",
+      "Aakhri chot! Apne haq, apni khushi aur azaadi ke naam! Zor se! 💥👑"
     ],
     "brokenTitle": "Azaad ho gayi meri Billu! 👑✨",
-    "brokenBody": "Zamaane ki fiqr chhod, tu bas muskura de,\nTere har ek khwaab ko, main apna aasmaan bana doon... 🕊️💛\n\nAaj se — aur aane wale har ek kal me — tumhe kisi se permission lene ki zaroorat nahi hai. Tum jaisi ho, waisi hi sabse anmol ho. Tumhara bachpana, tumhari hasi, tumhare sapne — in sabki hifazat ki zimmedaari meri hai.\n\nAane wale kal me chahe kitni bhi mushkilein aayein, main hamesha tumhare peeche ek deewar ban ke khada rahunga.\n\nBas ek waada: Tum kabhi apni chamak kam nahi hone dogi? 🤙✨",
+    "brokenBody": "Meri sabse pyaari Billu... 💛\n\nEk baat hamesha ke liye apne dil me basa lo na? Tumhara dil itna narm aur saaf hai ki tum har lamha sabko khush rakhne ke chakkar me khud ko bhool jaati ho. Par meri jaan, is duniya ka ek ajeeb sa dastoor hai — insaan chahe apna sab kuch kurbaan kar de, chahe apni saari zindagi doosron ke naam kar ke chala jaaye... log fir bhi kuch na kuch kahenge hi. Zamaane ki baatein kabhi khatam nahi hoti.\n\nIsliye please, har jagah doosron ki marzi ke aage apni khwahishein dabana chhod do. Tumhe sabse pehle apne baare me, apni khushi aur apne sukoon ke baare me sochna hai. Zindagi tumhari hai, aur isme khul kar muskuraane ka sabse pehla haq bhi sirf tumhara hai.\n\nJab tak main hoon, tumhe kisi zamaane ke taano se darrne ki zaroorat nahi. Main hamesha tumhari dhaal ban ke khada rahunga. Tum bas be-fikr hokar apni azaad zindagi jiyo, apne sapne poore karo aur dil khol kar haso...\n\nKyunki jab tum apne liye muskuraati ho na, meri poori kainaat roshan ho jaati hai ✨\n\nBas ek waada karo: Aaj ke baad khud ko kabhi doosre number pe nahi rakhogi? 🤙💛",
     "promiseButton": "Pinky promise, hamesha ke liye 🤙💛"
   },
   "playground": {
@@ -106,10 +106,19 @@ window.SURPRISE_CONFIG = {
     ],
     "lanternEmpty": "Pehle ek wish likho ✍️",
     "lanternDone": "Tumhara aasmaan ab tumhari wishes se chamak raha hai ✨",
-    "wardrobeIntro": "Jo pehenna hai pehno, jaise chaho waise. Koi kuch nahi kahega.",
+    "wardrobeIntro": "Apni sabse pyaari dress chuno, ya '🎲 Surprise Me' dabao — main toh har roop pe fida hoon! 💖 (Model ko swipe karke ya 'Ghoom ke dikhao 💃' se 360° ghumaao!)",
     "wardrobeStamp": "Approved by Tumhara ✅ \"Wow\" guaranteed",
     "wardrobeCaption": "Billu ka birthday look 💛",
-    "wardrobeResult": "Kitni pyaari lag rahi ho 😍 Ye look mujh tak pahunch gaya — aur main \"wow\" bol chuka hoon."
+    "wardrobeResult": "Kitni pyaari lag rahi ho meri jaan! 😍 Ye look mujh tak pahunch gaya — aur mera dil phir se haar gaya.",
+    "wardrobeCompliments": {
+      "anarkali": "Uff! Anarkali me toh poori Shehzadi lag rahi ho... Dil tham ke baithna padega mujhe! 🌸👑",
+      "saree": "Saree me tumhari saadgi aur husn ka koi muqabla nahi... Meri nazar utaarne ka man kar raha hai! 🥻✨",
+      "lehenga": "Lavender lehenga me bilkul dulhan wali feeling aa rahi hai... Sach me kisi din meri dulhan banogi! 💜💍",
+      "gown": "Royal Midnight Gown me red-carpet queen lag rahi ho! Aise dekhogi toh main behosh ho jaunga! 🖤👑",
+      "sundress": "Daisy sundress me kitni fresh, cute aur masoom lag rahi ho... Just like a morning sunflower! 🌼💛",
+      "casual": "Ye swag! Smart, stylish aur meri sabse pyaari Chetna — simple me bhi sabse killer! 👟🕶️",
+      "nightsuit": "Awww! Nightsuit me 5 saal ki cute Billu lag rahi ho, bas hug karne ka man kar raha hai! 🧸💤"
+    }
   },
   "catchHearts": {
     "title": "Dil Pakdo 💕",
