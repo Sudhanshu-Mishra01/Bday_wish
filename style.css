@@ -302,7 +302,7 @@ body.dark-room .scene[data-scene="hello"] .whisper { text-shadow: 0 0 20px rgba(
   animation: popIn 0.8s var(--ease-spring) both, floatSlow 4s ease-in-out infinite alternate;
 }
 .chetna-avatar {
-  width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;
+  width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: center 25%; display: block;
   border: 2px solid rgba(255, 255, 255, 0.85);
 }
 @keyframes floatSlow {
@@ -908,7 +908,7 @@ body.dark-room #sky { opacity: 0.35; }
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
 }
 .court-avatar {
-  width: 44px; height: 44px; border-radius: 50%; object-fit: cover;
+  width: 44px; height: 44px; border-radius: 50%; object-fit: cover; object-position: center 25%;
   border: 2px solid var(--gold);
 }
 .court-badge-tag {
