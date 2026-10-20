@@ -382,9 +382,9 @@ window.SURPRISE_CONFIG = {
       },
       {
         "photo": "assets/photos/memory-4.jpg",
-        "title": "Khwaab Jo Bohot Jald Sach Honge 🏡👰",
-        "date": "Our Future Imagination",
-        "caption": "Dhol-taashe, mandap, saat phere aur tum officially meri dulhan — 'Mrs. Mishrayin'. Hamara apna chhota sa pyara sa ghar, subah ki pehli chai aur raat ki befikar baatein. Ye sirf imagination nahi hai, bohot jald hamari haqeeqat banne wali hai! 💍✨"
+        "title": "Bohot Jald Sath Honge 🤍✨",
+        "date": "Doori Khatam Hone Wali Hai ⏳",
+        "caption": "Bohot jald wo din aane wala hai jab hum dono hamesha ke liye ek sath honge... Na koi screen ki doori hogi, na call katne ka darr. Bas tum mere paas hogi, sar mere kandhe pe, aur hum khoob saari befikar baatein karenge. Ye doori bas thode dino ki hai meri jaan, phir har pal sirf hamara hoga! 🫂🤍✨"
       },
       {
         "photo": "assets/photos/memory-5.jpg",
