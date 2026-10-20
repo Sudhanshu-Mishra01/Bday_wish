@@ -119,7 +119,7 @@
       return ctx;
     }
 
-    function tone(freq, { type = 'sine', dur = 0.4, vol = 0.15, when = 0, attack = 0.006, slideTo = null } = {}) {
+    function tone(freq, { type = 'sine', dur = 0.4, vol = 0.15, when = 0, attack = 0.006, slideTo = null, out = null } = {}) {
       if (!ensure()) return;
       const t = ctx.currentTime + when;
       const osc = ctx.createOscillator();
@@ -131,7 +131,7 @@
       g.gain.exponentialRampToValueAtTime(vol, t + attack);
       g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
       osc.connect(g);
-      g.connect(master);
+      g.connect(out || master);
       osc.start(t);
       osc.stop(t + dur + 0.05);
     }
@@ -156,10 +156,10 @@
     }
 
     // Music-box timbre: fundamental + soft overtones, quick decay
-    function box(freq, when = 0, vol = 0.12) {
-      tone(freq, { type: 'sine', dur: 1.5, vol, when });
-      tone(freq * 2, { type: 'sine', dur: 0.5, vol: vol * 0.3, when });
-      tone(freq * 4, { type: 'sine', dur: 0.15, vol: vol * 0.12, when });
+    function box(freq, when = 0, vol = 0.12, out = null) {
+      tone(freq, { type: 'sine', dur: 1.5, vol, when, out });
+      tone(freq * 2, { type: 'sine', dur: 0.5, vol: vol * 0.3, when, out });
+      tone(freq * 4, { type: 'sine', dur: 0.15, vol: vol * 0.12, when, out });
     }
 
     const N = { G4: 392, A4: 440, B4: 493.88, C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99 };
@@ -178,8 +178,85 @@
       return t * 1000;
     }
 
-    // Gentle lullaby: wandering pentatonic music-box notes
-    const LULLABY = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 783.99, 659.25];
+    // ---- Background song (when no music file is set): a soft romantic waltz on
+    // music box over strings, harp and bass, then a music-box "Happy Birthday",
+    // then the waltz again, looping. Original tune, all synthesised.
+    const nf = (n) => {
+      const m = /^([A-G])(#?)(\d)$/.exec(n);
+      const semi = { C: -9, D: -7, E: -5, F: -4, G: -2, A: 0, B: 2 }[m[1]] + (m[2] ? 1 : 0);
+      return 440 * Math.pow(2, (semi + (Number(m[3]) - 4) * 12) / 12);
+    };
+    const CHORDS = {
+      C: ['C3', 'C4', 'E4', 'G4'], G: ['G2', 'B3', 'D4', 'G4'], GB: ['B2', 'B3', 'D4', 'G4'],
+      Am: ['A2', 'A3', 'C4', 'E4'], EmG: ['G2', 'G3', 'B3', 'E4'], F: ['F2', 'A3', 'C4', 'F4'],
+      CE: ['E2', 'G3', 'C4', 'E4'], Dm7: ['D3', 'A3', 'C4', 'F4'], G7: ['G2', 'B3', 'D4', 'F4']
+    };
+    const WALTZ_CHORDS = ['C', 'GB', 'Am', 'EmG', 'F', 'CE', 'Dm7', 'G7', 'C', 'GB', 'Am', 'EmG', 'F', 'G', 'C', 'C'];
+    const WALTZ_TUNE = [ // [note, beats], three beats a bar
+      ['G4', 1], ['C5', 1], ['E5', 1], ['D5', 2], ['B4', 1], ['C5', 1], ['E5', 1], ['A5', 1], ['G5', 2], ['E5', 1],
+      ['F5', 1], ['A5', 1], ['G5', 1], ['E5', 2], ['C5', 1], ['D5', 1], ['F5', 1], ['E5', 1], ['D5', 3],
+      ['G4', 1], ['C5', 1], ['E5', 1], ['D5', 1], ['G5', 1], ['F5', 1], ['E5', 1], ['C5', 1], ['A4', 1], ['B4', 2], ['G4', 1],
+      ['A4', 1], ['C5', 1], ['F5', 1], ['E5', 1], ['D5', 1], ['B4', 1], ['C5', 3], [null, 3]
+    ];
+    const BDAY_CHORDS = ['C', 'G', 'G', 'C', 'C', 'F', 'G', 'C'];
+    const BDAY_TUNE = [ // [note, start beat, beats]; the first "Hap-py" is a pickup before bar 1
+      ['G4', -1, 0.75], ['G4', -0.25, 0.25], ['A4', 0, 1], ['G4', 1, 1], ['C5', 2, 1], ['B4', 3, 2],
+      ['G4', 5, 0.75], ['G4', 5.75, 0.25], ['A4', 6, 1], ['G4', 7, 1], ['D5', 8, 1], ['C5', 9, 2],
+      ['G4', 11, 0.75], ['G4', 11.75, 0.25], ['G5', 12, 1], ['E5', 13, 1], ['C5', 14, 1], ['B4', 15, 1], ['A4', 16, 1],
+      ['F5', 17, 0.75], ['F5', 17.75, 0.25], ['E5', 18, 1], ['C5', 19, 1], ['D5', 20, 1], ['C5', 21, 3]
+    ];
+    const SONG = (() => {
+      const ev = [];
+      let bar = 0;
+      const chords = (list, octaveUp = false) => list.forEach((name) => {
+        const [bass, ...pad] = CHORDS[name].map(nf);
+        const t = bar * 3;
+        ev.push({ t, kind: 'bass', f: bass });
+        ev.push({ t, kind: 'pad', fs: pad });
+        // harp: a gentle broken chord on every half beat
+        [0, 1, 2, 1, 0, 2].forEach((k, i) => ev.push({ t: t + i * 0.5, kind: 'harp', f: pad[k] * (octaveUp ? 4 : 2) }));
+        bar++;
+      });
+      const waltz = (vol) => {
+        let t = bar * 3;
+        WALTZ_TUNE.forEach(([n, beats]) => { if (n) ev.push({ t, kind: 'mel', f: nf(n), vol }); t += beats; });
+        chords(WALTZ_CHORDS);
+      };
+      waltz(0.07);
+      const start = bar * 3;
+      BDAY_TUNE.forEach(([n, at]) => ev.push({ t: start + at, kind: 'mel', f: nf(n) * 2, vol: 0.06 }));
+      chords(BDAY_CHORDS, true);
+      waltz(0.055);
+      ev.sort((x, y) => x.t - y.t);
+      return { ev, beats: bar * 3 };
+    })();
+    const BEAT = 60 / 84;
+    let bus = null;
+    let songIdx = 0;
+    let songT0 = 0;
+
+    function playEvent(e, when) {
+      if (e.kind === 'mel') box(e.f, when, e.vol, bus);
+      else if (e.kind === 'harp') tone(e.f, { type: 'triangle', dur: 0.9, vol: 0.016, when, out: bus });
+      else if (e.kind === 'bass') tone(e.f, { dur: BEAT * 2.8, vol: 0.06, attack: 0.03, when, out: bus });
+      else if (e.kind === 'pad') e.fs.forEach((f) => {
+        tone(f, { dur: BEAT * 3.3, vol: 0.011, attack: 0.5, when, out: bus });
+        tone(f * 1.004, { dur: BEAT * 3.3, vol: 0.008, attack: 0.6, when, out: bus });
+      });
+    }
+    function scheduleSong() {
+      if (!ambientOn || !ctx) return;
+      const horizon = ctx.currentTime + 0.8;
+      for (;;) {
+        const e = SONG.ev[songIdx];
+        const at = songT0 + e.t * BEAT;
+        if (at > horizon) break;
+        if (at >= ctx.currentTime - 0.05) playEvent(e, Math.max(0, at - ctx.currentTime));
+        songIdx++;
+        if (songIdx >= SONG.ev.length) { songIdx = 0; songT0 += SONG.beats * BEAT; }
+      }
+    }
+
     function startAmbient() {
       if (ambientOn) return;
       ambientOn = true;
@@ -191,19 +268,27 @@
         return;
       }
       if (!ensure()) return;
-      let i = 0;
-      ambientTimer = setInterval(() => {
-        if (!ambientOn) return;
-        const step = Math.random() < 0.6 ? 1 : -1;
-        i = (i + step + LULLABY.length) % LULLABY.length;
-        box(LULLABY[i] / 2, 0, 0.05);
-        if (i % 3 === 0) box(LULLABY[(i + 2) % LULLABY.length] / 4, 0.02, 0.03);
-      }, 820);
+      if (!bus) { bus = ctx.createGain(); bus.connect(master); }
+      bus.gain.cancelScheduledValues(ctx.currentTime);
+      bus.gain.setValueAtTime(0.0001, ctx.currentTime);
+      bus.gain.exponentialRampToValueAtTime(1, ctx.currentTime + 1.5);
+      // Pick up where the song paused (e.g. after the cake wish), from the start of that bar
+      const barBeat = Math.floor((SONG.ev[songIdx] ? SONG.ev[songIdx].t : 0) / 3) * 3;
+      songIdx = SONG.ev.findIndex((e) => e.t >= barBeat);
+      if (songIdx < 0) songIdx = 0;
+      songT0 = ctx.currentTime + 0.2 - SONG.ev[songIdx].t * BEAT;
+      scheduleSong();
+      ambientTimer = setInterval(scheduleSong, 200);
     }
     function stopAmbient() {
       ambientOn = false;
       clearInterval(ambientTimer);
       ambientTimer = null;
+      if (bus && ctx) {
+        bus.gain.cancelScheduledValues(ctx.currentTime);
+        bus.gain.setValueAtTime(Math.max(0.0001, bus.gain.value), ctx.currentTime);
+        bus.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
+      }
       if (!musicEl.paused) musicEl.pause();
     }
 
