@@ -42,8 +42,14 @@ export async function handleLog(req, store) {
 
 // GET /api/logs — the dashboard reads every event (needs the x-admin-key header).
 // DELETE /api/logs?clear=preview removes only test (?preview) events; ?clear=all wipes all.
-export async function handleLogs(req, store, adminKey) {
-  if (!adminKey) return json({ error: 'ADMIN_KEY is not set in Netlify → Site configuration → Environment variables' }, 503);
+export async function handleLogs(req, store, adminKey, diagnostics = null) {
+  if (!adminKey) {
+    return json({
+      error: 'ADMIN_KEY is not set in Netlify → Site configuration → Environment variables',
+      hint: 'Add ADMIN_KEY with the Functions scope for this deploy context, then trigger a new deploy.',
+      ...(diagnostics ? { diagnostics } : {})
+    }, 503);
+  }
   if (req.headers.get('x-admin-key') !== adminKey) return json({ error: 'Wrong key' }, 401);
 
   if (req.method === 'GET') return json({ ok: true, events: await readAll(store) });
