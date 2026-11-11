@@ -99,7 +99,7 @@
         return showNotice('Log ka backend nahi mila. Computer pe <code>python3 admin_server.py</code> se kholo, ya live site pe Netlify me ADMIN_KEY set karke dobara deploy karo (README dekho).');
       }
       const json = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(json.error || `Error ${res.status}`);
+      if (!res.ok) throw new Error((json.error || `Error ${res.status}`) + (json.diagnostics ? ' | ' + JSON.stringify(json.diagnostics) : ''));
       $('key-box').classList.add('hidden');
       $('notice').classList.add('hidden');
       $('content').classList.remove('hidden');
